@@ -152,8 +152,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 /* ── seletor de mês/período (dentro de Hospedagens) ── */
 .periodo-box{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.periodo-custom{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
-.periodo-custom input[type=date]{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:7px 9px;font-size:12px;color:#0d1117;font-family:inherit}
 
 /* ── grupos de obra (TOTAL / INFRAESTRUTURA-LOTE / AURA) ── */
 .obra-grupos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
@@ -247,12 +245,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;font-weight:700">Data</span>
       <select id="periodo-select" onchange="aoMudarPeriodoSelect_(this.value)" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:9px 12px;font-size:13px;color:#0d1117;font-family:inherit;font-weight:600;min-width:170px"></select>
-      <span style="font-size:11px;color:#b0b6bf" id="periodo-resumo"></span>
-    </div>
-    <div class="periodo-custom" id="periodo-custom" hidden>
-      <label style="font-size:11px;color:#6b7280">De</label><input type="date" id="periodo-de">
-      <label style="font-size:11px;color:#6b7280">Até</label><input type="date" id="periodo-ate">
-      <button class="fab" onclick="aplicarPeriodoCustom_()">Aplicar</button>
     </div>
   </div>
 
@@ -860,18 +852,13 @@ function calAtualizarTitulos_() {
 
 // ── FILTRO DE MÊS/PERÍODO (bloco abaixo do menu de hospedagens) ──
 // Filtra KPIs, financeiro, despesas, reservas, entradas e saques pelo mês
-// ou intervalo escolhido. Os blocos evolutivos (gráfico mês a mês, resumo
-// mensal e barras de ocupação) sempre mostram o ano inteiro.
-var periodo_ = { tipo: 'ano', mes: null, de: null, ate: null };
+// escolhido. Os blocos evolutivos (gráfico mês a mês, resumo mensal e
+// barras de ocupação) sempre mostram o ano inteiro.
+var periodo_ = { tipo: 'ano', mes: null };
 var MESES_LONGOS_ = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function limitesPeriodo_() {
   if (periodo_.tipo === 'mes') return { de: new Date(2026, periodo_.mes, 1), ate: new Date(2026, periodo_.mes + 1, 0) };
-  if (periodo_.tipo === 'intervalo') {
-    var de = dataLocal_(periodo_.de), ate = dataLocal_(periodo_.ate);
-    if (isNaN(de) || isNaN(ate)) return null;
-    return { de: de, ate: ate };
-  }
   return null; // 'ano' = sem filtro
 }
 function dentroDoPeriodo_(valorData) {
@@ -888,7 +875,6 @@ function filtrarPeriodo_(lista, campo) {
 }
 function rotuloPeriodo_() {
   if (periodo_.tipo === 'mes') return MESES_LONGOS_[periodo_.mes];
-  if (periodo_.tipo === 'intervalo') return fmtData_(periodo_.de) + ' a ' + fmtData_(periodo_.ate);
   return 'Ano 2026';
 }
 // Caixa de seleção rápida (um único menu de data pra tela toda).
@@ -899,17 +885,10 @@ function renderPeriodoChips_() {
   MESES_LONGOS_.forEach(function(nome, i) {
     opcoes += '<option value="mes-' + i + '">' + nome + '</option>';
   });
-  opcoes += '<option value="custom">Período personalizado…</option>';
   sel.innerHTML = opcoes;
-  sel.value = periodo_.tipo === 'mes' ? 'mes-' + periodo_.mes : (periodo_.tipo === 'intervalo' ? 'custom' : 'ano');
-  setTxt_('periodo-resumo', periodo_.tipo === 'intervalo' ? rotuloPeriodo_() : '');
+  sel.value = periodo_.tipo === 'mes' ? 'mes-' + periodo_.mes : 'ano';
 }
 function aoMudarPeriodoSelect_(valor) {
-  if (valor === 'custom') {
-    var form = document.getElementById('periodo-custom');
-    if (form) form.hidden = false;
-    return; // só aplica quando clicar em "Aplicar"
-  }
   if (valor.indexOf('mes-') === 0) selecionarPeriodo_('mes', Number(valor.slice(4)));
   else selecionarPeriodo_('ano');
 }
@@ -923,20 +902,8 @@ function reaplicarFiltros_() {
 }
 function selecionarPeriodo_(tipo, mes) {
   periodo_ = tipo === 'mes' ? { tipo: 'mes', mes: mes } : { tipo: 'ano' };
-  var form = document.getElementById('periodo-custom');
-  if (form) form.hidden = true;
   // o calendário acompanha o mês escolhido
   if (tipo === 'mes') { calMonthIdx = mes; }
-  reaplicarFiltros_();
-}
-function aplicarPeriodoCustom_() {
-  var de = document.getElementById('periodo-de').value;
-  var ate = document.getElementById('periodo-ate').value;
-  if (!de || !ate) { alert('Preencha as duas datas do período.'); return; }
-  if (dataLocal_(de) > dataLocal_(ate)) { alert('A data inicial precisa vir antes da final.'); return; }
-  periodo_ = { tipo: 'intervalo', de: de, ate: ate };
-  var inicio = dataLocal_(de);
-  if (inicio.getFullYear() === 2026) calMonthIdx = inicio.getMonth();
   reaplicarFiltros_();
 }
 

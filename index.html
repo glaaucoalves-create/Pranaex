@@ -987,7 +987,9 @@ function goTo(id, btnEl) {
   });
 })();
 
-// ── DADOS MENSAIS (valores de exemplo — serão substituídos pelos reais da planilha ao carregar) ──
+// ── DADOS MENSAIS (montados só a partir das tabelas reais — Reservas e
+//    Despesas — nunca da aba "Resumo", que guardava um histórico
+//    pré-app que não corresponde a nenhum lançamento de verdade) ──
 var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var MES = [
   [0,0,0,0,false],
@@ -996,38 +998,19 @@ var MES = [
   [0,0,0,0,false],
   [0,0,0,0,false],
   [0,0,0,0,false],
-  [5,4550,0,2400,true],
-  [10,9100,0,2400,false],
-  [8,7280,0,2400,false],
-  [6,5460,0,2400,false],
-  [9,8190,0,2400,false],
-  [12,10920,0,2400,false]
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false]
 ];
 
-// Snapshot da base de exemplo/projeção + cache do histórico real (dadosAura).
-// O array MES é RECONSTRUÍDO a partir dessa base a cada recálculo — sem isso,
-// trocar de hospedagem nos pills deixava no calendário/ocupação os números da
-// seleção anterior (meses sem reserva da nova hospedagem nunca eram zerados).
-var MES_EXEMPLO_ = MES.map(function(m) { return m.slice(); });
-var dadosAuraCache_ = null;
-
 function reconstruirBaseMes_() {
-  // O histórico da aba "Resumo" é da operação da Aura (anterior ao app);
-  // vale pra visão Total e pra própria Aura. As demais hospedagens não têm
-  // histórico — partem de zero e só as reservas delas preenchem os meses.
-  var usarHistorico = hospedagemSelecionada === 'Total' || normalizarTexto_(hospedagemSelecionada) === 'aura';
-  for (var i = 0; i < 12; i++) {
-    var opex = MES_EXEMPLO_[i][3];
-    if (!usarHistorico) { MES[i] = [0, 0, 0, opex, false]; continue; }
-    if (dadosAuraCache_) {
-      var receita = (dadosAuraCache_.contrato || [])[i] || 0;
-      var dias = (dadosAuraCache_.dias || [])[i] || 0;
-      var despesaReal = (dadosAuraCache_.despesaReal || [])[i] || 0;
-      MES[i] = [dias, receita, despesaReal, opex, receita > 0 || dias > 0 || despesaReal > 0];
-    } else {
-      MES[i] = MES_EXEMPLO_[i].slice();
-    }
-  }
+  // Trocar de hospedagem nos pills não pode deixar no calendário/ocupação os
+  // números da seleção anterior — todo mês zera antes de ser recalculado a
+  // partir das reservas/despesas reais da hospedagem escolhida.
+  for (var i = 0; i < 12; i++) MES[i] = [0, 0, 0, 0, false];
 }
 
 var chartMesInstance = null;
@@ -1870,7 +1853,6 @@ function atualizarTudo(pularSincronizacao) {
   carregarSaques();
   carregarObraProjetos();
   if (!apiConfigurada_()) return;
-  apiGet_('dadosAura').then(aplicarDadosReais).catch(function(erro) { console.error('Falha ao buscar dados reais:', erro); });
   // Depois de salvar algo pelo próprio app não precisa varrer o Drive de
   // novo (nada mudou lá) — a sincronização fica só pro carregamento inicial.
   if (pularSincronizacao) return;
@@ -2156,17 +2138,15 @@ function recalcularPainel() {
   renderEquilibrioSaques_(saques, socios);
 }
 
-// Recalcula "dias" e "receita" de cada mês de 2026 a partir das reservas
-// reais em STATE.reservas — isso é o que faz uma reserva nova (lançada à
-// mão ou importada do Airbnb) aparecer no calendário e no resumo mensal.
-// Meses sem nenhuma reserva no STATE mantêm o valor que já tinham (vindo
-// da aba "Resumo" da planilha, via dadosAura), já que esse recálculo só
-// enxerga reservas — não substitui histórico anterior ao uso do app.
+// Recalcula "dias", "receita" e "despesa" de cada mês de 2026 direto das
+// tabelas reais (Reservas e Despesas) — é o que faz uma reserva ou despesa
+// nova (lançada à mão ou importada do Airbnb) aparecer no calendário e no
+// gráfico mês a mês. Nenhum mês herda valor de fora dessas tabelas.
 function recalcularCalendarioDeReservas_() {
   reconstruirBaseMes_();
   var diasPorMes = new Array(12).fill(0);
   var receitaPorMes = new Array(12).fill(0);
-  var temReservaPorMes = new Array(12).fill(false);
+  var temDadoPorMes = new Array(12).fill(false);
 
   filtrarPorHospedagem_(STATE.reservas).forEach(function(r) {
     var entrada = dataLocal_(r.entrada);
@@ -2177,19 +2157,27 @@ function recalcularCalendarioDeReservas_() {
     while (cursor < fim) {
       if (cursor.getFullYear() === 2026) {
         diasPorMes[cursor.getMonth()]++;
-        temReservaPorMes[cursor.getMonth()] = true;
+        temDadoPorMes[cursor.getMonth()] = true;
       }
       cursor.setDate(cursor.getDate() + 1);
     }
     if (entrada.getFullYear() === 2026) receitaPorMes[entrada.getMonth()] += num_(r.valorContrato);
   });
 
+  var despesaPorMes = new Array(12).fill(0);
+  filtrarPorHospedagem_(STATE.despesas).forEach(function(d) {
+    var data = dataLocal_(d.dataPagamento);
+    if (isNaN(data) || data.getFullYear() !== 2026) return;
+    despesaPorMes[data.getMonth()] += num_(d.pago);
+    temDadoPorMes[data.getMonth()] = true;
+  });
+
   for (var i = 0; i < 12; i++) {
-    if (temReservaPorMes[i]) {
-      MES[i][0] = diasPorMes[i];
-      MES[i][1] = receitaPorMes[i];
-      MES[i][4] = true;
-    }
+    MES[i][0] = diasPorMes[i];
+    MES[i][1] = receitaPorMes[i];
+    MES[i][2] = despesaPorMes[i];
+    MES[i][3] = despesaPorMes[i];
+    MES[i][4] = temDadoPorMes[i];
   }
 }
 
@@ -2292,6 +2280,8 @@ function renderDespesas(lista) {
   if (!Array.isArray(lista)) return;
   STATE.despesas = lista;
   recalcularPainel();
+  recalcularCalendarioDeReservas_();
+  atualizarVisoesMensais_();
   var tbody = document.getElementById('tbl-despesas');
   var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'dataPagamento'), ['categoria', 'descricao', 'hospedagem']);
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + (filtroBusca_ ? 'Nenhuma despesa encontrada na busca.' : 'Nenhuma despesa cadastrada.') + '</td></tr>'; return; }
@@ -2616,27 +2606,6 @@ renderReservas(STATE.reservas);
 renderEntradas(STATE.entradas);
 renderDespesas(STATE.despesas);
 renderSaques(STATE.saques);
-
-// ── BUSCA DADOS REAIS DA PLANILHA (substitui os de exemplo quando chegar) ──
-function aplicarDadosReais(dados) {
-  if (!dados || !dados.ok) {
-    console.error('Não foi possível carregar dados reais — mantendo exemplo.', dados && dados.erro);
-    return;
-  }
-  // Guarda o histórico no cache — o array MES é sempre reconstruído a partir
-  // dele (+ base de exemplo) em reconstruirBaseMes_(), conforme a hospedagem
-  // selecionada. As reservas do app são reaplicadas por cima no recálculo,
-  // então nunca são apagadas por este fetch (que pode responder antes ou
-  // depois de carregarReservas, dependendo da rede).
-  dadosAuraCache_ = dados;
-  recalcularCalendarioDeReservas_();
-  atualizarVisoesMensais_();
-
-  if (dados.atualizadoEm) {
-    var badge = document.querySelector('.badge-month');
-    if (badge) badge.title = 'Dados atualizados em: ' + dados.atualizadoEm;
-  }
-}
 
 if (apiConfigurada_()) {
   atualizarTudo();

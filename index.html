@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prana Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poiret+One&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f5f6f8}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#0d1117;font-size:13px;min-height:100vh;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{height:6px;width:6px}
+::-webkit-scrollbar-thumb{background:#d7dbe0;border-radius:4px}
+
+/* ── menu superior (light) — sem sidebar lateral, melhor em celular ── */
+.topbar{background:#fff;border-bottom:1px solid #edeef1;padding:12px 20px;position:sticky;top:0;z-index:20}
+.topbar-row1{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.brand{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.brand-strip{height:5px;display:flex;flex-shrink:0}
+.brand-strip span{flex:1}
+.brand-badge{width:36px;height:36px;border-radius:50%;background:#fdf6ef;border:1px solid #ecdcc9;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:5px}
+.brand-badge svg{width:100%;height:100%}
+
+.nav-ic{width:15px;height:15px;flex-shrink:0;vertical-align:-3px;margin-right:5px}
+.nav-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;background:#f5f6f8;color:#6b7280;white-space:nowrap;transition:all .15s}
+.nav-tab:hover{color:#0d1117}
+.nav-tab.on{background:#c1622a;color:#fff}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:#b1503a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;cursor:default}
+.topbar-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-bar{flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#f5f6f8;border:1px solid #edeef1;border-radius:10px;padding:9px 14px;min-width:160px}
+.search-bar .ic{color:#b0b6bf;font-size:13px;flex-shrink:0}
+.search-bar input{flex:1;border:none;background:transparent;outline:none;font-size:13px;color:#0d1117;font-family:inherit;min-width:0}
+.search-bar input::placeholder{color:#b0b6bf}
+.badge-month{background:#fdf6ef;color:#c1622a;font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid #e7c9a0;white-space:nowrap}
+.badge-pend{background:#faf1e6;color:#a13a1f;font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid #e8c7a4;white-space:nowrap}
+.content{padding:20px 20px 60px 20px;max-width:1180px;width:100%;margin:0 auto}
+
+.panel{display:none}.panel.on{display:block}
+.ptitle{font-family:'Poiret One','Inter',sans-serif;font-size:28px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:#0d1117}
+.psub{font-size:13px;color:#6b7280;margin-top:3px}
+.phead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;gap:14px;flex-wrap:wrap}
+
+.hosp-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.hosp-pill{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid #edeef1;background:#fff;color:#6b7280;white-space:nowrap;transition:all .15s}
+.hosp-pill .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.hosp-pill.on{color:#fff;border-color:transparent}
+.hosp-chip{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:5px;color:#fff}
+
+.krow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #edeef1;border-radius:16px;padding:16px}
+.klbl{font-size:10.5px;color:#9aa3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.kval{font-size:19px;font-weight:700;color:#0d1117}
+.ksub{font-size:11px;margin-top:3px;color:#9aa3af}
+.up{color:#c1622a}.dn{color:#a13a1f}.warn{color:#a3813f}.pur{color:#b1503a}.red{color:#dc2626}
+
+.card{background:#fff;border:1px solid #edeef1;border-radius:18px;padding:18px;margin-bottom:14px}
+.ctitle{font-size:12px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-head .ctitle{margin-bottom:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
+
+.fr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f5f6f8}
+.fr:last-child{border-bottom:none}
+.fl{color:#9aa3af;font-size:12.5px;min-width:0;overflow-wrap:anywhere}.fv{font-weight:600;color:#374151;font-size:12.5px;flex-shrink:0}
+.slbl{font-size:10px;color:#c4c9d1;text-transform:uppercase;letter-spacing:.05em;padding:10px 0 4px;margin-top:2px}
+.tbl-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:480px}
+th{color:#9aa3af;font-weight:700;padding:8px 10px;text-align:left;border-bottom:1px solid #edeef1;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+td{padding:9px 10px;color:#6b7280;border-bottom:1px solid #f5f6f8;font-size:12.5px}
+tr:last-child td{border-bottom:none}
+.chip{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block}
+.cg{background:#f7e6d8;color:#c1622a}.co{background:#f4e2d1;color:#a13a1f}
+.cy{background:#ede4cf;color:#a3813f}.cb{background:#e6efe4;color:#5f8f5f}
+.cw{background:#f0f1f3;color:#9aa3af}.cr{background:#fee2e2;color:#dc2626}
+.avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#fff;flex-shrink:0}
+.name-cell{display:flex;align-items:center;gap:8px;min-width:0}
+.bv-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;flex-shrink:0}
+
+.br{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bl{width:120px;font-size:11.5px;color:#6b7280;flex-shrink:0}
+.bt{flex:1;height:8px;background:#f0f1f3;border-radius:4px;overflow:hidden}
+.bf{height:100%;border-radius:4px}
+.bv{width:70px;font-size:12px;font-weight:700;color:#0d1117;text-align:right;flex-shrink:0}
+
+/* ── ocupação por mês: faixa compacta de 12 colunas (era uma lista de 12
+   linhas cheias — bem mais "soft" e cabe numa olhada só) ── */
+.occ-strip{display:flex;align-items:flex-end;gap:5px;height:86px;padding:4px 2px 0}
+.occ-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.occ-val{font-size:9px;font-weight:700;color:#c1622a;margin-bottom:4px;white-space:nowrap}
+.occ-val.muted{color:#d8dbe0;font-weight:600}
+.occ-bar{width:100%;max-width:20px;border-radius:6px 6px 3px 3px;transition:height .25s ease}
+.occ-lbl{font-size:9px;color:#b0b6bf;text-transform:uppercase;letter-spacing:.03em;margin-top:6px}
+.occ-lbl.real{color:#c1622a;font-weight:700}
+.srow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.slbl2{font-size:11.5px;color:#6b7280;width:130px;flex-shrink:0}
+.sval{font-size:13px;font-weight:700;color:#c1622a;width:80px;text-align:right;flex-shrink:0}
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;background:#e5e7eb;border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#c1622a;border:3px solid #fff;box-shadow:0 0 0 1px #c1622a;cursor:pointer}
+.mk{background:#f9fafb;border-radius:10px;padding:11px 13px;border:1px solid #edeef1}
+.mk .ml{font-size:10px;color:#9aa3af;margin-bottom:4px}
+.mk .mv{font-size:16px;font-weight:800;color:#0d1117}
+.tag-r{background:#f7e6d8;color:#c1622a;font-size:9px;padding:2px 7px;border-radius:6px;font-weight:700;margin-left:3px;vertical-align:middle}
+.tag-e{background:#f0f1f3;color:#9aa3af;font-size:9px;padding:2px 7px;border-radius:6px;font-weight:700;margin-left:3px;vertical-align:middle}
+.nota{background:#f9fafb;border:1px solid #edeef1;border-radius:10px;padding:12px 14px;font-size:11.5px;color:#6b7280;margin-top:10px;line-height:1.6}
+.mc{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f5f6f8}
+.mc:last-child{border-bottom:none}
+.mc-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.mc-body{flex:1}
+.mc-title{font-size:12px;color:#374151}
+.mc-sub{font-size:11px;color:#9aa3af;margin-top:2px}
+.mc-val{font-size:12px;font-weight:700;flex-shrink:0}
+.mc-date{font-size:10px;color:#9aa3af;flex-shrink:0;width:72px;text-align:right}
+.leg{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#6b7280;margin-bottom:10px}
+.leg span{display:flex;align-items:center;gap:5px}
+.ld{width:14px;height:4px;border-radius:2px;flex-shrink:0}
+.ld-dash{width:14px;height:0;border-top:2px dashed;flex-shrink:0}
+.eq-bar{display:flex;height:22px;border-radius:8px;overflow:hidden;margin:8px 0;background:#f0f1f3}
+.eq-g{background:#b1503a;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.eq-y{background:#a3813f;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.mbtn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #edeef1;background:#fff;color:#6b7280;transition:all .15s}
+.mbtn:hover{color:#0d1117}
+.mbtn.on{background:#c1622a;color:#fff;border-color:#c1622a}
+.mbtn.has-real{border:1px solid #c1622a}
+.cal-wd{font-size:9.5px;color:#b0b6bf;text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.05em}
+.cal-cell{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#c9cdd3;background:#fafbfc;border:1px solid #f0f1f3;position:relative;transition:background .15s,border-color .15s}
+.cal-cell.empty{background:transparent;border:none}
+.cal-cell.res-real{background:#cf7245;color:#fff;border-color:#cf7245}
+.cal-cell.res-proj{background:#faeee2;color:#c1622a;border-color:#f0dcc7}
+.cal-cell .dot{position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:#a13a1f}
+.cal-tag{font-size:7px;font-weight:700;margin-top:1px}
+
+.fab{background:#c1622a;color:#fff;border:none;border-radius:20px;padding:7px 15px;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.fab:active{transform:scale(.97)}
+
+/* ── cards recolhíveis (Despesas/Reservas/Entradas/Saques): fechado mostra
+   só o resumo; os detalhes abrem sob demanda ── */
+.card-sum{font-size:11.5px;color:#9aa3af;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.btn-toggle{background:#f5f6f8;border:1px solid #e5e7eb;color:#6b7280;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.btn-toggle.on{background:#fdf6ef;color:#c1622a;border-color:#e7c9a0}
+.card-head-wrap{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.card-head-wrap .ctitle{margin-bottom:0}
+.card-acoes{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card-body-toggle{margin-top:14px}
+.card-body-toggle[hidden]{display:none}
+
+/* ── seletor de mês/período (dentro de Hospedagens) ── */
+.periodo-box{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.periodo-custom{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.periodo-custom input[type=date]{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:7px 9px;font-size:12px;color:#0d1117;font-family:inherit}
+
+/* ── grupos de obra (TOTAL / INFRAESTRUTURA-LOTE / AURA) ── */
+.obra-grupos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.obra-grupo{background:#fff;border:1px solid #edeef1;border-radius:16px;padding:16px;border-top:4px solid #c1622a}
+.obra-grupo .og-nome{font-size:10.5px;color:#9aa3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.obra-grupo .og-total{font-size:22px;font-weight:800;color:#0d1117;margin-bottom:8px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(13,17,23,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.on{display:flex}
+.modal-sheet{background:#fff;width:100%;max-width:460px;border-radius:20px;padding:22px;max-height:88vh;overflow-y:auto;border:1px solid #edeef1;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-title{font-size:16px;font-weight:800;color:#0d1117;margin-bottom:16px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;color:#6b7280;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+.field input,.field select{width:100%;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;color:#0d1117;font-size:14px;font-family:inherit}
+.field input:focus,.field select:focus{outline:none;border-color:#c1622a}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.btn-primary{flex:1;background:#c1622a;color:#fff;border:none;border-radius:10px;padding:12px;font-weight:700;font-size:13px;cursor:pointer}
+.btn-secondary{flex:1;background:#f5f6f8;color:#6b7280;border:1px solid #e5e7eb;border-radius:10px;padding:12px;font-weight:700;font-size:13px;cursor:pointer}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.empty-note{text-align:center;color:#c4c9d1;font-size:12px;padding:16px 0}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0d1117;color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);z-index:300;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:860px){
+  .topbar{padding:10px 16px}
+  .content{padding:18px 16px 50px 16px}
+}
+@media (max-width:640px){
+  .brand-name{display:none}
+  .user-avatar{display:none}
+  .search-bar{max-width:none;order:3;flex-basis:100%}
+  .g2,.g3{grid-template-columns:1fr}
+  .ptitle{font-size:20px}
+  .slbl2{width:96px}
+  /* obra no celular: grade de pendências vira coluna única e as barras
+     ganham rótulos mais curtos — sem isso um bloco estourava a largura */
+  #obra-pendencias-grid{grid-template-columns:1fr !important}
+  .br{gap:7px}
+  .bl{width:78px;font-size:10.5px;overflow-wrap:anywhere}
+  .bv{width:58px;font-size:11px}
+  .bv-badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="brand-strip"><span style="background:#d97a34"></span><span style="background:#ab8f5c"></span><span style="background:#b1503a"></span><span style="background:#5f8f5f"></span></div>
+<div class="topbar">
+  <div class="topbar-row1">
+    <!-- Logo oficial: espiral orgânica laranja com ponto azul no centro,
+         wordmark "PRANA experience" na fonte fina da marca (Poiret One). -->
+    <div class="brand"><div class="brand-badge"><svg viewBox="0 0 48 48" fill="none" aria-label="Prana"><path d="M15 35 C 9 30, 8.5 20, 15.5 13.5 C 20 9.5, 29 8.5, 33.5 13.5 C 39 19.5, 39.5 29.5, 33 35.5 C 27.5 40.5, 17.5 40.5, 14.5 34 C 12 29, 13.5 21.5, 18.5 17.5 C 22.5 14.5, 29.5 15, 32.5 19.5 C 35 23.5, 34 30.5, 29 33.5 C 25 35.8, 19.5 34.5, 18.5 30 C 17.7 26, 20.5 22, 24.5 22 C 27.5 22, 29.5 24.5, 28.5 27.5" stroke="#c86428" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="25" cy="27" r="2.5" fill="#38b6d6"/></svg></div><div class="brand-name" style="font-family:'Poiret One','Inter',sans-serif;color:#c86428;line-height:1"><div style="font-size:19px;letter-spacing:.22em">PRANA</div><div style="font-size:10px;letter-spacing:.34em;margin-top:2px">experience</div></div></div>
+    <div class="nav-tabs">
+      <button class="nav-tab on" onclick="goTo('aura',this)"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/></svg>Hospedagens</button>
+      <button class="nav-tab" onclick="goTo('obra',this)"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5 4.5 4.5-8.5 8.5L6 21l1-4.5z"/><path d="M13 6.5 17.5 11"/><path d="M4 11 2.5 12.5"/></svg>Obra</button>
+      <button class="nav-tab" onclick="goTo('invest',this)"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M3 20h18"/></svg>Investimento</button>
+    </div>
+    <div class="user-avatar" title="Glauco Alves · Sócio · Cabana 1">GA</div>
+  </div>
+  <div class="topbar-row2">
+    <div class="search-bar">
+      <span class="ic">⌕</span>
+      <input id="global-search" placeholder="Buscar reservas, despesas, lançamentos..." oninput="aoDigitarBusca_(this.value)">
+    </div>
+    <div style="flex:1"></div>
+    <div class="badge-month" id="badge-month">Julho 2026</div>
+    <div class="badge-pend"><span id="badge-pend-count">4</span> pendências de obra</div>
+  </div>
+</div>
+
+<main>
+  <div class="content">
+
+<!-- ═══════════ AURA / OPERACIONAL ═══════════ -->
+<div id="aura" class="panel on">
+  <div class="phead">
+    <div>
+      <div class="ptitle" id="aura-ptitle">Todas as hospedagens</div>
+      <div class="psub" id="aura-psub">Reservas, despesas e equilíbrio entre sócios — visão consolidada</div>
+    </div>
+  </div>
+
+  <div class="hosp-pills" id="hosp-pills"></div>
+
+  <!-- Caixa de seleção rápida de data: filtra todos os blocos abaixo (KPIs,
+       financeiro, despesas, reservas, entradas, saques e o calendário) —
+       o gráfico evolutivo sempre mostra o ano inteiro. -->
+  <div class="card" style="padding:12px 16px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;font-weight:700">Data</span>
+      <select id="periodo-select" onchange="aoMudarPeriodoSelect_(this.value)" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:9px 12px;font-size:13px;color:#0d1117;font-family:inherit;font-weight:600;min-width:170px"></select>
+      <span style="font-size:11px;color:#b0b6bf" id="periodo-resumo"></span>
+    </div>
+    <div class="periodo-custom" id="periodo-custom" hidden>
+      <label style="font-size:11px;color:#6b7280">De</label><input type="date" id="periodo-de">
+      <label style="font-size:11px;color:#6b7280">Até</label><input type="date" id="periodo-ate">
+      <button class="fab" onclick="aplicarPeriodoCustom_()">Aplicar</button>
+    </div>
+  </div>
+
+  <div class="krow">
+    <div class="kpi"><div class="klbl">Receita contratada</div><div class="kval" id="kpi-receita-contratada">R$ 4.550</div><div class="ksub" id="kpi-receita-contratada-sub">Isadora · 17–22/jul</div></div>
+    <div class="kpi"><div class="klbl">Recebido</div><div class="kval up" id="kpi-recebido">R$ 2.275</div><div class="ksub up" id="kpi-recebido-sub">50% do contrato</div></div>
+    <div class="kpi"><div class="klbl">A receber</div><div class="kval warn" id="kpi-areceber">R$ 2.275</div><div class="ksub">Saldo pendente</div></div>
+    <div class="kpi"><div class="klbl">Despesas</div><div class="kval" id="kpi-despesas-plan">R$ 2.400</div><div class="ksub dn" id="kpi-despesas-plan-sub">R$ 0 pago até agora</div></div>
+    <div class="kpi"><div class="klbl">Caixa atual</div><div class="kval dn" id="kpi-caixa-atual">R$ 0</div><div class="ksub" style="color:#9aa3af">Dado real</div></div>
+    <div class="kpi"><div class="klbl">Caixa previsto</div><div class="kval dn" id="kpi-caixa-previsto">–R$ 125</div><div class="ksub dn">Após despesas jul</div></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="ctitle" style="margin-bottom:0">Receita × Despesas — mês a mês 2026</div>
+      <div style="display:flex;gap:6px">
+        <span class="tag-r">REAL</span><span class="tag-e">PROJEÇÃO</span>
+      </div>
+    </div>
+    <div class="leg">
+      <span><div class="ld" style="background:#c1622a"></div>Receita bruta</span>
+      <span><div class="ld" style="background:#a13a1f"></div>Despesas</span>
+      <span><div class="ld" style="background:#b1503a"></div>Margem líquida</span>
+    </div>
+    <div style="position:relative;height:210px;margin-top:10px"><canvas id="chartMes"></canvas></div>
+  </div>
+
+  <!-- ── Calendário & ocupação (reage à hospedagem e à data selecionada) ── -->
+  <div class="krow">
+    <div class="kpi"><div class="klbl">Diárias reservadas</div><div class="kval up" id="kpi-diarias-ano">—</div><div class="ksub" id="kpi-diarias-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Ocupação do mês</div><div class="kval warn" id="kpi-occ-media">—</div><div class="ksub" id="kpi-occ-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Próxima reserva</div><div class="kval up" id="kpi-proxima-reserva">—</div><div class="ksub" id="kpi-proxima-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Dias até check-in</div><div class="kval pur" id="kpi-dias-checkin">—</div><div class="ksub">A partir de hoje</div></div>
+    <div class="kpi"><div class="klbl">Vacância no mês</div><div class="kval dn" id="kpi-vacancia-mes">—</div><div class="ksub" id="kpi-vacancia-sub">—</div></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+      <div class="ctitle" style="margin-bottom:0" id="cal-month-label">Julho 2026</div>
+    </div>
+    <div class="leg" style="margin-bottom:10px">
+      <span><div class="ld" style="background:#c1622a;height:10px;border-radius:3px"></div>Reserva confirmada (real)</span>
+      <span><div class="ld" style="background:#f7e6d8;height:10px;border-radius:3px"></div>Ocupação projetada</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px">
+      <div class="cal-wd">Dom</div><div class="cal-wd">Seg</div><div class="cal-wd">Ter</div><div class="cal-wd">Qua</div><div class="cal-wd">Qui</div><div class="cal-wd">Sex</div><div class="cal-wd">Sáb</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px" id="cal-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle" id="occ-title">Ocupação por mês — Todas as hospedagens 2026</div>
+    <div class="occ-strip" id="occ-bars"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle" id="fin-titulo">Financeiro — Julho</div>
+    <div style="display:flex;gap:34px;margin-bottom:14px;flex-wrap:wrap">
+      <div><div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Receita</div><div id="fin-receita" style="font-size:22px;font-weight:800;color:#c1622a">R$ 4.550</div></div>
+      <div><div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Despesas pagas</div><div id="fin-despesas-plan" style="font-size:22px;font-weight:800;color:#a13a1f">R$ 2.400</div></div>
+    </div>
+    <div class="slbl">Distribuição dos saques</div>
+    <div id="fin-dist-lista"></div>
+    <div class="slbl">Caixa</div>
+    <div class="fr"><span class="fl">Caixa atual (real)</span><span class="fv dn" id="fin-caixa-atual">R$ 0</span></div>
+    <div class="fr"><span class="fl">Caixa previsto pós-despesas</span><span class="fv dn" id="fin-caixa-previsto">–R$ 125</span></div>
+    <div class="slbl">Canal</div>
+    <div class="fr"><span class="fl">Instagram (direto)</span><span class="fv up" id="fin-canal-ig">R$ 4.550</span></div>
+    <div class="fr"><span class="fl">Airbnb</span><span class="fv" style="color:#c4c9d1" id="fin-canal-airbnb">R$ 0</span></div>
+    <div class="fr"><span class="fl">Outros</span><span class="fv" style="color:#c4c9d1" id="fin-canal-outros">R$ 0</span></div>
+  </div>
+
+  <!-- Cards recolhíveis: fechados mostram o resumo (quantidade + total do
+       filtro atual); os detalhes só aparecem ao tocar em "Detalhes". -->
+  <div class="card">
+    <div class="card-head-wrap">
+      <div style="min-width:0"><div class="ctitle">Reservas</div><div class="card-sum" id="sum-reservas">—</div></div>
+      <div class="card-acoes">
+        <button class="fab" id="btn-importar-airbnb" style="background:#f5f6f8;color:#374151;border:1px solid #e5e7eb" onclick="document.getElementById('input-airbnb-csv').click()">⭳ Importar Airbnb</button>
+        <input type="file" id="input-airbnb-csv" accept=".csv" style="display:none" onchange="importarCSVAirbnb(this)">
+        <button class="fab" onclick="abrirModal('reserva')">+ Nova</button>
+        <button class="btn-toggle" id="tg-reservas" onclick="alternarDetalhes_('reservas', this)">Detalhes ▾</button>
+      </div>
+    </div>
+    <div class="card-body-toggle" id="body-reservas" hidden>
+      <div style="font-size:11px;color:#9aa3af;margin-bottom:10px">Importa o relatório "Reservas concluídas" exportado do Airbnb — reconhece automaticamente os anúncios "Casa Prana Lumiar" e "Mantra Chalé Lumiar" e lança cada um na hospedagem certa; reservas já importadas (mesmo código de confirmação) são ignoradas automaticamente.</div>
+      <div class="tbl-wrap">
+      <table style="min-width:680px">
+        <thead><tr><th>Hóspede</th><th>Check-in</th><th>Checkout</th><th>Diárias</th><th>Valor</th><th>Pago</th><th>Canal</th><th>Status</th></tr></thead>
+        <tbody id="tbl-reservas"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head-wrap">
+      <div style="min-width:0"><div class="ctitle">Despesas</div><div class="card-sum" id="sum-despesas">—</div></div>
+      <div class="card-acoes">
+        <button class="fab" onclick="abrirModal('despesa')">+ Nova</button>
+        <button class="btn-toggle" id="tg-despesas" onclick="alternarDetalhes_('despesas', this)">Detalhes ▾</button>
+      </div>
+    </div>
+    <div class="card-body-toggle" id="body-despesas" hidden>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Categoria</th><th>Data pagamento</th><th>Valor</th><th>Descrição</th></tr></thead>
+        <tbody id="tbl-despesas"></tbody>
+      </table>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #edeef1;display:flex;justify-content:space-between;align-items:center">
+        <span style="color:#6b7280;font-size:12px">Total gasto</span>
+        <span style="font-size:15px;font-weight:800;color:#a13a1f" id="despesas-total-planejado">R$ 2.400</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head-wrap">
+      <div style="min-width:0"><div class="ctitle">Entradas</div><div class="card-sum" id="sum-entradas">—</div></div>
+      <div class="card-acoes">
+        <button class="fab" onclick="abrirModal('entrada')">+ Nova</button>
+        <button class="btn-toggle" id="tg-entradas" onclick="alternarDetalhes_('entradas', this)">Detalhes ▾</button>
+      </div>
+    </div>
+    <div class="card-body-toggle" id="body-entradas" hidden>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Reserva</th><th>Data pagamento</th><th>Valor pago</th></tr></thead>
+        <tbody id="tbl-entradas"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head-wrap">
+      <div style="min-width:0"><div class="ctitle">Saques &amp; equilíbrio entre sócios</div><div class="card-sum" id="sum-saques">—</div></div>
+      <div class="card-acoes">
+        <button class="fab" onclick="abrirModal('saque')">+ Novo</button>
+        <button class="btn-toggle" id="tg-saques" onclick="alternarDetalhes_('saques', this)">Detalhes ▾</button>
+      </div>
+    </div>
+    <div class="card-body-toggle" id="body-saques" hidden>
+      <div id="eq-container"></div>
+      <div class="slbl" style="padding-top:0">Histórico de saques</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Sócio</th><th>Data</th><th>Valor</th><th>Descrição</th></tr></thead>
+        <tbody id="tbl-saques"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ OBRA ═══════════ -->
+<div id="obra" class="panel">
+  <div class="phead">
+    <div>
+      <div class="ptitle">Controle de Obra</div>
+      <div class="psub">Sítio Sussuarana e cada hospedagem — investimento e pendências de serviço</div>
+    </div>
+  </div>
+
+  <!-- Menu de botões espelhando a aba Resumo da planilha: Total ·
+       Infraestrutura + Lote (TERRENO somado direto na infra) · Aura.
+       Trocar de botão troca todos os dados abaixo pro escopo escolhido. -->
+  <div class="periodo-box" id="obra-pills" style="margin-bottom:16px"></div>
+
+  <div class="krow" id="obra-kpis"></div>
+
+  <div class="card">
+    <div class="ctitle" id="obra-detalhe-titulo">Investimento por grupo</div>
+    <div id="obra-blocos-projetos"></div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid #edeef1">
+      <div class="fr"><span class="fl" style="font-weight:600;color:#b1503a">Glauco</span><span class="fv pur" id="obra-bloco-glauco">R$ 333.340 <span style="color:#c4c9d1;font-size:10px">total</span></span></div>
+      <div class="fr"><span class="fl">Yuri</span><span class="fv warn" id="obra-bloco-yuri">R$ 328.641 <span style="color:#c4c9d1;font-size:10px">total</span></span></div>
+      <div class="fr"><span class="fl">Diferença entre sócios</span><span class="fv up" id="obra-bloco-diferenca">R$ 4.698,75</span></div>
+      <div class="fr"><span class="fl">Dívida total pendente</span><span class="fv dn" id="obra-bloco-divida">R$ 69.800</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="ctitle" style="margin-bottom:0">Pendências de serviço</div>
+      <button class="fab" onclick="abrirModal('pendencia')">+ Nova pendência</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="obra-pendencias-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="ctitle" style="margin-bottom:0">Lançamentos de obra</div>
+      <button class="fab" onclick="abrirModal('gasto-obra')">+ Novo gasto</button>
+    </div>
+    <div class="psub" style="margin:-4px 0 0">Sítio e cada hospedagem, com a classificação real da planilha</div>
+  </div>
+
+  <div id="obra-lancamentos-projetos"></div>
+</div>
+
+<!-- ═══════════ INVESTIMENTO ═══════════ -->
+<div id="invest" class="panel">
+  <div class="phead">
+    <div>
+      <div class="ptitle">Investimento &amp; Payback</div>
+      <div class="psub">Simulação e projeção das 3 cabanas</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Simulador — Aura (50% Glauco)</div>
+    <div class="srow">
+      <span class="slbl2">Ocupação mensal</span>
+      <input type="range" id="sl-occ" min="30" max="100" value="75" step="5" oninput="calc()">
+      <span class="sval" id="out-occ">75%</span>
+    </div>
+    <div class="srow">
+      <span class="slbl2">Diária média (R$)</span>
+      <input type="range" id="sl-diaria" min="400" max="1800" value="910" step="10" oninput="calc()">
+      <span class="sval" id="out-diaria">R$ 910</span>
+    </div>
+    <div class="srow">
+      <span class="slbl2">OPEX mensal (R$)</span>
+      <input type="range" id="sl-opex" min="1000" max="6000" value="2400" step="100" oninput="calc()">
+      <span class="sval" id="out-opex">R$ 2.400</span>
+    </div>
+    <div class="g4" style="margin-top:4px">
+      <div class="mk"><div class="ml">Receita bruta/mês</div><div class="mv" id="res-bruta">—</div></div>
+      <div class="mk"><div class="ml">Líquido Glauco (50%)</div><div class="mv up" id="res-liq">—</div></div>
+      <div class="mk"><div class="ml">Simples Nacional (12%)</div><div class="mv dn" id="res-tax">—</div></div>
+      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Payback Aura</div><div class="mv up" id="res-pb">—</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Capital investido — sítio + hospedagens</div>
+    <div class="g2" style="margin-bottom:16px;align-items:center">
+      <div>
+        <div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px">Total capital Glauco no projeto</div>
+        <div style="font-size:30px;font-weight:800;color:#b1503a" id="inv-glauco-total">R$ 333.340</div>
+        <div style="font-size:11.5px;color:#9aa3af;margin-top:3px">Maior aportador — split 50/50 com Yuri+Jessica</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-chale-lbl">Obra / chalé 53%</span><span id="inv-chale-val">R$ 177.753</span></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-chale-bar" style="height:100%;width:53%;background:#b1503a;border-radius:3px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-terreno-lbl">Terreno 36%</span><span id="inv-terreno-val">R$ 120.000</span></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-terreno-bar" style="height:100%;width:36%;background:#a13a1f;border-radius:3px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-infra-lbl">Infra terreno 11%</span><span id="inv-infra-val">R$ 35.587</span></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-infra-bar" style="height:100%;width:11%;background:#9aa3af;border-radius:3px"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="mk"><div class="ml">Total projeto (100%)</div><div class="mv" style="font-size:15px" id="inv-total-projeto">R$ 731.781</div></div>
+      <div class="mk"><div class="ml">Glauco (maior aportador)</div><div class="mv pur" style="font-size:15px" id="inv-total-glauco">R$ 333.340</div></div>
+      <div class="mk"><div class="ml">Yuri + Jessica</div><div class="mv warn" style="font-size:15px" id="inv-total-yuri">R$ 328.641</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital — Aura</div>
+      <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-capital-header">R$ 333.340</span></span>
+    </div>
+    <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
+      Representa <strong style="color:#c1622a">lucro acumulado</strong>, não dinheiro sacado. Nenhum saque ocorre até o projeto (3 cabanas) estar concluído — 100% do lucro é reinvestido mês a mês nas obras seguintes (ver fluxo de caixa abaixo).
+    </div>
+    <div id="pb-timeline" style="display:flex;flex-direction:column;gap:5px"></div>
+    <div style="margin-top:8px;display:flex;gap:14px;font-size:11px;color:#6b7280">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c1622a;margin-right:4px"></span>Capital recuperado (em lucro gerado)</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#b1503a;margin-right:4px"></span>Em progresso</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="ctitle" style="margin-bottom:0">Fluxo de caixa — Cabanas 1, 2 e 3 vs. CDI</div>
+      <span style="font-size:11px;color:#c1622a;background:#f7e6d8;padding:3px 10px;border-radius:20px">🔒 Zero saques até concluir</span>
+    </div>
+    <div class="leg">
+      <span><div class="ld" style="background:#c1622a"></div>Caixa acumulado (100% reinvestido, zero saques)</span>
+      <span><div class="ld-dash" style="border-color:#a13a1f"></div>Aporte de bolso acumulado</span>
+      <span><div class="ld-dash" style="border-color:#a3813f"></div>CDI sobre capital comprometido</span>
+      <span><div class="ld" style="background:#b1503a;opacity:.5"></div>Capital total comprometido</span>
+    </div>
+    <div style="position:relative;height:260px;margin-top:10px"><canvas id="chartCDI"></canvas></div>
+
+    <div class="nota">
+      📌 <strong style="color:#c1622a">Verde (caixa)</strong> — receita líquida acumulada de cada cabana operando, descontada a cada saída para financiar a obra seguinte.
+      <strong style="color:#a13a1f">Laranja (aporte)</strong> — só aparece quando o caixa acumulado não cobre a saída mensal da obra (obra+terreno+infra ratados igualmente nos 10 meses de construção).
+      <strong style="color:#a3813f">Amarelo (CDI)</strong> — referência de rendimento se o mesmo capital estivesse aplicado.
+      <strong style="color:#b1503a">Roxo (capital)</strong> — total comprometido no projeto.
+      <br><br>💡 O caixa de Cabana 1 é consumido primeiro na obra da Cabana 2; depois, caixa de Cabana 1+2 financia a Cabana 3 — por isso o aporte tende a cair conforme mais cabanas entram em operação.
+    </div>
+
+    <div class="g3" style="margin-top:12px">
+      <div class="mk" style="border-color:#f4ddd4">
+        <div class="ml">Cabana 1 — Aura</div>
+        <div class="mv pur" style="font-size:14px" id="inv-cabana1-investido">R$ 333k investido</div>
+        <div style="font-size:10px;color:#c1622a;margin-top:4px;font-weight:600">✓ Operando · Jul/2026</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">Gera caixa para financiar as obras</div>
+      </div>
+      <div class="mk" style="border-color:#f7e6d8">
+        <div class="ml">Cabana 2 · Mar–Dez/27</div>
+        <div class="mv up" style="font-size:14px">Obra R$ 280k</div>
+        <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap2">Calculando...</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">Capital total: R$ 371k · Opera Jan/28</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido Glauco: <span id="liq2-txt" style="color:#c1622a;font-weight:600">—</span>/mês</div>
+      </div>
+      <div class="mk" style="border-color:#f4e2d1">
+        <div class="ml">Cabana 3 · Mar–Dez/28</div>
+        <div class="mv dn" style="font-size:14px">Obra R$ 300k</div>
+        <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap3">Calculando...</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">Capital total: R$ 391k · Opera Jan/29</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido Glauco: <span id="liq3-txt" style="color:#a13a1f;font-weight:600">—</span>/mês</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #edeef1">
+      <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — receita acumulada financia as obras</div>
+      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Líquido Glauco varia com os sliders</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">R$ 37,1k/mês (obra+terreno+infra) por 10 meses · caixa de Aura abate primeiro</div></div><div class="mc-val up" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — início de operação</div><div class="mc-sub">Aura + Cabana 2 acumulam caixa para Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">R$ 39,1k/mês (obra+terreno+infra) por 10 meses · Cabanas 1+2 financiam primeiro</div></div><div class="mc-val up" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Receita total Glauco consolidada</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Consolidado — 3 Cabanas</div>
+    <div class="tbl-wrap">
+    <table style="min-width:560px">
+      <thead><tr><th>Cabana</th><th>Obra</th><th>Capital total</th><th>Opera</th><th>Rec./mês</th><th>Glauco/mês</th><th>Payback</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="color:#b1503a;font-weight:600">Cabana 1 — Aura</td>
+          <td id="inv-tabela-obra1">R$ 367k</td><td class="pur" id="inv-tabela-capital1">R$ 333k</td><td>Jul/26</td>
+          <td>R$ 4.550+</td>
+          <td class="up" id="tc-gl1">—</td>
+          <td class="warn" id="tc-pb1">—</td>
+        </tr>
+        <tr>
+          <td style="color:#c1622a;font-weight:600">Cabana 2</td>
+          <td>R$ 280k</td><td class="up">R$ 371k</td><td>Jan/28</td>
+          <td id="tc-rec2">—</td>
+          <td class="up" id="tc-gl2">—</td>
+          <td class="warn">~40 meses</td>
+        </tr>
+        <tr>
+          <td style="color:#a13a1f;font-weight:600">Cabana 3</td>
+          <td>R$ 300k</td><td class="dn">R$ 391k</td><td>Jan/29</td>
+          <td id="tc-rec3">—</td>
+          <td class="up" id="tc-gl3">—</td>
+          <td class="warn">~40 meses</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+  </div><!-- content -->
+</main>
+
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this) fecharModal()">
+  <div class="modal-sheet">
+
+    <div id="form-reserva" style="display:none">
+      <div class="modal-title">Nova reserva</div>
+      <div class="field">
+        <label>Hospedagem</label>
+        <select id="r-hospedagem"></select>
+      </div>
+      <div class="field">
+        <label>Canal</label>
+        <select id="r-canal">
+          <option>Aluguel Instagram</option>
+          <option>Aluguel Airbnb</option>
+          <option>Outros</option>
+        </select>
+      </div>
+      <div class="field"><label>Nome do hóspede</label><input type="text" id="r-nome" placeholder="Nome completo"></div>
+      <div class="field"><label>Documento (CPF)</label><input type="text" id="r-doc" placeholder="Opcional"></div>
+      <div class="row2">
+        <div class="field"><label>Check-in</label><input type="date" id="r-entrada"></div>
+        <div class="field"><label>Checkout</label><input type="date" id="r-saida"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Valor contrato (R$)</label><input type="number" id="r-valor" step="0.01"></div>
+        <div class="field"><label>Já pago (R$)</label><input type="number" id="r-pago" step="0.01" value="0"></div>
+      </div>
+      <div class="field"><label>Observações</label><input type="text" id="r-obs" placeholder="Opcional"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarReserva(this)">Salvar reserva</button>
+      </div>
+    </div>
+
+    <div id="form-entrada" style="display:none">
+      <div class="modal-title">Nova entrada</div>
+      <div class="field">
+        <label>Hospedagem</label>
+        <select id="e-hospedagem"></select>
+      </div>
+      <div class="field"><label>Reserva / hóspede</label><input type="text" id="e-reserva" placeholder="Ex: Isadora Chagas G."></div>
+      <div class="field"><label>Data do pagamento</label><input type="date" id="e-data"></div>
+      <div class="field"><label>Valor pago (R$)</label><input type="number" id="e-valor" step="0.01"></div>
+      <div class="field"><label>Observações</label><input type="text" id="e-obs" placeholder="Opcional"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarEntrada(this)">Salvar entrada</button>
+      </div>
+    </div>
+
+    <div id="form-despesa" style="display:none">
+      <div class="modal-title">Nova despesa</div>
+      <div class="field">
+        <label>Hospedagem</label>
+        <select id="d-hospedagem"></select>
+      </div>
+      <div class="field"><label>Categoria</label><input type="text" id="d-categoria" placeholder="Ex: Jardinagem"></div>
+      <div class="row2">
+        <div class="field"><label>Data pagamento</label><input type="date" id="d-datapg"></div>
+        <div class="field"><label>Valor pago (R$)</label><input type="number" id="d-pago" step="0.01"></div>
+      </div>
+      <div class="field"><label>Descrição</label><input type="text" id="d-desc" placeholder="Opcional"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarDespesa(this)">Salvar despesa</button>
+      </div>
+    </div>
+
+    <div id="form-saque" style="display:none">
+      <div class="modal-title">Novo saque</div>
+      <div class="field">
+        <label>Hospedagem</label>
+        <select id="s-hospedagem" onchange="atualizarSociosSaque_()"></select>
+      </div>
+      <div class="field">
+        <label>Sócio</label>
+        <select id="s-categoria"></select>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Data</label><input type="date" id="s-data"></div>
+        <div class="field"><label>Valor (R$)</label><input type="number" id="s-valor" step="0.01"></div>
+      </div>
+      <div class="field"><label>Descrição</label><input type="text" id="s-desc" placeholder="Opcional"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarSaque(this)">Salvar saque</button>
+      </div>
+    </div>
+
+    <div id="form-gasto-obra" style="display:none">
+      <div class="modal-title">Novo gasto de obra</div>
+      <div class="field">
+        <label>Projeto</label>
+        <select id="g-projeto"></select>
+      </div>
+      <div class="field">
+        <label>Classificação</label>
+        <input type="text" id="g-classificacao" list="lista-classificacoes-obra" placeholder="Ex: Hidráulica/gás, Elétrica, Mão de obra...">
+        <datalist id="lista-classificacoes-obra"></datalist>
+      </div>
+      <div class="field"><label>Descrição</label><input type="text" id="g-item" placeholder="Ex: Telhas, portão, material hidráulica..."></div>
+      <div class="row2">
+        <div class="field"><label>Valor (R$)</label><input type="number" id="g-valor" step="0.01"></div>
+        <div class="field"><label>Data</label><input type="date" id="g-data"></div>
+      </div>
+      <div class="field">
+        <label>Pago por</label>
+        <select id="g-pagador">
+          <option value="Glauco">Glauco</option>
+          <option value="Yuri">Yuri</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarGastoObra(this)">Salvar gasto</button>
+      </div>
+    </div>
+
+    <div id="form-pendencia" style="display:none">
+      <div class="modal-title">Nova pendência de obra</div>
+      <div class="field">
+        <label>Projeto</label>
+        <select id="p-projeto"></select>
+      </div>
+      <div class="field">
+        <label>Tipo</label>
+        <select id="p-tipo">
+          <option value="Serviço">Serviço</option>
+          <option value="Compra/Melhoria">Compra/Melhoria</option>
+        </select>
+      </div>
+      <div class="field"><label>Item / serviço</label><input type="text" id="p-desc" placeholder="Ex: Torneira do jardim vazando"></div>
+      <div class="field"><label>Estimativa (R$)</label><input type="number" id="p-estimativa" step="0.01" placeholder="Opcional"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarPendencia(this)">Salvar pendência</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIGURAÇÃO DA API — cole aqui a URL do seu Web App do Apps Script
+// (Extensões → Apps Script → Implantar → Nova implantação → Web App → "Anyone")
+// Exemplo: 'https://script.google.com/macros/s/AKfycb.../exec'
+// ══════════════════════════════════════════════
+var API_URL = 'https://script.google.com/macros/s/AKfycbypfcBN3SHIWABvVmGAtc8A-rNjZna3fJPIvKdzM0imAxILE598vVKch3B8iTBbdkkhwg/exec';
+
+// ── HOSPEDAGENS — identidade visual e filtro "Total / cada uma" ──
+// "chave" precisa bater com o texto da coluna Hospedagem na planilha
+// operacional; "projetoObra" precisa bater com o nome da aba da hospedagem
+// na planilha de obra. As que ainda não têm dados aparecem "sem
+// lançamentos ainda" e passam a funcionar sozinhas assim que a aba/linha
+// delas existir nas planilhas — não precisa mexer no código de novo.
+// "socios" define a divisão de lucro/saques de cada hospedagem: Aura divide
+// com Glauco, Ojás divide com a Kassia (50/50, a confirmar se for diferente),
+// Mantra e Casa Prana são lucro cheio de Yuri+Jessica (um só sócio, sem
+// divisão pra equilibrar).
+var HOSPEDAGENS_ = [
+  { chave: 'Aura', nome: 'Cabana Aura', projetoObra: 'AURA', cor: '#5f8f5f', corClara: '#e8f2e7',
+    socios: [{ chave: 'Glauco', nome: 'Glauco', cor: 'pur' }, { chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] },
+  { chave: 'Ojás', nome: 'Domo Ojás', projetoObra: 'OJAS', cor: '#ab8f5c', corClara: '#f2ecdc',
+    socios: [{ chave: 'Kassia', nome: 'Kassia', cor: 'pur' }, { chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] },
+  { chave: 'Mantra', nome: 'Chalé Mantra', projetoObra: 'MANTRA', cor: '#b1503a', corClara: '#f7e3dd',
+    socios: [{ chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] },
+  { chave: 'Casa Prana', nome: 'Casa Prana', projetoObra: 'CASA PRANA', cor: '#d97a34', corClara: '#fbe9db',
+    socios: [{ chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] }
+];
+var hospedagemSelecionada = 'Total';
+
+function normalizarTexto_(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+function hospedagemPorChave_(chave) {
+  var alvo = normalizarTexto_(chave);
+  for (var i = 0; i < HOSPEDAGENS_.length; i++) {
+    if (normalizarTexto_(HOSPEDAGENS_[i].chave) === alvo || normalizarTexto_(HOSPEDAGENS_[i].nome) === alvo) return HOSPEDAGENS_[i];
+  }
+  return null;
+}
+function filtrarPorHospedagem_(lista) {
+  if (!Array.isArray(lista)) return [];
+  if (hospedagemSelecionada === 'Total') return lista;
+  var alvo = normalizarTexto_(hospedagemSelecionada);
+  return lista.filter(function(x) { return normalizarTexto_(x.hospedagem || '') === alvo; });
+}
+function hospChipHtml_(chave) {
+  var h = hospedagemPorChave_(chave);
+  if (!h) return '';
+  return '<span class="hosp-chip" style="background:' + h.cor + '">' + h.nome + '</span>';
+}
+
+// ── BUSCA GLOBAL (campo do topo) ──
+// Filtra as tabelas de reservas/entradas/despesas/saques por texto livre.
+// Só afeta as LISTAS — os KPIs e o financeiro continuam refletindo a
+// hospedagem selecionada inteira, senão os números "dançariam" a cada tecla.
+var filtroBusca_ = '';
+function aplicarBusca_(lista, campos) {
+  if (!filtroBusca_) return lista;
+  return lista.filter(function(x) {
+    return campos.some(function(c) { return normalizarTexto_(x[c]).indexOf(filtroBusca_) !== -1; });
+  });
+}
+function aoDigitarBusca_(valor) {
+  filtroBusca_ = normalizarTexto_(valor).trim();
+  renderTabelaReservas_();
+  renderEntradas(STATE.entradas);
+  renderDespesas(STATE.despesas);
+  renderSaques(STATE.saques);
+}
+function renderHospedagemPills_() {
+  var containers = document.querySelectorAll('.hosp-pills');
+  if (!containers.length) return;
+  var opcoes = [{ chave: 'Total', nome: 'Total', cor: '#c1622a' }].concat(HOSPEDAGENS_);
+  var html = opcoes.map(function(h) {
+    var ativo = hospedagemSelecionada === h.chave;
+    var estilo = ativo ? 'background:' + h.cor + ';border-color:' + h.cor : '';
+    return '<button type="button" class="hosp-pill' + (ativo ? ' on' : '') + '" style="' + estilo + '" onclick="selecionarHospedagem_(\'' + h.chave.replace(/'/g, "\\'") + '\')">' +
+      (h.chave !== 'Total' ? '<span class="dot" style="background:' + (ativo ? '#fff' : h.cor) + '"></span>' : '') + h.nome + '</button>';
+  }).join('');
+  containers.forEach(function(c) { c.innerHTML = html; });
+}
+// Atualiza os textos de cabeçalho (Hospedagens e Calendário) que mudam
+// conforme a hospedagem selecionada nos pills.
+function calAtualizarTitulos_() {
+  var h = hospedagemPorChave_(hospedagemSelecionada);
+  var sufixo = hospedagemSelecionada === 'Total' ? 'Todas as hospedagens' : h.nome;
+  setTxt_('occ-title', 'Ocupação por mês — ' + sufixo + ' 2026');
+}
+
+// ── FILTRO DE MÊS/PERÍODO (bloco abaixo do menu de hospedagens) ──
+// Filtra KPIs, financeiro, despesas, reservas, entradas e saques pelo mês
+// ou intervalo escolhido. Os blocos evolutivos (gráfico mês a mês, resumo
+// mensal e barras de ocupação) sempre mostram o ano inteiro.
+var periodo_ = { tipo: 'ano', mes: null, de: null, ate: null };
+var MESES_LONGOS_ = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+function limitesPeriodo_() {
+  if (periodo_.tipo === 'mes') return { de: new Date(2026, periodo_.mes, 1), ate: new Date(2026, periodo_.mes + 1, 0) };
+  if (periodo_.tipo === 'intervalo') {
+    var de = dataLocal_(periodo_.de), ate = dataLocal_(periodo_.ate);
+    if (isNaN(de) || isNaN(ate)) return null;
+    return { de: de, ate: ate };
+  }
+  return null; // 'ano' = sem filtro
+}
+function dentroDoPeriodo_(valorData) {
+  var lim = limitesPeriodo_();
+  if (!lim) return true;
+  var d = dataLocal_(valorData);
+  if (isNaN(d)) return false;
+  var dia = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return dia >= lim.de && dia <= lim.ate;
+}
+function filtrarPeriodo_(lista, campo) {
+  if (!limitesPeriodo_()) return lista;
+  return lista.filter(function(x) { return dentroDoPeriodo_(x[campo]); });
+}
+function rotuloPeriodo_() {
+  if (periodo_.tipo === 'mes') return MESES_LONGOS_[periodo_.mes];
+  if (periodo_.tipo === 'intervalo') return fmtData_(periodo_.de) + ' a ' + fmtData_(periodo_.ate);
+  return 'Ano 2026';
+}
+// Caixa de seleção rápida (um único menu de data pra tela toda).
+function renderPeriodoChips_() {
+  var sel = document.getElementById('periodo-select');
+  if (!sel) return;
+  var opcoes = '<option value="ano">Ano 2026</option>';
+  MESES_LONGOS_.forEach(function(nome, i) {
+    opcoes += '<option value="mes-' + i + '">' + nome + '</option>';
+  });
+  opcoes += '<option value="custom">Período personalizado…</option>';
+  sel.innerHTML = opcoes;
+  sel.value = periodo_.tipo === 'mes' ? 'mes-' + periodo_.mes : (periodo_.tipo === 'intervalo' ? 'custom' : 'ano');
+  setTxt_('periodo-resumo', periodo_.tipo === 'intervalo' ? rotuloPeriodo_() : '');
+}
+function aoMudarPeriodoSelect_(valor) {
+  if (valor === 'custom') {
+    var form = document.getElementById('periodo-custom');
+    if (form) form.hidden = false;
+    return; // só aplica quando clicar em "Aplicar"
+  }
+  if (valor.indexOf('mes-') === 0) selecionarPeriodo_('mes', Number(valor.slice(4)));
+  else selecionarPeriodo_('ano');
+}
+function reaplicarFiltros_() {
+  renderPeriodoChips_();
+  setTxt_('fin-titulo', 'Financeiro — ' + rotuloPeriodo_());
+  renderReservas(STATE.reservas);
+  renderEntradas(STATE.entradas);
+  renderDespesas(STATE.despesas);
+  renderSaques(STATE.saques);
+}
+function selecionarPeriodo_(tipo, mes) {
+  periodo_ = tipo === 'mes' ? { tipo: 'mes', mes: mes } : { tipo: 'ano' };
+  var form = document.getElementById('periodo-custom');
+  if (form) form.hidden = true;
+  // o calendário acompanha o mês escolhido
+  if (tipo === 'mes') { calMonthIdx = mes; }
+  reaplicarFiltros_();
+}
+function aplicarPeriodoCustom_() {
+  var de = document.getElementById('periodo-de').value;
+  var ate = document.getElementById('periodo-ate').value;
+  if (!de || !ate) { alert('Preencha as duas datas do período.'); return; }
+  if (dataLocal_(de) > dataLocal_(ate)) { alert('A data inicial precisa vir antes da final.'); return; }
+  periodo_ = { tipo: 'intervalo', de: de, ate: ate };
+  var inicio = dataLocal_(de);
+  if (inicio.getFullYear() === 2026) calMonthIdx = inicio.getMonth();
+  reaplicarFiltros_();
+}
+
+// ── CARDS RECOLHÍVEIS (Despesas/Reservas/Entradas/Saques) ──
+function alternarDetalhes_(nome, btn) {
+  var body = document.getElementById('body-' + nome);
+  if (!body) return;
+  body.hidden = !body.hidden;
+  if (btn) {
+    btn.textContent = body.hidden ? 'Detalhes ▾' : 'Fechar ▴';
+    btn.classList.toggle('on', !body.hidden);
+  }
+}
+// Calcula a próxima reserva futura (a partir de hoje) dentro da hospedagem
+// selecionada, e quantos dias faltam até o check-in dela.
+function calAtualizarProximaReserva_() {
+  var hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+  var lista = filtrarPorHospedagem_(STATE.reservas)
+    .map(function(r) { return { r: r, entrada: dataLocal_(r.entrada) }; })
+    .filter(function(x) { return !isNaN(x.entrada) && x.entrada >= hoje; })
+    .sort(function(a, b) { return a.entrada - b.entrada; });
+  if (!lista.length) {
+    setTxt_('kpi-proxima-reserva', '—');
+    setTxt_('kpi-proxima-sub', 'Nenhuma reserva futura');
+    setTxt_('kpi-dias-checkin', '—');
+    return;
+  }
+  var proxima = lista[0];
+  var dias = Math.round((proxima.entrada - hoje) / 86400000);
+  setTxt_('kpi-proxima-reserva', fmtData_(proxima.r.entrada));
+  setTxt_('kpi-proxima-sub', (proxima.r.nome || '').split(' ')[0] + ' · ' + proxima.r.diarias + ' diárias');
+  setTxt_('kpi-dias-checkin', dias + (dias === 1 ? ' dia' : ' dias'));
+}
+function selecionarHospedagem_(chave) {
+  hospedagemSelecionada = chave;
+  renderHospedagemPills_();
+  var h = hospedagemPorChave_(chave);
+  setTxt_('aura-ptitle', chave === 'Total' ? 'Todas as hospedagens' : h.nome);
+  setTxt_('aura-psub', chave === 'Total' ? 'Reservas, despesas e equilíbrio entre sócios — visão consolidada' : 'Reservas, despesas e equilíbrio entre sócios — ' + h.nome);
+  renderReservas(STATE.reservas);
+  renderEntradas(STATE.entradas);
+  renderDespesas(STATE.despesas);
+  renderSaques(STATE.saques);
+}
+function preencherSelectHospedagens_(id, incluirTotal) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var opcoes = incluirTotal ? [{ chave: 'Total', nome: 'Total (todas)' }].concat(HOSPEDAGENS_) : HOSPEDAGENS_;
+  el.innerHTML = opcoes.map(function(h) { return '<option value="' + h.chave + '">' + h.nome + '</option>'; }).join('');
+}
+function atualizarSociosSaque_() {
+  var hospedagem = document.getElementById('s-hospedagem').value;
+  var h = hospedagemPorChave_(hospedagem);
+  var socios = h ? h.socios : HOSPEDAGENS_[0].socios;
+  var el = document.getElementById('s-categoria');
+  if (el) el.innerHTML = socios.map(function(s) { return '<option value="' + s.chave + '">' + s.nome + '</option>'; }).join('');
+}
+
+// ── NAV (sidebar) ──
+function goTo(id, btnEl) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById(id).classList.add('on');
+  btnEl.classList.add('on');
+  window.scrollTo(0,0);
+}
+
+// ── BUSCA GLOBAL (filtra linhas/itens visíveis pelo texto digitado) ──
+(function() {
+  var input = document.getElementById('global-search');
+  if (!input) return;
+  input.addEventListener('input', function(e) {
+    var q = e.target.value.trim().toLowerCase();
+    var seletores = ['#tbl-reservas tr', '#tbl-entradas tr', '#tbl-despesas tr', '#tbl-saques tr', '#obra-lancamentos-projetos .fr', '#obra-pendencias-grid > div'];
+    seletores.forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(function(el) {
+        var texto = el.textContent.toLowerCase();
+        el.style.display = (!q || texto.indexOf(q) >= 0) ? '' : 'none';
+      });
+    });
+  });
+})();
+
+// ── DADOS MENSAIS (valores de exemplo — serão substituídos pelos reais da planilha ao carregar) ──
+var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+var MES = [
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [0,0,0,0,false],
+  [5,4550,0,2400,true],
+  [10,9100,0,2400,false],
+  [8,7280,0,2400,false],
+  [6,5460,0,2400,false],
+  [9,8190,0,2400,false],
+  [12,10920,0,2400,false]
+];
+
+// Snapshot da base de exemplo/projeção + cache do histórico real (dadosAura).
+// O array MES é RECONSTRUÍDO a partir dessa base a cada recálculo — sem isso,
+// trocar de hospedagem nos pills deixava no calendário/ocupação os números da
+// seleção anterior (meses sem reserva da nova hospedagem nunca eram zerados).
+var MES_EXEMPLO_ = MES.map(function(m) { return m.slice(); });
+var dadosAuraCache_ = null;
+
+function reconstruirBaseMes_() {
+  // O histórico da aba "Resumo" é da operação da Aura (anterior ao app);
+  // vale pra visão Total e pra própria Aura. As demais hospedagens não têm
+  // histórico — partem de zero e só as reservas delas preenchem os meses.
+  var usarHistorico = hospedagemSelecionada === 'Total' || normalizarTexto_(hospedagemSelecionada) === 'aura';
+  for (var i = 0; i < 12; i++) {
+    var opex = MES_EXEMPLO_[i][3];
+    if (!usarHistorico) { MES[i] = [0, 0, 0, opex, false]; continue; }
+    if (dadosAuraCache_) {
+      var receita = (dadosAuraCache_.contrato || [])[i] || 0;
+      var dias = (dadosAuraCache_.dias || [])[i] || 0;
+      var despesaReal = (dadosAuraCache_.despesaReal || [])[i] || 0;
+      MES[i] = [dias, receita, despesaReal, opex, receita > 0 || dias > 0 || despesaReal > 0];
+    } else {
+      MES[i] = MES_EXEMPLO_[i].slice();
+    }
+  }
+}
+
+var chartMesInstance = null;
+
+function chartMes_atualizar() {
+  if (chartMesInstance) chartMesInstance.destroy();
+  chartMesInstance = new Chart(document.getElementById('chartMes'), {
+    type: 'bar',
+    data: {
+      labels: MESES,
+      datasets: [
+        {
+          label: 'Receita',
+          data: MES.map(function(d){ return d[1]; }),
+          backgroundColor: MES.map(function(d){ return d[4] ? '#c1622a' : '#e7c9a0'; }),
+          borderRadius: 4, borderSkipped: 'bottom', order: 2
+        },
+        {
+          label: 'Despesas',
+          data: MES.map(function(d){ return d[3]; }),
+          backgroundColor: MES.map(function(d){ return d[4] ? '#a13a1f' : '#e8c7a4'; }),
+          borderRadius: 4, borderSkipped: 'bottom', order: 3
+        },
+        {
+          label: 'Margem',
+          data: MES.map(function(d){ return Math.max(0, d[1] - d[3]); }),
+          type: 'line',
+          borderColor: '#b1503a',
+          backgroundColor: 'rgba(124,58,237,0.06)',
+          borderWidth: 2, pointRadius: 3,
+          pointBackgroundColor: MES.map(function(d){ return d[4] ? '#b1503a' : 'rgba(177,80,58,0.35)'; }),
+          tension: 0.4, fill: true, order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0d1117', titleColor: '#fff', bodyColor: '#e5e7eb', borderWidth: 0,
+          padding: 10, cornerRadius: 10, displayColors: true, boxPadding: 4,
+          callbacks: { label: function(c){ return ' ' + c.dataset.label + ': R$ ' + c.raw.toLocaleString('pt-BR'); } }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#9aa3af', font: { size: 10 } }, grid: { display: false }, border: { display: false } },
+        y: { ticks: { color: '#9aa3af', font: { size: 10 }, callback: function(v){ return v >= 1000 ? 'R$' + (v/1000).toFixed(0) + 'k' : 'R$' + v; } }, grid: { color: '#f0f1f3' }, border: { display: false } }
+      }
+    }
+  });
+}
+
+function tbody_atualizarTabelaMes() {
+  var tbody = document.getElementById('tbl-mes');
+  if (!tbody) return; // a tabela de resumo mensal saiu da tela — só o gráfico ficou
+  tbody.innerHTML = '';
+  MES.forEach(function(d, i) {
+    var dias = d[0], rec = d[1], opReal = d[2], opPlan = d[3], real = d[4];
+    var ocup = dias > 0 ? Math.round(dias / 30 * 100) : 0;
+    var res = rec - opPlan;
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="color:#0d1117;font-weight:600">' + MESES[i] + '<span class="' + (real ? 'tag-r' : 'tag-e') + '">' + (real ? 'REAL' : 'EST') + '</span></td>' +
+      '<td style="color:' + (dias > 0 ? '#c1622a' : '#c4c9d1') + '">' + (dias > 0 ? dias : '—') + '</td>' +
+      '<td style="color:' + (ocup > 0 ? '#a3813f' : '#c4c9d1') + '">' + (ocup > 0 ? ocup + '%' : '—') + '</td>' +
+      '<td style="color:' + (rec > 0 ? '#c1622a' : '#c4c9d1') + ';font-weight:' + (rec > 0 ? 600 : 400) + '">' + (rec > 0 ? 'R$ ' + rec.toLocaleString('pt-BR') : '—') + '</td>' +
+      '<td style="color:' + (opReal > 0 ? '#a13a1f' : '#c4c9d1') + '">' + (opReal > 0 ? 'R$ ' + opReal.toLocaleString('pt-BR') : '—') + '</td>' +
+      '<td style="color:' + (opPlan > 0 ? '#9aa3af' : '#c4c9d1') + '">' + (opPlan > 0 ? 'R$ ' + opPlan.toLocaleString('pt-BR') : '—') + '</td>' +
+      '<td style="color:' + (res > 0 ? '#c1622a' : (res < 0 ? '#a13a1f' : '#c4c9d1')) + ';font-weight:' + (res !== 0 ? 600 : 400) + '">' + (rec > 0 ? (res >= 0 ? '+' : '') + ' R$ ' + Math.abs(res).toLocaleString('pt-BR') : '—') + '</td>' +
+      '<td>' + (real ? '<span class="chip cg">Real</span>' : '<span class="chip cw">Projeção</span>') + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+// ── CONSTANTES ──
+var CAPITAL = 333340;
+function fmt(n){ return 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR'); }
+
+var cdiChart = null;
+
+// Soma o líquido (50% Glauco) já realizado nos meses marcados como reais em
+// MES — isso permite que o payback/retorno acumulado parta do que já
+// aconteceu de verdade, em vez de simular todo o histórico com o slider.
+function realAcumuladoAura_() {
+  var total = 0, meses = 0;
+  MES.forEach(function(d) {
+    if (!d[4]) return;
+    var bruta = d[1], opex = d[3];
+    total += Math.max(0, (bruta - bruta * 0.12 - opex) * 0.5);
+    meses++;
+  });
+  return { total: total, meses: meses };
+}
+
+function calc() {
+  var occ    = +document.getElementById('sl-occ').value / 100;
+  var diaria = +document.getElementById('sl-diaria').value;
+  var opex   = +document.getElementById('sl-opex').value;
+
+  var bruta  = 30 * occ * diaria;
+  var tax    = bruta * 0.12;
+  var liq50  = (bruta - tax - opex) * 0.5;
+
+  var real = realAcumuladoAura_();
+  var capitalRestante = Math.max(0, CAPITAL - real.total);
+  var pb = real.total >= CAPITAL ? real.meses : real.meses + (liq50 > 0 ? Math.ceil(capitalRestante / liq50) : 999);
+
+  document.getElementById('out-occ').textContent    = Math.round(occ * 100) + '%';
+  document.getElementById('out-diaria').textContent = 'R$ ' + diaria.toLocaleString('pt-BR');
+  document.getElementById('out-opex').textContent   = fmt(opex);
+  document.getElementById('res-bruta').textContent  = fmt(bruta);
+  document.getElementById('res-tax').textContent    = '–' + fmt(tax);
+  document.getElementById('res-liq').textContent    = fmt(Math.max(0, liq50));
+  document.getElementById('res-pb').textContent     = pb > 120 ? '>10 anos' : pb + ' meses';
+
+  document.getElementById('tc-gl1').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('tc-pb1').textContent = pb > 120 ? '>10 anos' : '~' + pb + ' meses';
+  setTxt_('tc-total', fmt(Math.max(0, liq50) * 3));
+  document.getElementById('tc-gl2').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('tc-gl3').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('tc-rec2').textContent = fmt(bruta);
+  document.getElementById('tc-rec3').textContent = fmt(bruta);
+  document.getElementById('liq2-txt').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('liq3-txt').textContent = fmt(Math.max(0, liq50));
+
+  buildTimeline(liq50, real);
+  buildCDI(liq50);
+}
+
+function buildTimeline(mensal, real) {
+  real = real || realAcumuladoAura_();
+  var c = document.getElementById('pb-timeline');
+  c.innerHTML = '';
+  [6, 12, 18, 24, 30, 36, 42, 48, 54, 60].forEach(function(m){
+    var mesesProjecao = Math.max(0, m - real.meses);
+    var acum = Math.max(0, real.total + mensal * mesesProjecao);
+    var pct  = Math.min(100, Math.round(acum / CAPITAL * 100));
+    var paid = acum >= CAPITAL;
+    var row  = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px';
+    row.innerHTML =
+      '<div style="width:52px;font-size:10.5px;color:#9aa3af;text-align:right;flex-shrink:0">mês ' + m + '</div>' +
+      '<div style="flex:1;height:20px;background:#f0f1f3;border-radius:6px;overflow:hidden;position:relative">' +
+        '<div style="height:100%;width:' + pct + '%;background:' + (paid ? '#c1622a' : '#b1503a') + ';border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px">' +
+          (pct > 14 ? '<span style="font-size:9px;font-weight:700;color:#fff">' + pct + '%</span>' : '') +
+        '</div>' +
+        (pct <= 14 ? '<span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:9px;color:#9aa3af">' + pct + '%</span>' : '') +
+      '</div>' +
+      '<div style="width:80px;font-size:11px;font-weight:600;text-align:right;flex-shrink:0;color:' + (paid ? '#c1622a' : '#9aa3af') + '">' + fmt(acum) + (paid ? ' ✓' : '') + '</div>';
+    c.appendChild(row);
+  });
+}
+
+function buildCDI(liq1) {
+  var liq2 = liq1;
+  var liq3 = liq1;
+
+  var CAP2_TOTAL = 280000 + 75000 + 16279;
+  var CAP3_TOTAL = 300000 + 75000 + 16279;
+  var MENSAL2 = CAP2_TOTAL / 10;
+  var MENSAL3 = CAP3_TOTAL / 10;
+
+  var CDI_M = Math.pow(1.105, 1/12) - 1;
+
+  var caixa = 0, aporteAcum = 0, capCDI = CAPITAL, acCDI = 0;
+  var aporteCab2 = 0, aporteCab3 = 0;
+  var labels = [], dsCaixa = [], dsAporte = [], dsCDI = [], dsCapital = [];
+  var caixaNoInicioObra2 = 0, caixaNoInicioObra3 = 0;
+
+  for (var m = 1; m <= 90; m++) {
+    var r1 = Math.max(0, liq1);
+    var r2 = m >= 19 ? liq2 : 0;
+    var r3 = m >= 31 ? liq3 : 0;
+    caixa += r1 + r2 + r3;
+
+    var saida = 0;
+    if (m >= 9  && m <= 18) saida = MENSAL2;
+    if (m >= 21 && m <= 30) saida = MENSAL3;
+
+    if (saida > 0) {
+      var cobre = Math.min(caixa, saida);
+      var falta = saida - cobre;
+      caixa -= cobre;
+      if (falta > 0) {
+        aporteAcum += falta;
+        capCDI += falta;
+        if (m >= 9  && m <= 18) aporteCab2 += falta;
+        if (m >= 21 && m <= 30) aporteCab3 += falta;
+      }
+    }
+
+    acCDI += capCDI * CDI_M;
+
+    if (m === 8)  caixaNoInicioObra2 = caixa;
+    if (m === 20) caixaNoInicioObra3 = caixa;
+
+    if (m % 3 === 0) {
+      var ano = Math.floor((m - 1) / 12) + 1;
+      var mes = ((m - 1) % 12) + 1;
+      labels.push('A' + ano + 'M' + String(mes).padStart(2, '0'));
+      dsCaixa.push(Math.round(caixa));
+      dsAporte.push(Math.round(aporteAcum));
+      dsCDI.push(Math.round(acCDI));
+      dsCapital.push(Math.round(capCDI));
+    }
+  }
+
+  var card2 = document.getElementById('card-ap2');
+  if (aporteCab2 <= 0) {
+    card2.textContent = '✓ 100% financiada pela Aura';
+    card2.style.color = '#c1622a';
+  } else {
+    card2.textContent = 'Aporte necessário: ~' + fmt(aporteCab2);
+    card2.style.color = '#a3813f';
+  }
+
+  var card3 = document.getElementById('card-ap3');
+  if (aporteCab3 <= 0) {
+    card3.textContent = '✓ Financiada pelas cabanas 1+2';
+    card3.style.color = '#c1622a';
+  } else {
+    card3.textContent = 'Aporte necessário: ~' + fmt(aporteCab3);
+    card3.style.color = '#a3813f';
+  }
+
+  document.getElementById('mc-liq1').textContent = fmt(liq1) + '/mês';
+  document.getElementById('mc-cx2').textContent  = 'Caixa: ' + fmt(caixaNoInicioObra2);
+  document.getElementById('mc-cx3').textContent  = 'Caixa: ' + fmt(caixaNoInicioObra3);
+  document.getElementById('mc-liq2').textContent = '+ ' + fmt(liq2) + '/mês';
+  document.getElementById('mc-total').textContent = fmt(liq1 + liq2 + liq3) + '/mês';
+
+  if (cdiChart) cdiChart.destroy();
+  cdiChart = new Chart(document.getElementById('chartCDI'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Caixa acumulado', data: dsCaixa, borderColor: '#c1622a', backgroundColor: 'rgba(193,98,42,0.07)', borderWidth: 2.5, pointRadius: 0, tension: 0.4, fill: true, order: 1 },
+        { label: 'Aporte de bolso', data: dsAporte, borderColor: '#a13a1f', backgroundColor: 'rgba(161,58,31,0.05)', borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: 0.3, fill: true, order: 2 },
+        { label: 'CDI sobre capital', data: dsCDI, borderColor: '#a3813f', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0, tension: 0.4, order: 3 },
+        { label: 'Capital comprometido', data: dsCapital, borderColor: '#b1503a', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [2, 5], pointRadius: 0, stepped: true, order: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { color: '#6b7280', boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'rectRounded', font: { size: 11 }, padding: 14 } },
+        tooltip: {
+          backgroundColor: '#0d1117', titleColor: '#fff', bodyColor: '#e5e7eb', borderWidth: 0,
+          padding: 10, cornerRadius: 10, displayColors: true, boxPadding: 4,
+          callbacks: {
+            title: function(t){ return 'Período: ' + t[0].label; },
+            label: function(c){
+              var nms = ['Caixa acumulado', 'Aporte de bolso acum.', 'CDI acumulado', 'Capital comprometido'];
+              return nms[c.datasetIndex] + ': R$ ' + c.raw.toLocaleString('pt-BR');
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#9aa3af', font: { size: 9 }, maxRotation: 45 }, grid: { display: false }, border: { display: false } },
+        y: { ticks: { color: '#9aa3af', font: { size: 10 }, callback: function(v){ return 'R$' + (v/1000).toFixed(0) + 'k'; } }, grid: { color: '#f0f1f3' }, border: { display: false } }
+      }
+    }
+  });
+}
+
+// ── CALENDÁRIO & OCUPAÇÃO ──
+var calMonthIdx = 6;
+
+function buildMonthButtons() {
+  // Os botões de mês do calendário saíram — a navegação agora é feita só
+  // pela caixa de seleção de data no topo, um único menu pra tela toda.
+  var c = document.getElementById('cal-month-btns');
+  if (!c) return;
+  c.innerHTML = '';
+  MESES.forEach(function(nome, i) {
+    var hasReal = MES[i][4];
+    var hasProj = MES[i][0] > 0;
+    var btn = document.createElement('button');
+    btn.className = 'mbtn' + (i === calMonthIdx ? ' on' : '') + (hasReal ? ' has-real' : '');
+    btn.textContent = nome + (hasReal ? ' ✓' : (hasProj ? ' •' : ''));
+    btn.onclick = function() { calMonthIdx = i; buildCalendar(i); buildMonthButtons(); calRunSummary(i); };
+    c.appendChild(btn);
+  });
+}
+
+// Retorna a reserva real (de STATE.reservas) que ocupa a data informada,
+// ou null. Substitui o destaque fixo que só reconhecia a reserva de
+// exemplo — qualquer reserva (manual ou importada do Airbnb) aparece aqui.
+function reservaNoDia_(data) {
+  var lista = filtrarPorHospedagem_(STATE.reservas);
+  for (var i = 0; i < lista.length; i++) {
+    var r = lista[i];
+    var e = dataLocal_(r.entrada), s = dataLocal_(r.saida);
+    if (isNaN(e) || isNaN(s)) continue;
+    var eSoData = new Date(e.getFullYear(), e.getMonth(), e.getDate());
+    var sSoData = new Date(s.getFullYear(), s.getMonth(), s.getDate());
+    if (data >= eSoData && data < sSoData) return r;
+  }
+  return null;
+}
+
+function buildCalendar(mIdx) {
+  document.getElementById('cal-month-label').textContent = MESES[mIdx] + ' 2026';
+  var grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  var hoje = new Date();
+  var daysInMonth = new Date(2026, mIdx + 1, 0).getDate();
+  var firstDay = new Date(2026, mIdx, 1).getDay();
+  var dadosMes = MES[mIdx];
+  var diasOcup = dadosMes[0];
+  var isReal = dadosMes[4];
+  var diasVagos = 0;
+
+  for (var i = 0; i < firstDay; i++) {
+    var blank = document.createElement('div');
+    blank.className = 'cal-cell empty';
+    grid.appendChild(blank);
+  }
+
+  for (var d = 1; d <= daysInMonth; d++) {
+    var cell = document.createElement('div');
+    var tag = '';
+    var dataCelula = new Date(2026, mIdx, d);
+    var reserva = reservaNoDia_(dataCelula);
+
+    if (reserva) {
+      cell.className = 'cal-cell res-real';
+      var entradaReserva = new Date(reserva.entrada);
+      if (d === entradaReserva.getDate() && mIdx === entradaReserva.getMonth()) tag = (reserva.nome || '').split(' ')[0];
+    } else if (!isReal && diasOcup > 0 && d <= diasOcup) {
+      cell.className = 'cal-cell res-proj';
+    } else {
+      cell.className = 'cal-cell';
+    }
+
+    if (!reserva) diasVagos++;
+
+    cell.innerHTML = '<span>' + d + '</span>' + (tag ? '<span class="cal-tag">' + tag + '</span>' : '');
+
+    if (mIdx === hoje.getMonth() && d === hoje.getDate() && hoje.getFullYear() === 2026) {
+      var dot = document.createElement('div');
+      dot.className = 'dot';
+      cell.appendChild(dot);
+    }
+
+    grid.appendChild(cell);
+  }
+
+  setTxt_('kpi-vacancia-mes', diasVagos + (diasVagos === 1 ? ' dia' : ' dias'));
+  setTxt_('kpi-vacancia-sub', MESES[mIdx] + ' — ' + (diasVagos === 0 ? 'mês cheio' : 'livre'));
+}
+
+// Faixa compacta de 12 colunas (uma por mês) em vez da lista de 12 linhas
+// cheias — mesma informação (ocupação real/projetada), numa olhada só e
+// sem tomar a tela toda. Meses sem nenhum dado mostram um traço fino, só
+// pra manter o ritmo visual da faixa sem sumir da tela.
+function buildOccBars() {
+  var c = document.getElementById('occ-bars');
+  if (!c) return;
+  c.innerHTML = '';
+  MES.forEach(function(d, i) {
+    var dias = d[0], real = d[4];
+    var ocup = dias > 0 ? Math.round(dias / 30 * 100) : 0;
+    var altura = Math.max(6, ocup);
+    var cor = real ? '#cf7245' : (dias > 0 ? '#f0dcc7' : '#f0f1f3');
+    var col = document.createElement('div');
+    col.className = 'occ-col';
+    col.innerHTML =
+      '<div class="occ-val' + (ocup > 0 ? '' : ' muted') + '">' + (ocup > 0 ? ocup + '%' : '—') + '</div>' +
+      '<div class="occ-bar" style="height:' + altura + '%;background:' + cor + '"></div>' +
+      '<div class="occ-lbl' + (real ? ' real' : '') + '">' + MESES[i] + '</div>';
+    c.appendChild(col);
+  });
+}
+
+function calRunSummary(mIdx) {
+  if (mIdx === undefined) mIdx = calMonthIdx;
+  var d = MES[mIdx];
+  var dias = d[0], real = d[4];
+  var ocup = dias > 0 ? Math.round(dias / 30 * 100) : 0;
+  var rotulo = MESES[mIdx] + ' 2026' + (real ? ' · real' : (dias > 0 ? ' · projeção' : ''));
+  setTxt_('kpi-diarias-ano', dias + ' diárias');
+  setTxt_('kpi-diarias-sub', rotulo);
+  setTxt_('kpi-occ-media', ocup > 0 ? ocup + '%' : '—');
+  setTxt_('kpi-occ-sub', rotulo);
+}
+
+// ── MODAL: abrir/fechar ──
+function preselecionarHospedagem_(id) {
+  var el = document.getElementById(id);
+  if (el && hospedagemSelecionada !== 'Total') el.value = hospedagemSelecionada;
+}
+function abrirModal(tipo) {
+  document.getElementById('form-reserva').style.display = tipo === 'reserva' ? 'block' : 'none';
+  document.getElementById('form-entrada').style.display = tipo === 'entrada' ? 'block' : 'none';
+  document.getElementById('form-despesa').style.display = tipo === 'despesa' ? 'block' : 'none';
+  document.getElementById('form-saque').style.display = tipo === 'saque' ? 'block' : 'none';
+  document.getElementById('form-gasto-obra').style.display = tipo === 'gasto-obra' ? 'block' : 'none';
+  document.getElementById('form-pendencia').style.display = tipo === 'pendencia' ? 'block' : 'none';
+
+  if (tipo === 'reserva') { preencherSelectHospedagens_('r-hospedagem', false); preselecionarHospedagem_('r-hospedagem'); }
+  if (tipo === 'entrada') { preencherSelectHospedagens_('e-hospedagem', false); preselecionarHospedagem_('e-hospedagem'); }
+  if (tipo === 'despesa') { preencherSelectHospedagens_('d-hospedagem', false); preselecionarHospedagem_('d-hospedagem'); }
+  if (tipo === 'saque') { preencherSelectHospedagens_('s-hospedagem', false); preselecionarHospedagem_('s-hospedagem'); atualizarSociosSaque_(); }
+  if ((tipo === 'gasto-obra' || tipo === 'pendencia') && Array.isArray(STATE.obraProjetos)) preencherSelectProjetosObra_(STATE.obraProjetos);
+
+  document.getElementById('modal-overlay').classList.add('on');
+}
+function fecharModal() {
+  document.getElementById('modal-overlay').classList.remove('on');
+}
+function apiConfigurada_() {
+  return API_URL && API_URL.indexOf('COLE_AQUI') === -1;
+}
+function avisoOffline_() {
+  alert('A URL da API ainda não foi configurada. Publique o Codigo.gs como Web App e cole a URL na constante API_URL no topo do arquivo Index.');
+}
+
+// ── CHAMADAS À API (Web App do Apps Script publicado) ──
+// Interpreta a resposta como texto primeiro e só então tenta o JSON.parse —
+// se o Apps Script devolver algo inesperado (página de permissão/login do
+// Google, erro HTML, etc. em vez do JSON esperado), o erro fica descritivo
+// em vez de um "Unexpected token <" genérico.
+function interpretarResposta_(r) {
+  return r.text().then(function(texto) {
+    try {
+      return JSON.parse(texto);
+    } catch (e) {
+      throw new Error('A API não respondeu em JSON (HTTP ' + r.status + '). Verifique se o Apps Script está publicado como "Qualquer pessoa" pode acessar. Resposta recebida: ' + texto.slice(0, 200));
+    }
+  });
+}
+function apiGet_(action) {
+  return fetch(API_URL + '?action=' + encodeURIComponent(action))
+    .then(interpretarResposta_);
+}
+function apiPost_(action, dados) {
+  // Content-Type text/plain evita o preflight CORS (o Apps Script não responde a OPTIONS)
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: action, dados: dados })
+  }).then(interpretarResposta_);
+}
+
+// ── PROTEÇÃO CONTRA CLIQUE DUPLO / ENVIO DUPLICADO ──
+// Um único envio por vez: o botão é desabilitado assim que clicado e só
+// reabilita quando a chamada retorna (sucesso ou erro). Evita registros
+// duplicados quando o usuário clica mais de uma vez em "Salvar".
+var envioEmAndamento = false;
+function iniciarEnvio_(btn) {
+  if (envioEmAndamento) return false;
+  envioEmAndamento = true;
+  if (btn) { btn.disabled = true; btn.dataset.textoOriginal = btn.textContent; btn.textContent = 'Salvando...'; }
+  return true;
+}
+function finalizarEnvio_(btn) {
+  envioEmAndamento = false;
+  if (btn) { btn.disabled = false; if (btn.dataset.textoOriginal) btn.textContent = btn.dataset.textoOriginal; }
+}
+var toastTimer_ = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = '✓ ' + msg;
+  t.classList.add('on');
+  clearTimeout(toastTimer_);
+  toastTimer_ = setTimeout(function() { t.classList.remove('on'); }, 2600);
+}
+
+// ── SALVAR ──
+function salvarReserva(btn) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  if (!iniciarEnvio_(btn)) return;
+  var hospedagem = document.getElementById('r-hospedagem').value;
+  var nome = document.getElementById('r-nome').value;
+  var dataEntrada = document.getElementById('r-entrada').value;
+  var valorContrato = parseFloat(document.getElementById('r-valor').value) || 0;
+  var jaPago = parseFloat(document.getElementById('r-pago').value) || 0;
+  var dados = {
+    hospedagem: hospedagem,
+    canal: document.getElementById('r-canal').value,
+    nome: nome,
+    doc: document.getElementById('r-doc').value,
+    entrada: dataEntrada,
+    saida: document.getElementById('r-saida').value,
+    valorContrato: valorContrato,
+    statusPago: (valorContrato > 0 && jaPago >= valorContrato) ? 'Pago' : (jaPago > 0 ? 'Parcial' : 'Pendente'),
+    obs: document.getElementById('r-obs').value
+  };
+  if (!dados.nome || !dados.entrada || !dados.saida) { alert('Preencha nome, check-in e checkout.'); finalizarEnvio_(btn); return; }
+  apiPost_('adicionarReserva', dados).then(function(res) {
+    if (!res || !res.ok) throw new Error(res && res.erro);
+    // Se já foi informado um valor pago no ato da reserva, registra a
+    // entrada correspondente — hoje o "recebido" de uma reserva vem
+    // inteiramente da soma das entradas, não mais de um campo na reserva.
+    if (jaPago > 0) {
+      return apiPost_('adicionarEntrada', { hospedagem: hospedagem, reserva: nome, data: dataEntrada, valor: jaPago, obs: 'Pagamento inicial da reserva' });
+    }
+    return { ok: true };
+  }).then(function(res) {
+    finalizarEnvio_(btn);
+    if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
+    fecharModal();
+    mostrarToast('Reserva salva com sucesso!');
+    atualizarTudo(true);
+  }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
+}
+
+function salvarEntrada(btn) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  if (!iniciarEnvio_(btn)) return;
+  var dados = {
+    hospedagem: document.getElementById('e-hospedagem').value,
+    reserva: document.getElementById('e-reserva').value,
+    data: document.getElementById('e-data').value,
+    valor: parseFloat(document.getElementById('e-valor').value) || 0,
+    obs: document.getElementById('e-obs').value
+  };
+  if (!dados.reserva || !dados.data || !dados.valor) { alert('Preencha reserva, data e valor.'); finalizarEnvio_(btn); return; }
+  apiPost_('adicionarEntrada', dados).then(function(res) {
+    finalizarEnvio_(btn);
+    if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
+    fecharModal();
+    mostrarToast('Entrada salva com sucesso!');
+    atualizarTudo(true);
+  }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
+}
+
+function salvarDespesa(btn) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  if (!iniciarEnvio_(btn)) return;
+  var dados = {
+    hospedagem: document.getElementById('d-hospedagem').value,
+    categoria: document.getElementById('d-categoria').value,
+    dataPagamento: document.getElementById('d-datapg').value,
+    pago: parseFloat(document.getElementById('d-pago').value) || 0,
+    descricao: document.getElementById('d-desc').value
+  };
+  if (!dados.categoria) { alert('Informe a categoria.'); finalizarEnvio_(btn); return; }
+  apiPost_('adicionarDespesa', dados).then(function(res) {
+    finalizarEnvio_(btn);
+    if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
+    fecharModal();
+    mostrarToast('Despesa salva com sucesso!');
+    atualizarTudo(true);
+  }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
+}
+
+function salvarSaque(btn) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  if (!iniciarEnvio_(btn)) return;
+  var dados = {
+    hospedagem: document.getElementById('s-hospedagem').value,
+    categoria: document.getElementById('s-categoria').value,
+    data: document.getElementById('s-data').value,
+    valor: parseFloat(document.getElementById('s-valor').value) || 0,
+    descricao: document.getElementById('s-desc').value
+  };
+  if (!dados.data || !dados.valor) { alert('Preencha a data e o valor.'); finalizarEnvio_(btn); return; }
+  apiPost_('adicionarSaque', dados).then(function(res) {
+    finalizarEnvio_(btn);
+    if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
+    fecharModal();
+    mostrarToast('Saque salvo com sucesso!');
+    atualizarTudo(true);
+  }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
+}
+
+function salvarGastoObra(btn) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  if (!iniciarEnvio_(btn)) return;
+  var dados = {
+    projeto: document.getElementById('g-projeto').value,
+    classificacao: document.getElementById('g-classificacao').value,
+    descricao: document.getElementById('g-item').value,
+    valor: parseFloat(document.getElementById('g-valor').value) || 0,
+    data: document.getElementById('g-data').value,
+    pagador: document.getElementById('g-pagador').value
+  };
+  if (!dados.projeto) { alert('Escolha o projeto.'); finalizarEnvio_(btn); return; }
+  if (!dados.descricao || !dados.valor) { alert('Preencha a descrição e o valor.'); finalizarEnvio_(btn); return; }
+  apiPost_('adicionarGastoObra', dados).then(function(res) {
+    finalizarEnvio_(btn);
+    if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
+    fecharModal();
+    mostrarToast('Gasto de obra salvo com sucesso!');
+    atualizarTudo(true);
+  }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
+}
+
+function salvarPendencia(btn) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  if (!iniciarEnvio_(btn)) return;
+  var dados = {
+    projeto: document.getElementById('p-projeto').value,
+    tipo: document.getElementById('p-tipo').value,
+    item: document.getElementById('p-desc').value,
+    estimativa: parseFloat(document.getElementById('p-estimativa').value) || 0,
+    status: 'Pendente'
+  };
+  if (!dados.projeto) { alert('Escolha o projeto.'); finalizarEnvio_(btn); return; }
+  if (!dados.item) { alert('Descreva a pendência.'); finalizarEnvio_(btn); return; }
+  apiPost_('adicionarPendenciaObra', dados).then(function(res) {
+    finalizarEnvio_(btn);
+    if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
+    fecharModal();
+    mostrarToast('Pendência registrada com sucesso!');
+    atualizarTudo(true);
+  }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
+}
+
+// ── IMPORTADOR DE RELATÓRIO AIRBNB (CSV) ──
+// O relatório "Reservas concluídas" do Airbnb traz todas as unidades do
+// anfitrião — cada anúncio reconhecido ("Casa Prana Lumiar" → Casa Prana,
+// "Mantra Chalé Lumiar" → Chalé Mantra) é lançado na hospedagem certa;
+// anúncios desconhecidos são ignorados como "outro imóvel".
+// A trava de duplicatas usa o "Código de Confirmação" do Airbnb, guardado
+// no campo "doc" da reserva (prefixado com "AIRBNB:") para sobreviver ao
+// vai-e-volta com a planilha sem precisar de coluna nova no Apps Script.
+var AIRBNB_MARCADOR_ = 'AIRBNB:';
+
+// Parser de CSV simples que respeita aspas (campos com vírgula ou quebra
+// de linha embutidas, como acontece no campo "Anúncio" do relatório).
+function parseCSV_(texto) {
+  var linhas = [];
+  var linhaAtual = [];
+  var campoAtual = '';
+  var dentroDeAspas = false;
+  for (var i = 0; i < texto.length; i++) {
+    var c = texto[i];
+    if (dentroDeAspas) {
+      if (c === '"') {
+        if (texto[i + 1] === '"') { campoAtual += '"'; i++; }
+        else { dentroDeAspas = false; }
+      } else {
+        campoAtual += c;
+      }
+    } else {
+      if (c === '"') { dentroDeAspas = true; }
+      else if (c === ',') { linhaAtual.push(campoAtual); campoAtual = ''; }
+      else if (c === '\r') { /* ignora, quebra tratada no \n */ }
+      else if (c === '\n') { linhaAtual.push(campoAtual); campoAtual = ''; linhas.push(linhaAtual); linhaAtual = []; }
+      else { campoAtual += c; }
+    }
+  }
+  if (campoAtual.length || linhaAtual.length) { linhaAtual.push(campoAtual); linhas.push(linhaAtual); }
+  return linhas;
+}
+
+// Datas do relatório Airbnb vêm em MM/DD/YYYY; convertemos para YYYY-MM-DD
+// (formato que o backend/paraData_ espera, igual aos campos <input type=date>).
+function dataAirbnbParaISO_(str) {
+  if (!str) return '';
+  var p = str.split('/');
+  if (p.length !== 3) return '';
+  var mm = p[0].padStart(2, '0'), dd = p[1].padStart(2, '0'), yyyy = p[2];
+  return yyyy + '-' + mm + '-' + dd;
+}
+
+function processarCSVAirbnb_(texto) {
+  var linhas = parseCSV_(texto);
+  if (!linhas.length) return { erros: ['Arquivo vazio ou inválido.'] };
+  var header = linhas[0].map(function(h) { return h.trim(); });
+  var idx = {};
+  header.forEach(function(h, i) { idx[h] = i; });
+
+  var obrigatorios = ['Tipo', 'Código de Confirmação', 'Data de início', 'Data de término', 'Hóspede', 'Anúncio', 'Valor', 'Ganhos brutos', 'Data'];
+  var faltando = obrigatorios.filter(function(c) { return !(c in idx); });
+  if (faltando.length) return { erros: ['Este arquivo não parece ser o relatório de reservas do Airbnb. Colunas não encontradas: ' + faltando.join(', ')] };
+
+  var codigosExistentes = {};
+  (Array.isArray(STATE.reservas) ? STATE.reservas : []).forEach(function(r) {
+    // r.doc pode vir como número do Sheets (ex.: CPF digitado sem formatação
+    // foi autoconvertido para número pela planilha) — força string antes do indexOf.
+    var docStr = String(r.doc || '');
+    if (docStr.indexOf(AIRBNB_MARCADOR_) === 0) codigosExistentes[docStr.slice(AIRBNB_MARCADOR_.length)] = true;
+  });
+
+  var novos = [], duplicados = 0, outroImovel = 0, invalidos = 0;
+  for (var i = 1; i < linhas.length; i++) {
+    var l = linhas[i];
+    if (!l || l.length < 2) continue;
+    var tipo = (l[idx['Tipo']] || '').trim();
+    if (tipo !== 'Reserva') continue;
+    var anuncio = (l[idx['Anúncio']] || '');
+    var hospedagem = hospedagemPorAnuncioAirbnb_(anuncio);
+    if (!hospedagem) { outroImovel++; continue; }
+    var codigo = (l[idx['Código de Confirmação']] || '').trim();
+    if (!codigo) { invalidos++; continue; }
+    if (codigosExistentes[codigo]) { duplicados++; continue; }
+
+    var entrada = dataAirbnbParaISO_((l[idx['Data de início']] || '').trim());
+    var saida = dataAirbnbParaISO_((l[idx['Data de término']] || '').trim());
+    var nome = (l[idx['Hóspede']] || '').trim();
+    // "Ganhos brutos" inclui taxas extras (limpeza/pet) que não são receita da
+    // diária em si; "Valor" é o repasse líquido já com a taxa de serviço do
+    // Airbnb descontada. Usamos o líquido como valorContrato E como pago —
+    // a reserva chega quitada (o hóspede já pagou tudo no Airbnb), sem nada
+    // "a receber" pendurado por causa da diferença bruto x líquido.
+    var valorLiquido = parseFloat(l[idx['Valor']] || '0') || 0;
+    var dataTransacao = dataAirbnbParaISO_((l[idx['Data']] || '').trim());
+
+    if (!nome || !entrada || !saida) { invalidos++; continue; }
+
+    codigosExistentes[codigo] = true; // evita duplicata dentro do próprio arquivo importado
+    novos.push({
+      hospedagem: hospedagem, codigo: codigo, nome: nome, entrada: entrada, saida: saida,
+      valorContrato: valorLiquido, pago: valorLiquido, dataTransacao: dataTransacao
+    });
+  }
+  return { novos: novos, duplicados: duplicados, outroImovel: outroImovel, invalidos: invalidos };
+}
+
+// Mapeia o anúncio do relatório do Airbnb pra hospedagem: "Casa Prana Lumiar"
+// é a Casa Prana, "Mantra Chalé Lumiar" é o Chalé Mantra. Qualquer outro
+// anúncio (de outro anfitrião, por exemplo) é ignorado como "outro imóvel".
+function hospedagemPorAnuncioAirbnb_(anuncio) {
+  var a = String(anuncio || '').toLowerCase();
+  if (a.indexOf('casa prana') !== -1) return 'Casa Prana';
+  if (a.indexOf('mantra') !== -1) return 'Mantra';
+  return null;
+}
+
+// Importa uma reserva por vez (reserva + entrada correspondente), em série,
+// para não sobrecarregar o Apps Script com requisições simultâneas.
+// aoProgredir(atual, total) é chamado antes de cada item — a importação
+// pode levar bem mais de um minuto com muitas reservas, e sem um contador
+// no botão parece que travou.
+function executarImportacaoAirbnb_(novos, aoProgredir) {
+  var i = 0;
+  function proximo() {
+    if (i >= novos.length) return Promise.resolve();
+    if (aoProgredir) aoProgredir(i + 1, novos.length);
+    var item = novos[i++];
+    var dadosReserva = {
+      hospedagem: item.hospedagem,
+      canal: 'Aluguel Airbnb',
+      nome: item.nome,
+      doc: AIRBNB_MARCADOR_ + item.codigo,
+      entrada: item.entrada,
+      saida: item.saida,
+      valorContrato: item.valorContrato,
+      statusPago: 'Pago',
+      obs: 'Importado do relatório Airbnb'
+    };
+    return apiPost_('adicionarReserva', dadosReserva).then(function(res) {
+      if (!res || !res.ok) throw new Error('Falha ao importar reserva de ' + item.nome + ': ' + (res && res.erro));
+      return apiPost_('adicionarEntrada', {
+        hospedagem: item.hospedagem,
+        reserva: item.nome,
+        data: item.dataTransacao || item.saida,
+        valor: item.pago,
+        obs: 'Importado do relatório Airbnb'
+      });
+    }).then(proximo);
+  }
+  return proximo();
+}
+
+function importarCSVAirbnb(inputEl) {
+  if (!apiConfigurada_()) { avisoOffline_(); return; }
+  var arquivo = inputEl.files && inputEl.files[0];
+  if (!arquivo) return;
+
+  var btn = document.getElementById('btn-importar-airbnb');
+  // Feedback imediato ao selecionar o arquivo — se travar aqui, o problema
+  // está na leitura do arquivo, não na importação em si.
+  if (btn) { btn.disabled = true; btn.textContent = 'Lendo arquivo...'; }
+
+  function falhar_(msg) {
+    if (btn) { btn.disabled = false; btn.textContent = '⭳ Importar Airbnb'; }
+    alert(msg);
+  }
+
+  var leitor = new FileReader();
+  leitor.onerror = function() {
+    inputEl.value = '';
+    falhar_('Não foi possível ler o arquivo (' + (leitor.error ? leitor.error.name : 'erro desconhecido') + '). Tente exportar o relatório novamente do Airbnb e selecionar de novo.');
+  };
+  leitor.onload = function(e) {
+    inputEl.value = ''; // permite selecionar o mesmo arquivo de novo mais tarde
+    try {
+      var resultado = processarCSVAirbnb_(e.target.result);
+      if (resultado.erros) { falhar_(resultado.erros.join('\n')); return; }
+      if (!resultado.novos.length) {
+        var motivo = [];
+        if (resultado.duplicados) motivo.push(resultado.duplicados + ' já importada(s) anteriormente');
+        if (resultado.outroImovel) motivo.push(resultado.outroImovel + ' de outro imóvel (ignoradas)');
+        falhar_('Nenhuma reserva nova para importar.' + (motivo.length ? '\n' + motivo.join(' · ') : ''));
+        return;
+      }
+      if (btn) { btn.textContent = 'Importando...'; }
+      executarImportacaoAirbnb_(resultado.novos, function(atual, total) {
+        if (btn) btn.textContent = 'Importando ' + atual + '/' + total + '...';
+      }).then(function() {
+        if (btn) { btn.disabled = false; btn.textContent = '⭳ Importar Airbnb'; }
+        var extra = [];
+        if (resultado.duplicados) extra.push(resultado.duplicados + ' duplicata(s) ignorada(s)');
+        if (resultado.outroImovel) extra.push(resultado.outroImovel + ' de outro imóvel ignorada(s)');
+        mostrarToast(resultado.novos.length + ' reserva(s) do Airbnb importada(s)!');
+        if (extra.length) alert(extra.join(' · '));
+        atualizarTudo(true);
+      }).catch(function(erro) {
+        atualizarTudo(true); // recarrega o que já foi salvo até a falha, evitando estado inconsistente na tela
+        falhar_('Erro ao importar: ' + (erro && erro.message ? erro.message : erro));
+      });
+    } catch (erroInesperado) {
+      falhar_('Erro inesperado ao processar o arquivo: ' + erroInesperado.message);
+    }
+  };
+  try {
+    leitor.readAsText(arquivo, 'UTF-8');
+  } catch (erroLeitura) {
+    falhar_('Erro ao iniciar a leitura do arquivo: ' + erroLeitura.message);
+  }
+}
+
+// ── ATUALIZAÇÃO COMPLETA DO PAINEL ──
+// Toda entrada (reserva, entrada, despesa, saque, gasto de obra ou
+// pendência) dispara o recarregamento de TODAS as listas + o recálculo de
+// KPIs, gráficos e equilíbrio financeiro, já que esses dados são
+// interdependentes (ex.: um saque afeta o caixa e o equilíbrio; uma
+// despesa afeta o caixa previsto; etc.).
+function atualizarTudo(pularSincronizacao) {
+  // Todas as listas carregam em paralelo, imediatamente — a sincronização do
+  // Drive (varredura lenta de arquivos CSV do Airbnb) roda em segundo plano
+  // e, SE importar algo novo, recarrega reservas/entradas quando terminar.
+  // Antes o painel esperava a varredura acabar pra só então buscar reservas,
+  // deixando a tela em "dados de exemplo" por vários segundos a cada load.
+  carregarReservas();
+  carregarEntradas();
+  carregarDespesas();
+  carregarSaques();
+  carregarObraProjetos();
+  if (!apiConfigurada_()) return;
+  apiGet_('dadosAura').then(aplicarDadosReais).catch(function(erro) { console.error('Falha ao buscar dados reais:', erro); });
+  // Depois de salvar algo pelo próprio app não precisa varrer o Drive de
+  // novo (nada mudou lá) — a sincronização fica só pro carregamento inicial.
+  if (pularSincronizacao) return;
+  apiGet_('sincronizarAirbnb').then(function(res) {
+    if (res && res.ok && res.novos > 0) {
+      mostrarToast(res.novos + ' reserva(s) do Airbnb sincronizada(s) automaticamente!');
+      carregarReservas();
+      carregarEntradas();
+    }
+  }).catch(function(erro) { console.error('Falha ao sincronizar Airbnb do Drive:', erro); });
+}
+
+// ── DADOS REAIS DE OBRA (planilha "Controle Lumiar Obra") ──
+// Aba "Resumo" lista cada projeto (sítio + hospedagens) com totais prontos;
+// cada projeto tem sua própria aba com a Classificação real de cada gasto.
+function fmtObraK_(v) { return Math.abs(v) >= 1000 ? 'R$ ' + Math.round(v / 1000) + 'k' : fmtR_(v); }
+
+// Reaproveita os 3 slots de barra do card "Capital investido" pra mostrar
+// os projetos reais (Sítio + hospedagens) em vez do antigo chalé/terreno/infra
+// fixo de uma única cabana.
+function atualizarCapitalInvestimento_(projetos, totalGeral) {
+  var totalGlauco = num_(totalGeral.glauco);
+  if (totalGlauco > 0) CAPITAL = totalGlauco;
+
+  setTxt_('inv-glauco-total', fmtR_(totalGlauco));
+  setTxt_('inv-total-projeto', fmtR_(totalGeral.total));
+  setTxt_('inv-total-glauco', fmtR_(totalGlauco));
+  setTxt_('inv-total-yuri', fmtR_(totalGeral.yuri));
+  setTxt_('inv-capital-header', fmtR_(totalGlauco));
+
+  var ordenados = projetos.slice().sort(function(a, b) { return num_(b.total) - num_(a.total); }).slice(0, 3);
+  ['chale', 'terreno', 'infra'].forEach(function(slot, i) {
+    var p = ordenados[i];
+    var lbl = document.getElementById('inv-' + slot + '-lbl');
+    var val = document.getElementById('inv-' + slot + '-val');
+    var bar = document.getElementById('inv-' + slot + '-bar');
+    if (!p) {
+      if (lbl) lbl.textContent = '—';
+      if (val) val.textContent = '';
+      if (bar) bar.style.width = '0%';
+      return;
+    }
+    var pct = totalGlauco > 0 ? Math.round(num_(p.glauco) / totalGlauco * 100) : 0;
+    if (lbl) lbl.textContent = nomeAmigavelProjeto_(p.nome) + ' ' + pct + '%';
+    if (val) val.textContent = fmtR_(p.glauco);
+    if (bar) { bar.style.width = pct + '%'; bar.style.background = corProjeto_(p.nome); }
+  });
+
+  var aura = projetos.filter(function(p) { return normalizarTexto_(p.nome) === normalizarTexto_('AURA'); })[0];
+  if (aura) {
+    setTxt_('inv-cabana1-investido', fmtObraK_(aura.glauco) + ' investido');
+    setTxt_('inv-tabela-obra1', fmtObraK_(aura.total));
+    setTxt_('inv-tabela-capital1', fmtObraK_(aura.glauco));
+  }
+
+  // recalcula payback/timeline/CDI, já que CAPITAL pode ter mudado
+  try { calc(); } catch (e) { console.error('Falha ao recalcular Investimento após dados de obra:', e); }
+}
+
+// ── AVATAR COM INICIAIS (uma cor consistente por nome) ──
+var PALETA_AVATAR_ = ['#c1622a', '#a13a1f', '#a3813f', '#b1503a', '#5f8f5f', '#dc2626'];
+function iniciais_(nome) {
+  var partes = (nome || '?').trim().split(/\s+/);
+  var ini = partes[0] ? partes[0][0] : '?';
+  if (partes.length > 1) ini += partes[partes.length - 1][0];
+  return ini.toUpperCase();
+}
+function corAvatar_(nome) {
+  var s = nome || '';
+  var soma = 0;
+  for (var i = 0; i < s.length; i++) soma += s.charCodeAt(i);
+  return PALETA_AVATAR_[soma % PALETA_AVATAR_.length];
+}
+function avatarHtml_(nome) {
+  return '<span class="avatar" style="background:' + corAvatar_(nome) + '">' + iniciais_(nome) + '</span>';
+}
+
+// ── CARREGAR E RENDERIZAR LISTAS DINÂMICAS ──
+// Datas 'YYYY-MM-DD' puras são interpretadas pelo JS como meia-noite UTC —
+// em fusos negativos (Brasil, UTC-3) isso vira 21h do dia ANTERIOR e a data
+// aparece um dia atrás na tela. Este parser trata esse formato como data
+// local; qualquer outro formato (ISO completo com hora, Date, etc.) segue
+// o caminho normal do new Date().
+function dataLocal_(v) {
+  if (v instanceof Date) return v;
+  var m = String(v || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return new Date(v);
+}
+function fmtData_(d) {
+  if (!d) return '—';
+  var dt = dataLocal_(d);
+  if (isNaN(dt)) return d;
+  var dd = String(dt.getDate()).padStart(2, '0');
+  var mm = String(dt.getMonth() + 1).padStart(2, '0');
+  var yy = String(dt.getFullYear()).slice(-2);
+  return dd + '/' + mm + '/' + yy;
+}
+
+// ── ESTADO CENTRAL DO PAINEL ──
+// Guarda a última lista conhecida de cada tipo de dado. Alimentado pelas
+// funções renderX() sempre que uma lista é (re)carregada da API.
+var STATE = {
+  reservas: [
+    { hospedagem: 'Aura', canal: 'Aluguel Instagram', nome: 'Isadora Chagas G.', entrada: '2026-07-17', saida: '2026-07-22', diarias: 5, valorContrato: 4550, statusPago: 'Parcial' }
+  ],
+  entradas: [
+    { hospedagem: 'Aura', reserva: 'Isadora Chagas G.', data: '2026-06-21', valor: 2275 }
+  ],
+  despesas: [
+    { hospedagem: 'Aura', categoria: 'Jardinagem', dataPagamento: '2026-07-15', pago: 0 },
+    { hospedagem: 'Aura', categoria: 'Custo operacional/Jéssica', dataPagamento: '2026-07-15', pago: 0 },
+    { hospedagem: 'Aura', categoria: 'Internet', dataPagamento: '2026-07-15', pago: 0 },
+    { hospedagem: 'Aura', categoria: 'Energia elétrica', dataPagamento: '2026-07-15', pago: 0 },
+    { hospedagem: 'Aura', categoria: 'Imposto DAS', dataPagamento: '2026-07-15', pago: 0 }
+  ],
+  saques: [
+    { hospedagem: 'Aura', categoria: 'Yuri/Jessica', data: '2026-06-22', valor: 2275, descricao: 'Saque inicial' }
+  ],
+  obraProjetos: []
+};
+
+function num_(v) { return typeof v === 'number' && !isNaN(v) ? v : (parseFloat(v) || 0); }
+function fmtR_(v) { return 'R$ ' + Math.round(Math.abs(v)).toLocaleString('pt-BR'); }
+function fmtSinal_(v) { return (v < 0 ? '–' : '') + fmtR_(v); }
+function setTxt_(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+function setSinal_(id, v) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = fmtSinal_(v);
+  el.classList.remove('up', 'dn');
+  el.classList.add(v >= 0 ? 'up' : 'dn');
+}
+
+// Recalcula TODOS os dados derivados do painel (KPIs, card Financeiro,
+// equilíbrio de saques, canais, totais) a partir do STATE atual. Chamado
+// sempre que qualquer lista (reservas, entradas, despesas ou saques) é
+// recarregada — ou seja, após qualquer input do usuário.
+// Sócios ativos pra distribuição/equilíbrio de saques: dentro de uma
+// hospedagem específica, é a divisão dela; na visão Total, junta os sócios
+// distintos de todas as hospedagens (sem repetir Yuri/Jessica).
+function sociosAtivos_() {
+  if (hospedagemSelecionada !== 'Total') {
+    var h = hospedagemPorChave_(hospedagemSelecionada);
+    return h ? h.socios : HOSPEDAGENS_[0].socios;
+  }
+  var vistos = {};
+  var lista = [];
+  HOSPEDAGENS_.forEach(function(h) {
+    h.socios.forEach(function(s) {
+      if (!vistos[s.chave]) { vistos[s.chave] = true; lista.push(s); }
+    });
+  });
+  return lista;
+}
+
+function renderDistribuicaoSaques_(saques, socios) {
+  var c = document.getElementById('fin-dist-lista');
+  if (!c) return;
+  c.innerHTML = socios.map(function(s) {
+    var total = saques.filter(function(x) { return x.categoria === s.chave; }).reduce(function(a, x) { return a + num_(x.valor); }, 0);
+    return '<div class="fr"><span class="fl">' + s.nome + '</span><span class="fv ' + s.cor + '">' + fmtR_(total) + '</span></div>';
+  }).join('');
+}
+
+function renderEquilibrioSaques_(saques, socios) {
+  var c = document.getElementById('eq-container');
+  if (!c) return;
+
+  function totalDe(chave) {
+    return saques.filter(function(s) { return s.categoria === chave; }).reduce(function(a, s) { return a + num_(s.valor); }, 0);
+  }
+  function ultimoDe(chave) {
+    var lista = saques.filter(function(s) { return s.categoria === chave; });
+    if (!lista.length) return null;
+    return lista.reduce(function(a, b) { return dataLocal_(a.data) > dataLocal_(b.data) ? a : b; });
+  }
+  function miniCard(s) {
+    var total = totalDe(s.chave);
+    var ult = ultimoDe(s.chave);
+    return '<div class="mk"><div class="ml">Saques ' + s.nome + '</div><div class="mv ' + s.cor + '">' + fmtR_(total) + '</div>' +
+      '<div style="font-size:11px;color:#9aa3af;margin-top:3px">' + (ult ? fmtData_(ult.data) + ' · ' + (ult.descricao || '—') : 'Nenhum saque realizado') + '</div></div>';
+  }
+
+  if (socios.length <= 1) {
+    var s0 = socios[0] || { chave: '', nome: 'sócio único', cor: 'warn' };
+    c.innerHTML = miniCard(s0) +
+      '<div style="font-size:11px;color:#9aa3af;margin-top:10px">100% do lucro é de ' + s0.nome + ' nesta hospedagem — sem divisão a equilibrar.</div>';
+    return;
+  }
+
+  if (socios.length === 2) {
+    var sA = socios[0], sB = socios[1];
+    var totalA = totalDe(sA.chave), totalB = totalDe(sB.chave);
+    var totalDois = totalA + totalB;
+    var pctA = totalDois > 0 ? Math.round(totalA / totalDois * 100) : 0;
+    var pctB = totalDois > 0 ? 100 - pctA : 0;
+    var parteIdeal = totalDois / 2;
+    var deltaA = parteIdeal - totalA; // >0: sA a receber · <0: sA adiantado
+
+    c.innerHTML =
+      '<div class="g2" style="margin-bottom:14px">' + miniCard(sA) + miniCard(sB) + '</div>' +
+      '<div style="font-size:11px;color:#9aa3af;margin-bottom:6px">Distribuição acumulada dos saques</div>' +
+      '<div class="eq-bar"><div class="eq-g" style="width:' + pctA + '%">' + (pctA > 0 ? sA.nome + ' ' + pctA + '%' : '') + '</div><div class="eq-y" style="width:' + pctB + '%">' + (pctB > 0 ? sB.nome + ' ' + pctB + '%' : '') + '</div></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:14px">' +
+        '<span class="' + sA.cor + '" style="font-weight:600">' + sA.nome + ': ' + fmtR_(totalA) + ' (' + pctA + '%)</span>' +
+        '<span class="' + sB.cor + '" style="font-weight:600">' + sB.nome + ': ' + fmtR_(totalB) + ' (' + pctB + '%)</span>' +
+      '</div>' +
+      '<div class="mk">' +
+        '<div class="ml" style="margin-bottom:6px">Para equilíbrio 50/50</div>' +
+        '<div class="fr"><span class="fl">Total sacado acumulado</span><span class="fv">' + fmtR_(totalDois) + '</span></div>' +
+        '<div class="fr"><span class="fl">Parte ideal por sócio</span><span class="fv">' + fmtR_(parteIdeal) + '</span></div>' +
+        '<div class="fr"><span class="fl">' + sA.nome + ' ' + (deltaA >= 0 ? 'a receber' : 'adiantado') + '</span><span class="fv ' + sA.cor + '">' + fmtR_(deltaA) + '</span></div>' +
+        '<div class="fr"><span class="fl">' + sB.nome + ' ' + (deltaA >= 0 ? 'adiantado' : 'a receber') + '</span><span class="fv ' + sB.cor + '">' + fmtR_(deltaA) + '</span></div>' +
+      '</div>';
+    return;
+  }
+
+  // Mais de 2 sócios (visão Total juntando hospedagens com divisões
+  // diferentes) — mostra só os totais, sem tentar equilibrar entre partes
+  // que nem sempre dividem a mesma hospedagem.
+  c.innerHTML = '<div class="g2" style="margin-bottom:6px">' + socios.map(miniCard).join('') + '</div>' +
+    '<div style="font-size:11px;color:#9aa3af">Visão consolidada de todas as hospedagens — cada uma tem sua própria regra de divisão de lucro.</div>';
+}
+
+function recalcularPainel() {
+  // Hospedagem selecionada + mês/período escolhido: reservas entram pelo
+  // check-in, entradas/saques pela data e despesas pela data de pagamento.
+  var reservas = filtrarPeriodo_(filtrarPorHospedagem_(STATE.reservas), 'entrada');
+  var entradas = filtrarPeriodo_(filtrarPorHospedagem_(STATE.entradas), 'data');
+  var despesas = filtrarPeriodo_(filtrarPorHospedagem_(STATE.despesas), 'dataPagamento');
+  var saques   = filtrarPeriodo_(filtrarPorHospedagem_(STATE.saques), 'data');
+
+  var receitaContratada = reservas.reduce(function(s, r) { return s + num_(r.valorContrato); }, 0);
+  var recebido = entradas.reduce(function(s, e) { return s + num_(e.valor); }, 0);
+  var aReceber = Math.max(0, receitaContratada - recebido);
+
+  var despesasPagas = despesas.reduce(function(s, d) { return s + num_(d.pago); }, 0);
+  var totalSaques = saques.reduce(function(s, x) { return s + num_(x.valor); }, 0);
+
+  var caixaAtual = recebido - despesasPagas - totalSaques;
+  var caixaPrevisto = caixaAtual + aReceber;
+
+  // ── KPIs (topo Aura) ──
+  setTxt_('kpi-receita-contratada', fmtR_(receitaContratada));
+  setTxt_('kpi-receita-contratada-sub', reservas.length ? (reservas.length === 1 ? '1 reserva' : reservas.length + ' reservas') : 'Sem reservas');
+  setTxt_('kpi-recebido', fmtR_(recebido));
+  setTxt_('kpi-recebido-sub', receitaContratada > 0 ? Math.round(recebido / receitaContratada * 100) + '% do contrato' : '—');
+  setTxt_('kpi-areceber', fmtR_(aReceber));
+  setTxt_('kpi-despesas-plan', fmtR_(despesasPagas));
+  setTxt_('kpi-despesas-plan-sub', despesas.length ? (despesas.length === 1 ? '1 despesa' : despesas.length + ' despesas') : 'Sem despesas');
+  setSinal_('kpi-caixa-atual', caixaAtual);
+  setSinal_('kpi-caixa-previsto', caixaPrevisto);
+
+  // ── Card Financeiro ──
+  setTxt_('fin-receita', fmtR_(receitaContratada));
+  setTxt_('fin-despesas-plan', fmtR_(despesasPagas));
+  setSinal_('fin-caixa-atual', caixaAtual);
+  setSinal_('fin-caixa-previsto', caixaPrevisto);
+
+  var canalMap = { Instagram: 0, Airbnb: 0, Outros: 0 };
+  reservas.forEach(function(r) {
+    var c = String(r.canal || '');
+    var chave = c.indexOf('Instagram') >= 0 ? 'Instagram' : (c.indexOf('Airbnb') >= 0 ? 'Airbnb' : 'Outros');
+    canalMap[chave] += num_(r.valorContrato);
+  });
+  setTxt_('fin-canal-ig', fmtR_(canalMap.Instagram));
+  setTxt_('fin-canal-airbnb', fmtR_(canalMap.Airbnb));
+  setTxt_('fin-canal-outros', fmtR_(canalMap.Outros));
+
+  // ── Despesas — total gasto ──
+  setTxt_('despesas-total-planejado', fmtR_(despesasPagas));
+
+  // ── Resumos dos cards recolhíveis (mesmos filtros das tabelas) ──
+  setTxt_('sum-reservas', reservas.length + ' reserva(s) · ' + fmtR_(receitaContratada) + ' contratado · ' + fmtR_(recebido) + ' recebido');
+  setTxt_('sum-despesas', despesas.length + ' despesa(s) · ' + fmtR_(despesasPagas) + ' pago');
+  setTxt_('sum-entradas', entradas.length + ' entrada(s) · ' + fmtR_(recebido) + ' recebido');
+  setTxt_('sum-saques', saques.length + ' saque(s) · ' + fmtR_(totalSaques) + ' sacado');
+
+  // ── Distribuição e equilíbrio de saques — conforme a divisão de lucro da hospedagem ──
+  var socios = sociosAtivos_();
+  renderDistribuicaoSaques_(saques, socios);
+  renderEquilibrioSaques_(saques, socios);
+}
+
+// Recalcula "dias" e "receita" de cada mês de 2026 a partir das reservas
+// reais em STATE.reservas — isso é o que faz uma reserva nova (lançada à
+// mão ou importada do Airbnb) aparecer no calendário e no resumo mensal.
+// Meses sem nenhuma reserva no STATE mantêm o valor que já tinham (vindo
+// da aba "Resumo" da planilha, via dadosAura), já que esse recálculo só
+// enxerga reservas — não substitui histórico anterior ao uso do app.
+function recalcularCalendarioDeReservas_() {
+  reconstruirBaseMes_();
+  var diasPorMes = new Array(12).fill(0);
+  var receitaPorMes = new Array(12).fill(0);
+  var temReservaPorMes = new Array(12).fill(false);
+
+  filtrarPorHospedagem_(STATE.reservas).forEach(function(r) {
+    var entrada = dataLocal_(r.entrada);
+    var saida = dataLocal_(r.saida);
+    if (isNaN(entrada) || isNaN(saida)) return;
+    var cursor = new Date(entrada.getFullYear(), entrada.getMonth(), entrada.getDate());
+    var fim = new Date(saida.getFullYear(), saida.getMonth(), saida.getDate());
+    while (cursor < fim) {
+      if (cursor.getFullYear() === 2026) {
+        diasPorMes[cursor.getMonth()]++;
+        temReservaPorMes[cursor.getMonth()] = true;
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    if (entrada.getFullYear() === 2026) receitaPorMes[entrada.getMonth()] += num_(r.valorContrato);
+  });
+
+  for (var i = 0; i < 12; i++) {
+    if (temReservaPorMes[i]) {
+      MES[i][0] = diasPorMes[i];
+      MES[i][1] = receitaPorMes[i];
+      MES[i][4] = true;
+    }
+  }
+}
+
+// Reaplica todas as visualizações que dependem do array MES (gráfico,
+// tabela de resumo, calendário e barras de ocupação) após um recálculo.
+function atualizarVisoesMensais_() {
+  tbody_atualizarTabelaMes();
+  try { chartMes_atualizar(); } catch (e) { console.error('Falha ao desenhar chartMes:', e); }
+  buildOccBars();
+  calRunSummary();
+  buildMonthButtons();
+  buildCalendar(calMonthIdx);
+  calAtualizarTitulos_();
+  calAtualizarProximaReserva_();
+  // Meses reais recém-atualizados mudam o acumulado já realizado — recalcula
+  // o payback/retorno de Investimento para refletir isso.
+  try { calc(); } catch (e) { console.error('Falha ao recalcular Investimento após meses reais:', e); }
+}
+
+// Soma as entradas já registradas para uma reserva (por nome do hóspede) —
+// é o que hoje define quanto já foi realmente recebido, já que a coluna
+// "Pago" da aba Reservas virou status (Pago/Pendente), não mais um valor.
+function recebidoPorReserva_(nome) {
+  var alvo = normalizarTexto_(nome);
+  return (Array.isArray(STATE.entradas) ? STATE.entradas : [])
+    .filter(function(e) { return normalizarTexto_(e.reserva || '') === alvo; })
+    .reduce(function(s, e) { return s + num_(e.valor); }, 0);
+}
+
+// A tabela de reservas depende de STATE.entradas (pra somar o recebido de
+// cada reserva) — como reservas e entradas chegam por fetches separados e
+// assíncronos, essa renderização precisa ser reaplicada sempre que
+// QUALQUER um dos dois terminar de carregar, não só reservas.
+function renderTabelaReservas_() {
+  var tbody = document.getElementById('tbl-reservas');
+  if (!tbody) return;
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.reservas), 'entrada'), ['nome', 'canal', 'obs', 'hospedagem']);
+  if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-note">' + (filtroBusca_ ? 'Nenhuma reserva encontrada na busca.' : 'Nenhuma reserva cadastrada.') + '</td></tr>'; return; }
+  tbody.innerHTML = visiveis.map(function(r) {
+    // Reservas do Airbnb: o hóspede já pagou 100% no ato da reserva — o valor
+    // recebido pode ser o repasse líquido (após taxa da plataforma), não um
+    // saldo pendente. Por isso não comparamos recebido x contrato nesse canal.
+    var ehAirbnb = String(r.canal || '').indexOf('Airbnb') >= 0;
+    var recebido = recebidoPorReserva_(r.nome);
+    var pct = r.valorContrato > 0 ? Math.round((recebido / r.valorContrato) * 100) : 0;
+    var quitado = ehAirbnb || pct >= 100;
+    var statusClass = quitado ? 'cg' : (pct > 0 ? 'cy' : 'cw');
+    var statusTxt = quitado ? 'Pago' : (pct > 0 ? pct + '% pago' : 'Pendente');
+    var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(r.hospedagem) + '</div>' : '';
+    return '<tr>' +
+      '<td><div class="name-cell">' + avatarHtml_(r.nome) + '<span style="color:#0d1117;font-weight:600">' + r.nome + '</span></div>' + chip + '</td>' +
+      '<td>' + fmtData_(r.entrada) + '</td>' +
+      '<td>' + fmtData_(r.saida) + '</td>' +
+      '<td>' + r.diarias + '</td>' +
+      '<td style="color:#c1622a;font-weight:600">R$ ' + Math.round(r.valorContrato).toLocaleString('pt-BR') + '</td>' +
+      '<td class="warn">R$ ' + Math.round(recebido).toLocaleString('pt-BR') + '</td>' +
+      '<td><span class="chip cb">' + r.canal + '</span></td>' +
+      '<td><span class="chip ' + statusClass + '">' + statusTxt + '</span></td>' +
+      '</tr>';
+  }).join('');
+}
+function renderReservas(lista) {
+  // Uma resposta que não seja uma lista de verdade (ex.: API fora do ar
+  // respondendo algo inesperado) não deve corromper o estado local.
+  if (!Array.isArray(lista)) return;
+  STATE.reservas = lista;
+  recalcularPainel();
+  recalcularCalendarioDeReservas_();
+  atualizarVisoesMensais_();
+  renderTabelaReservas_();
+}
+function carregarReservas() {
+  if (!apiConfigurada_()) return;
+  apiGet_('reservas').then(renderReservas).catch(function(){});
+}
+
+function renderEntradas(lista) {
+  if (!Array.isArray(lista)) return;
+  STATE.entradas = lista;
+  recalcularPainel();
+  renderTabelaReservas_();
+  var tbody = document.getElementById('tbl-entradas');
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'data'), ['reserva', 'obs', 'hospedagem']);
+  if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty-note">' + (filtroBusca_ ? 'Nenhuma entrada encontrada na busca.' : 'Nenhuma entrada registrada.') + '</td></tr>'; return; }
+  tbody.innerHTML = visiveis.map(function(e) {
+    var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(e.hospedagem) + '</div>' : '';
+    return '<tr>' +
+      '<td><div class="name-cell">' + avatarHtml_(e.reserva) + '<span style="color:#0d1117">' + e.reserva + '</span></div>' + chip + '</td>' +
+      '<td>' + fmtData_(e.data) + '</td>' +
+      '<td class="up" style="font-weight:600">R$ ' + Math.round(e.valor).toLocaleString('pt-BR') + '</td>' +
+      '</tr>';
+  }).join('');
+}
+function carregarEntradas() {
+  if (!apiConfigurada_()) return;
+  apiGet_('entradas').then(renderEntradas).catch(function(){});
+}
+
+function renderDespesas(lista) {
+  if (!Array.isArray(lista)) return;
+  STATE.despesas = lista;
+  recalcularPainel();
+  var tbody = document.getElementById('tbl-despesas');
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'dataPagamento'), ['categoria', 'descricao', 'hospedagem']);
+  if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + (filtroBusca_ ? 'Nenhuma despesa encontrada na busca.' : 'Nenhuma despesa cadastrada.') + '</td></tr>'; return; }
+  tbody.innerHTML = visiveis.map(function(d) {
+    var chip = hospedagemSelecionada === 'Total' ? ' ' + hospChipHtml_(d.hospedagem) : '';
+    return '<tr>' +
+      '<td style="color:#0d1117">' + d.categoria + chip + '</td>' +
+      '<td>' + fmtData_(d.dataPagamento) + '</td>' +
+      '<td style="color:#a13a1f;font-weight:600">R$ ' + Math.round(d.pago).toLocaleString('pt-BR') + '</td>' +
+      '<td style="color:#9aa3af">' + (d.descricao || '—') + '</td>' +
+      '</tr>';
+  }).join('');
+}
+function carregarDespesas() {
+  if (!apiConfigurada_()) return;
+  apiGet_('despesas').then(renderDespesas).catch(function(){});
+}
+
+function renderSaques(lista) {
+  if (!Array.isArray(lista)) return;
+  STATE.saques = lista;
+  recalcularPainel();
+  var tbody = document.getElementById('tbl-saques');
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'data'), ['categoria', 'descricao', 'hospedagem']);
+  if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + (filtroBusca_ ? 'Nenhum saque encontrado na busca.' : 'Nenhum saque registrado.') + '</td></tr>'; return; }
+  tbody.innerHTML = visiveis.map(function(s) {
+    var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(s.hospedagem) + '</div>' : '';
+    return '<tr>' +
+      '<td><div class="name-cell">' + avatarHtml_(s.categoria) + '<span style="color:#0d1117">' + s.categoria + '</span></div>' + chip + '</td>' +
+      '<td>' + fmtData_(s.data) + '</td>' +
+      '<td class="warn" style="font-weight:600">R$ ' + Math.round(s.valor).toLocaleString('pt-BR') + '</td>' +
+      '<td style="color:#9aa3af">' + (s.descricao || '—') + '</td>' +
+      '</tr>';
+  }).join('');
+}
+function carregarSaques() {
+  if (!apiConfigurada_()) return;
+  apiGet_('saques').then(renderSaques).catch(function(){});
+}
+
+// ══════════════════════════════════════════════
+// OBRA — renderização dinâmica por projeto (sítio Sussuarana + hospedagens).
+// A Classificação de cada gasto já vem pronta da planilha "Controle Lumiar
+// Obra" — não precisa mais adivinhar categoria por palavra-chave.
+// ══════════════════════════════════════════════
+
+var CORES_CLASSIFICACAO_ = ['#dc2626', '#5f8f5f', '#a3813f', '#b1503a', '#0891b2', '#c1622a', '#a13a1f', '#0d9488', '#db2777', '#6366f1', '#9333ea', '#0369a1'];
+function corClassificacao_(nome) {
+  var soma = 0;
+  for (var i = 0; i < nome.length; i++) soma += nome.charCodeAt(i);
+  return CORES_CLASSIFICACAO_[soma % CORES_CLASSIFICACAO_.length];
+}
+function corProjeto_(nomeProjeto) {
+  if (ehLoteOuInfra_(nomeProjeto)) return '#7d6b53';
+  var h = HOSPEDAGENS_.filter(function(hh) { return normalizarTexto_(hh.projetoObra) === normalizarTexto_(nomeProjeto); })[0];
+  return h ? h.cor : '#78716c';
+}
+function nomeAmigavelProjeto_(nomeProjeto) {
+  var n = normalizarTexto_(nomeProjeto);
+  if (n === 'sussuarana') return 'Sítio Sussuarana';
+  if (n === 'terreno' || n === 'lote') return 'Lote/terreno';
+  if (n === 'infraestrutura') return 'Infraestrutura';
+  if (n === 'infraestrutura/lote') return 'Infraestrutura + Lote';
+  var h = HOSPEDAGENS_.filter(function(hh) { return normalizarTexto_(hh.projetoObra) === normalizarTexto_(nomeProjeto); })[0];
+  return h ? h.nome : nomeProjeto;
+}
+
+// Agrupamento pros blocos do topo da Obra, espelhando a planilha: o custo do
+// lote (linha TERRENO do Resumo) soma direto no grupo INFRAESTRUTURA/LOTE;
+// cada hospedagem (AURA etc.) fica num grupo próprio.
+function ehLoteOuInfra_(nome) {
+  return /terreno|lote|infra|sussuarana/i.test(String(nome || ''));
+}
+function agruparProjetosObra_(projetos) {
+  var infra = { nome: 'INFRAESTRUTURA/LOTE', rotulo: 'Infraestrutura + Lote', cor: '#7d6b53', total: 0, glauco: 0, yuri: 0, divida: 0, itens: [], pendencias: [] };
+  var grupos = [];
+  var temInfra = false;
+  projetos.forEach(function(p) {
+    if (ehLoteOuInfra_(p.nome)) {
+      temInfra = true;
+      infra.total += num_(p.total); infra.glauco += num_(p.glauco);
+      infra.yuri += num_(p.yuri); infra.divida += num_(p.divida);
+      infra.itens = infra.itens.concat(p.itens || []);
+      infra.pendencias = infra.pendencias.concat((p.pendencias || []).map(function(pd) { return Object.assign({ projeto: p.nome }, pd); }));
+    } else {
+      grupos.push({ nome: p.nome, rotulo: nomeAmigavelProjeto_(p.nome), cor: corProjeto_(p.nome), total: num_(p.total), glauco: num_(p.glauco), yuri: num_(p.yuri), divida: num_(p.divida), itens: (p.itens || []).slice(), pendencias: (p.pendencias || []).map(function(pd) { return Object.assign({ projeto: p.nome }, pd); }) });
+    }
+  });
+  if (temInfra) grupos.unshift(infra);
+  return grupos;
+}
+function slugify_(s) {
+  return normalizarTexto_(s).replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function renderResumoTipoProjeto_(id, itens) {
+  var c = document.getElementById(id);
+  if (!c) return;
+  if (!itens.length) { c.innerHTML = '<div class="empty-note">Nenhum lançamento registrado.</div>'; return; }
+  var totais = {};
+  itens.forEach(function(it) {
+    var nome = it.classificacao || 'Outros';
+    if (!totais[nome]) totais[nome] = { nome: nome, cor: corClassificacao_(nome), valor: 0 };
+    totais[nome].valor += num_(it.total);
+  });
+  var lista = Object.keys(totais).map(function(k) { return totais[k]; }).sort(function(a, b) {
+    if (a.nome === 'Outros') return 1;
+    if (b.nome === 'Outros') return -1;
+    return b.valor - a.valor;
+  });
+  var max = lista.reduce(function(m, cat) { return Math.max(m, cat.valor); }, 1);
+  c.innerHTML = lista.map(function(cat) {
+    var pct = max > 0 ? Math.round(cat.valor / max * 100) : 0;
+    return '<div class="br"><div class="bl">' + cat.nome + '</div><div class="bt"><div class="bf" style="width:' + pct + '%;background:' + cat.cor + '"></div></div><div class="bv">' + fmtR_(cat.valor) + '</div></div>';
+  }).join('');
+}
+
+// Lançamentos paginados: mostra os 10 mais recentes e vai abrindo de 10 em
+// 10 pelo botão "Mostrar mais" — listas grandes (Aura tem 200+ linhas)
+// deixavam a página pesada e infinita no celular.
+var obraItensCache_ = {};
+var obraItensVisiveis_ = {};
+function renderItensProjeto_(id, itens) {
+  var c = document.getElementById(id);
+  if (!c) return;
+  obraItensCache_[id] = itens;
+  if (!itens.length) { c.innerHTML = '<div class="empty-note">Nenhum lançamento registrado.</div>'; return; }
+  var visiveis = obraItensVisiveis_[id] || 10;
+  var ordenados = itens.slice().reverse(); // mais recente primeiro
+  var restantes = Math.max(0, ordenados.length - visiveis);
+  c.innerHTML = ordenados.slice(0, visiveis).map(function(it) {
+    var deGlauco = num_(it.glauco) >= num_(it.yuri);
+    return '<div class="fr"><div class="name-cell">' + avatarHtml_(deGlauco ? 'Glauco' : 'Yuri') + '<span class="fl" style="color:#374151">' + it.descricao + ' <span style="color:#b0b6bf;font-size:10px">' + it.classificacao + '</span></span></div>' +
+      '<span class="fv ' + (deGlauco ? 'pur' : 'warn') + '">R$ ' + Math.round(num_(it.total)).toLocaleString('pt-BR') + '</span></div>';
+  }).join('') +
+  (restantes > 0 ? '<div style="text-align:center;margin-top:10px"><button class="btn-toggle" onclick="mostrarMaisItensObra_(\'' + id + '\')">Mostrar mais 10 (' + restantes + ' restantes)</button></div>' : '');
+}
+function mostrarMaisItensObra_(id) {
+  obraItensVisiveis_[id] = (obraItensVisiveis_[id] || 10) + 10;
+  renderItensProjeto_(id, obraItensCache_[id] || []);
+}
+
+function renderPendenciasProjeto_(lista) {
+  var c = document.getElementById('obra-pendencias-grid');
+  if (!c) return;
+  setTxt_('badge-pend-count', lista.length);
+  if (!lista.length) { c.innerHTML = '<div class="empty-note">Nenhuma pendência registrada.</div>'; return; }
+  var estilos = { 'Serviço': { bg: '#f4eee0', cor: '#a3813f', chip: 'cy' }, 'Compra/Melhoria': { bg: '#eef4ed', cor: '#5f8f5f', chip: 'cb' } };
+  c.innerHTML = lista.map(function(p) {
+    var e = estilos[p.tipo] || { bg: '#f9fafb', cor: '#6b7280', chip: 'cw' };
+    var chipProjeto = '<span class="hosp-chip" style="background:' + corProjeto_(p.projeto) + '">' + nomeAmigavelProjeto_(p.projeto) + '</span>';
+    return '<div style="background:' + e.bg + ';border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px">' +
+      '<span style="font-size:12px;color:' + e.cor + '">' + p.item + (p.estimativa > 0 ? ' <span style="color:#9aa3af">· R$ ' + Math.round(p.estimativa).toLocaleString('pt-BR') + '</span>' : '') + '</span>' +
+      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><span class="chip ' + e.chip + '">' + (p.tipo || 'Serviço') + '</span>' + chipProjeto + '</div></div>';
+  }).join('');
+}
+
+function preencherSelectProjetosObra_(projetos) {
+  ['g-projeto', 'p-projeto'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = projetos.map(function(p) { return '<option value="' + p.nome + '">' + nomeAmigavelProjeto_(p.nome) + '</option>'; }).join('');
+  });
+}
+
+function renderObraProjetos_(payload) {
+  // Se a API ainda não implementa esta ação, ou responder algo inesperado,
+  // não apaga os dados de exemplo já exibidos.
+  if (!payload || !payload.ok || !Array.isArray(payload.projetos)) {
+    console.error('Não foi possível carregar dados reais de obra — mantendo exemplo.', payload && payload.erro);
+    return;
+  }
+  STATE.obraProjetos = payload.projetos;
+
+  var totalGeral = payload.totalGeral || payload.projetos.reduce(function(acc, p) {
+    acc.total += num_(p.total); acc.glauco += num_(p.glauco); acc.yuri += num_(p.yuri); acc.divida += num_(p.divida);
+    return acc;
+  }, { total: 0, glauco: 0, yuri: 0, divida: 0 });
+
+  // Guarda os grupos (base: aba Resumo — TERRENO somado na infraestrutura)
+  // e redesenha a visão conforme o botão selecionado no menu da Obra.
+  obraGruposCache_ = agruparProjetosObra_(payload.projetos);
+  obraTotalGeralCache_ = totalGeral;
+  renderObraVisao_();
+
+  preencherSelectProjetosObra_(payload.projetos);
+
+  var classificacoesUsadas = {};
+  payload.projetos.forEach(function(p) { (p.itens || []).forEach(function(it) { if (it.classificacao) classificacoesUsadas[it.classificacao] = true; }); });
+  var datalist = document.getElementById('lista-classificacoes-obra');
+  if (datalist) datalist.innerHTML = Object.keys(classificacoesUsadas).sort().map(function(c) { return '<option value="' + c + '">'; }).join('');
+
+  atualizarCapitalInvestimento_(obraGruposCache_.map(function(g) { return { nome: g.nome, total: g.total, glauco: g.glauco, yuri: g.yuri }; }), totalGeral);
+}
+
+// ── VISÃO DA OBRA POR ESCOPO (menu Total · Infraestrutura+Lote · Aura) ──
+var obraEscopo_ = 'TOTAL';
+var obraGruposCache_ = [];
+var obraTotalGeralCache_ = null;
+
+function selecionarGrupoObra_(nome) {
+  obraEscopo_ = nome;
+  renderObraVisao_();
+}
+
+function renderObraVisao_() {
+  var grupos = obraGruposCache_;
+  var totalGeral = obraTotalGeralCache_;
+  if (!totalGeral) return;
+  var grupoSel = grupos.filter(function(g) { return g.nome === obraEscopo_; })[0] || null;
+
+  // ── menu de botões ──
+  var pills = document.getElementById('obra-pills');
+  if (pills) {
+    var opcoes = [{ nome: 'TOTAL', rotulo: 'Total', cor: '#c1622a' }].concat(grupos);
+    pills.innerHTML = opcoes.map(function(g) {
+      var ativo = obraEscopo_ === g.nome;
+      var estilo = ativo ? 'background:' + g.cor + ';border-color:' + g.cor + ';color:#fff' : '';
+      return '<button type="button" class="hosp-pill' + (ativo ? ' on' : '') + '" style="' + estilo + '" onclick="selecionarGrupoObra_(\'' + g.nome.replace(/'/g, "\\'") + '\')">' +
+        (g.nome !== 'TOTAL' ? '<span class="dot" style="background:' + (ativo ? '#fff' : g.cor) + '"></span>' : '') + g.rotulo + '</button>';
+    }).join('');
+  }
+
+  // ── KPIs do escopo ──
+  var alvo = grupoSel || totalGeral;
+  var kpis = document.getElementById('obra-kpis');
+  if (kpis) {
+    function kpiHtml(rot, val, sub, cls) {
+      return '<div class="kpi"><div class="klbl">' + rot + '</div><div class="kval ' + (cls || '') + '">' + val + '</div><div class="ksub">' + (sub || '') + '</div></div>';
+    }
+    var pct = grupoSel && totalGeral.total > 0 ? Math.round(grupoSel.total / totalGeral.total * 100) + '% do investimento total' : 'Lote + infraestrutura + hospedagens';
+    var difere = Math.abs(num_(alvo.glauco) - num_(alvo.yuri));
+    var maior = num_(alvo.glauco) >= num_(alvo.yuri) ? 'Glauco' : 'Yuri';
+    kpis.innerHTML =
+      kpiHtml('Investido — ' + (grupoSel ? grupoSel.rotulo : 'Total'), fmtR_(alvo.total), pct) +
+      kpiHtml('Glauco', fmtR_(alvo.glauco), alvo.total > 0 ? Math.round(num_(alvo.glauco) / alvo.total * 100) + '%' : '—', 'pur') +
+      kpiHtml('Yuri', fmtR_(alvo.yuri), alvo.total > 0 ? Math.round(num_(alvo.yuri) / alvo.total * 100) + '%' : '—', 'warn') +
+      kpiHtml('Diferença sócios', fmtR_(difere), maior + ' a receber', 'up') +
+      kpiHtml('Dívida pendente', fmtR_(num_(alvo.divida)), grupoSel ? 'Deste grupo' : 'Saldo financiado', 'dn');
+  }
+
+  // ── card de detalhe: barras por grupo (Total) ou por classificação (grupo) ──
+  var blocos = document.getElementById('obra-blocos-projetos');
+  if (blocos) {
+    if (!grupoSel) {
+      setTxt_('obra-detalhe-titulo', 'Investimento por grupo');
+      blocos.innerHTML = grupos.map(function(g) {
+        var pct = totalGeral.total > 0 ? Math.round(g.total / totalGeral.total * 100) : 0;
+        return '<div class="br"><div class="bl">' + g.rotulo + '</div><div class="bt"><div class="bf" style="width:' + pct + '%;background:' + g.cor + '"></div></div><span class="bv-badge" style="background:' + g.cor + '22;color:' + g.cor + '">' + pct + '%</span><div class="bv">' + fmtObraK_(g.total) + '</div></div>';
+      }).join('');
+    } else {
+      setTxt_('obra-detalhe-titulo', 'Resumo por classificação — ' + grupoSel.rotulo);
+      renderResumoTipoProjeto_('obra-blocos-projetos', grupoSel.itens || []);
+      if (!(grupoSel.itens || []).length) blocos.innerHTML = '<div class="empty-note">Sem lançamentos detalhados — os totais deste grupo vêm da aba Resumo da planilha.</div>';
+    }
+  }
+  setTxt_('obra-bloco-glauco', fmtR_(alvo.glauco) + ' total');
+  setTxt_('obra-bloco-yuri', fmtR_(alvo.yuri) + ' total');
+  var maiorAportador = num_(alvo.glauco) >= num_(alvo.yuri) ? 'Glauco' : 'Yuri';
+  setTxt_('obra-bloco-diferenca', maiorAportador + ' a receber: ' + fmtR_(Math.abs(num_(alvo.glauco) - num_(alvo.yuri))));
+  setTxt_('obra-bloco-divida', fmtR_(num_(alvo.divida)));
+
+  // ── Pendências do escopo (itens concluídos ficam de fora) ──
+  var origem = grupoSel ? [grupoSel] : grupos;
+  var pendencias = [];
+  origem.forEach(function(g) {
+    (g.pendencias || []).forEach(function(pd) {
+      if (/conclu|feito|resolvid|comprado|instalad|cancelad/i.test(String(pd.status || ''))) return;
+      pendencias.push({ projeto: pd.projeto || g.nome, tipo: pd.tipo, item: pd.item, estimativa: pd.estimativa, status: pd.status });
+    });
+  });
+  renderPendenciasProjeto_(pendencias);
+
+  // ── Lançamentos do escopo — resumo por tipo + lista paginada ──
+  var container = document.getElementById('obra-lancamentos-projetos');
+  if (container) {
+    var comDados = origem.filter(function(g) { return g.itens && g.itens.length; });
+    container.innerHTML = comDados.map(function(g) {
+      return (grupoSel ? '' : '<div class="card">' +
+        '<div class="ctitle" style="display:flex;align-items:center;gap:7px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + g.cor + ';flex-shrink:0"></span>' + g.rotulo + ' — resumo por tipo</div>' +
+        '<div id="obra-tipo-' + slugify_(g.nome) + '"></div>' +
+        '</div>') +
+        '<div class="card">' +
+        '<div class="ctitle">' + g.rotulo + ' — lançamentos (mais recente primeiro)</div>' +
+        '<div id="obra-itens-' + slugify_(g.nome) + '"></div>' +
+        '<div style="margin-top:8px;font-size:10.5px;color:#b0b6bf">G = Glauco &nbsp;·&nbsp; Y = Yuri</div>' +
+        '</div>';
+    }).join('');
+    comDados.forEach(function(g) {
+      if (!grupoSel) renderResumoTipoProjeto_('obra-tipo-' + slugify_(g.nome), g.itens);
+      renderItensProjeto_('obra-itens-' + slugify_(g.nome), g.itens);
+    });
+  }
+}
+function carregarObraProjetos() {
+  if (!apiConfigurada_()) return;
+  apiGet_('obraProjetos').then(renderObraProjetos_).catch(function(erro) { console.error('Falha ao buscar dados de obra:', erro); });
+}
+
+// ── RENDERIZAÇÃO INICIAL (com dados de exemplo) ──
+// Cada etapa é isolada em try/catch: uma falha ao desenhar um gráfico (ex.:
+// Chart.js não carregou da CDN) não pode travar o resto da inicialização —
+// em especial o recálculo do painel e a busca dos dados reais da API.
+// Badge do topo mostra o mês corrente de verdade (era texto fixo).
+(function() {
+  var nomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  var agora = new Date();
+  setTxt_('badge-month', nomes[agora.getMonth()] + ' ' + agora.getFullYear());
+})();
+try { chartMes_atualizar(); } catch (e) { console.error('Falha ao desenhar chartMes:', e); }
+tbody_atualizarTabelaMes();
+buildMonthButtons();
+buildCalendar(calMonthIdx);
+buildOccBars();
+calRunSummary();
+try { calc(); } catch (e) { console.error('Falha ao calcular simulador:', e); }
+renderHospedagemPills_();
+renderPeriodoChips_();
+setTxt_('fin-titulo', 'Financeiro — ' + rotuloPeriodo_());
+recalcularPainel();
+renderReservas(STATE.reservas);
+renderEntradas(STATE.entradas);
+renderDespesas(STATE.despesas);
+renderSaques(STATE.saques);
+
+// ── BUSCA DADOS REAIS DA PLANILHA (substitui os de exemplo quando chegar) ──
+function aplicarDadosReais(dados) {
+  if (!dados || !dados.ok) {
+    console.error('Não foi possível carregar dados reais — mantendo exemplo.', dados && dados.erro);
+    return;
+  }
+  // Guarda o histórico no cache — o array MES é sempre reconstruído a partir
+  // dele (+ base de exemplo) em reconstruirBaseMes_(), conforme a hospedagem
+  // selecionada. As reservas do app são reaplicadas por cima no recálculo,
+  // então nunca são apagadas por este fetch (que pode responder antes ou
+  // depois de carregarReservas, dependendo da rede).
+  dadosAuraCache_ = dados;
+  recalcularCalendarioDeReservas_();
+  atualizarVisoesMensais_();
+
+  if (dados.atualizadoEm) {
+    var badge = document.querySelector('.badge-month');
+    if (badge) badge.title = 'Dados atualizados em: ' + dados.atualizadoEm;
+  }
+}
+
+if (apiConfigurada_()) {
+  atualizarTudo();
+} else {
+  console.warn('API_URL não configurada — rodando em modo demonstração com dados de exemplo.');
+}
+</script>
+</body>
+</html>

@@ -56,7 +56,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .klbl{font-size:10.5px;color:#9aa3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
 .kval{font-size:19px;font-weight:700;color:#0d1117}
 .ksub{font-size:11px;margin-top:3px;color:#9aa3af}
-.up{color:#c1622a}.dn{color:#a13a1f}.warn{color:#a3813f}.pur{color:#b1503a}.red{color:#dc2626}
+.up{color:#c1622a}.dn{color:#a13a1f}.warn{color:#a3813f}.pur{color:#b1503a}
 
 .card{background:#fff;border:1px solid #edeef1;border-radius:18px;padding:18px;margin-bottom:14px}
 .ctitle{font-size:12px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
@@ -76,9 +76,8 @@ th{color:#9aa3af;font-weight:700;padding:8px 10px;text-align:left;border-bottom:
 td{padding:9px 10px;color:#6b7280;border-bottom:1px solid #f5f6f8;font-size:12.5px}
 tr:last-child td{border-bottom:none}
 .chip{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block}
-.cg{background:#f7e6d8;color:#c1622a}.co{background:#f4e2d1;color:#a13a1f}
-.cy{background:#ede4cf;color:#a3813f}.cb{background:#e6efe4;color:#5f8f5f}
-.cw{background:#f0f1f3;color:#9aa3af}.cr{background:#fee2e2;color:#dc2626}
+.cg{background:#f7e6d8;color:#c1622a}.cy{background:#ede4cf;color:#a3813f}
+.cb{background:#e6efe4;color:#5f8f5f}.cw{background:#f0f1f3;color:#9aa3af}
 .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#fff;flex-shrink:0}
 .name-cell{display:flex;align-items:center;gap:8px;min-width:0}
 .bv-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;flex-shrink:0}
@@ -106,8 +105,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .mk{background:#f9fafb;border-radius:10px;padding:11px 13px;border:1px solid #edeef1}
 .mk .ml{font-size:10px;color:#9aa3af;margin-bottom:4px}
 .mk .mv{font-size:16px;font-weight:800;color:#0d1117}
-.tag-r{background:#f7e6d8;color:#c1622a;font-size:9px;padding:2px 7px;border-radius:6px;font-weight:700;margin-left:3px;vertical-align:middle}
-.tag-e{background:#f0f1f3;color:#9aa3af;font-size:9px;padding:2px 7px;border-radius:6px;font-weight:700;margin-left:3px;vertical-align:middle}
 .nota{background:#f9fafb;border:1px solid #edeef1;border-radius:10px;padding:12px 14px;font-size:11.5px;color:#6b7280;margin-top:10px;line-height:1.6}
 .mc{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f5f6f8}
 .mc:last-child{border-bottom:none}
@@ -124,15 +121,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .eq-bar{display:flex;height:22px;border-radius:8px;overflow:hidden;margin:8px 0;background:#f0f1f3}
 .eq-g{background:#b1503a;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
 .eq-y{background:#a3813f;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
-.mbtn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #edeef1;background:#fff;color:#6b7280;transition:all .15s}
-.mbtn:hover{color:#0d1117}
-.mbtn.on{background:#c1622a;color:#fff;border-color:#c1622a}
-.mbtn.has-real{border:1px solid #c1622a}
 .cal-wd{font-size:9.5px;color:#b0b6bf;text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.05em}
 .cal-cell{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#c9cdd3;background:#fafbfc;border:1px solid #f0f1f3;position:relative;transition:background .15s,border-color .15s}
 .cal-cell.empty{background:transparent;border:none}
 .cal-cell.res-real{background:#cf7245;color:#fff;border-color:#cf7245}
-.cal-cell.res-proj{background:#faeee2;color:#c1622a;border-color:#f0dcc7}
 .cal-cell .dot{position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:#a13a1f}
 .cal-tag{font-size:7px;font-weight:700;margin-top:1px}
 
@@ -152,12 +144,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 /* ── seletor de mês/período (dentro de Hospedagens) ── */
 .periodo-box{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-
-/* ── grupos de obra (TOTAL / INFRAESTRUTURA-LOTE / AURA) ── */
-.obra-grupos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
-.obra-grupo{background:#fff;border:1px solid #edeef1;border-radius:16px;padding:16px;border-top:4px solid #c1622a}
-.obra-grupo .og-nome{font-size:10.5px;color:#9aa3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.obra-grupo .og-total{font-size:22px;font-weight:800;color:#0d1117;margin-bottom:8px}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(13,17,23,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.on{display:flex}
@@ -258,12 +244,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   </div>
 
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <div class="ctitle" style="margin-bottom:0">Receita × Despesas — mês a mês 2026</div>
-      <div style="display:flex;gap:6px">
-        <span class="tag-r">REAL</span><span class="tag-e">PROJEÇÃO</span>
-      </div>
-    </div>
+    <div class="ctitle">Receita × Despesas — mês a mês 2026</div>
     <div class="leg">
       <span><div class="ld" style="background:#c1622a"></div>Receita bruta</span>
       <span><div class="ld" style="background:#a13a1f"></div>Despesas</span>
@@ -286,8 +267,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <div class="ctitle" style="margin-bottom:0" id="cal-month-label">Julho 2026</div>
     </div>
     <div class="leg" style="margin-bottom:10px">
-      <span><div class="ld" style="background:#c1622a;height:10px;border-radius:3px"></div>Reserva confirmada (real)</span>
-      <span><div class="ld" style="background:#f7e6d8;height:10px;border-radius:3px"></div>Ocupação projetada</span>
+      <span><div class="ld" style="background:#cf7245;height:10px;border-radius:3px"></div>Dia com reserva confirmada</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px">
       <div class="cal-wd">Dom</div><div class="cal-wd">Seg</div><div class="cal-wd">Ter</div><div class="cal-wd">Qua</div><div class="cal-wd">Qui</div><div class="cal-wd">Sex</div><div class="cal-wd">Sáb</div>
@@ -421,10 +401,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="ctitle" id="obra-detalhe-titulo">Investimento por grupo</div>
     <div id="obra-blocos-projetos"></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid #edeef1">
-      <div class="fr"><span class="fl" style="font-weight:600;color:#b1503a">Glauco</span><span class="fv pur" id="obra-bloco-glauco">R$ 333.340 <span style="color:#c4c9d1;font-size:10px">total</span></span></div>
-      <div class="fr"><span class="fl">Yuri</span><span class="fv warn" id="obra-bloco-yuri">R$ 328.641 <span style="color:#c4c9d1;font-size:10px">total</span></span></div>
-      <div class="fr"><span class="fl">Diferença entre sócios</span><span class="fv up" id="obra-bloco-diferenca">R$ 4.698,75</span></div>
-      <div class="fr"><span class="fl">Dívida total pendente</span><span class="fv dn" id="obra-bloco-divida">R$ 69.800</span></div>
+      <div class="fr"><span class="fl" style="font-weight:600;color:#b1503a">Glauco</span><span class="fv pur" id="obra-bloco-glauco">—</span></div>
+      <div class="fr"><span class="fl">Yuri</span><span class="fv warn" id="obra-bloco-yuri">—</span></div>
+      <div class="fr"><span class="fl">Diferença entre sócios</span><span class="fv up" id="obra-bloco-diferenca">—</span></div>
+      <div class="fr"><span class="fl">Dívida total pendente</span><span class="fv dn" id="obra-bloco-divida">—</span></div>
     </div>
   </div>
 
@@ -793,6 +773,14 @@ var hospedagemSelecionada = 'Total';
 function normalizarTexto_(s) {
   return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
+// Texto vindo da planilha é injetado via innerHTML em dezenas de lugares —
+// sem escapar, um "&" numa descrição ou um "<" num nome quebra a linha (ou
+// engole o resto da célula). Toda interpolação de texto livre passa por aqui.
+function esc_(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 function hospedagemPorChave_(chave) {
   var alvo = normalizarTexto_(chave);
   for (var i = 0; i < HOSPEDAGENS_.length; i++) {
@@ -809,7 +797,7 @@ function filtrarPorHospedagem_(lista) {
 function hospChipHtml_(chave) {
   var h = hospedagemPorChave_(chave);
   if (!h) return '';
-  return '<span class="hosp-chip" style="background:' + h.cor + '">' + h.nome + '</span>';
+  return '<span class="hosp-chip" style="background:' + h.cor + '">' + esc_(h.nome) + '</span>';
 }
 
 // ── BUSCA GLOBAL (campo do topo) ──
@@ -826,9 +814,10 @@ function aplicarBusca_(lista, campos) {
 function aoDigitarBusca_(valor) {
   filtroBusca_ = normalizarTexto_(valor).trim();
   renderTabelaReservas_();
-  renderEntradas(STATE.entradas);
-  renderDespesas(STATE.despesas);
-  renderSaques(STATE.saques);
+  renderTabelaEntradas_();
+  renderTabelaDespesas_();
+  renderTabelaSaques_();
+  renderObraVisao_(); // lançamentos e pendências de obra também respondem à busca
 }
 function renderHospedagemPills_() {
   var containers = document.querySelectorAll('.hosp-pills');
@@ -837,16 +826,27 @@ function renderHospedagemPills_() {
   var html = opcoes.map(function(h) {
     var ativo = hospedagemSelecionada === h.chave;
     var estilo = ativo ? 'background:' + h.cor + ';border-color:' + h.cor : '';
-    return '<button type="button" class="hosp-pill' + (ativo ? ' on' : '') + '" style="' + estilo + '" onclick="selecionarHospedagem_(\'' + h.chave.replace(/'/g, "\\'") + '\')">' +
-      (h.chave !== 'Total' ? '<span class="dot" style="background:' + (ativo ? '#fff' : h.cor) + '"></span>' : '') + h.nome + '</button>';
+    return '<button type="button" class="hosp-pill' + (ativo ? ' on' : '') + '" style="' + estilo + '" data-hosp="' + esc_(h.chave) + '">' +
+      (h.chave !== 'Total' ? '<span class="dot" style="background:' + (ativo ? '#fff' : h.cor) + '"></span>' : '') + esc_(h.nome) + '</button>';
   }).join('');
   containers.forEach(function(c) { c.innerHTML = html; });
+}
+// Delegação: o nome da hospedagem/grupo vai num data-attribute em vez de ser
+// interpolado dentro de um onclick="" — assim aspas e acentos no nome nunca
+// conseguem quebrar o handler.
+function ligarDelegacaoPills_() {
+  document.addEventListener('click', function(ev) {
+    var alvo = ev.target.closest ? ev.target.closest('[data-hosp],[data-obra]') : null;
+    if (!alvo) return;
+    if (alvo.hasAttribute('data-hosp')) selecionarHospedagem_(alvo.getAttribute('data-hosp'));
+    else selecionarGrupoObra_(alvo.getAttribute('data-obra'));
+  });
 }
 // Atualiza os textos de cabeçalho (Hospedagens e Calendário) que mudam
 // conforme a hospedagem selecionada nos pills.
 function calAtualizarTitulos_() {
   var h = hospedagemPorChave_(hospedagemSelecionada);
-  var sufixo = hospedagemSelecionada === 'Total' ? 'Todas as hospedagens' : h.nome;
+  var sufixo = (hospedagemSelecionada === 'Total' || !h) ? 'Todas as hospedagens' : h.nome;
   setTxt_('occ-title', 'Ocupação por mês — ' + sufixo + ' 2026');
 }
 
@@ -895,10 +895,7 @@ function aoMudarPeriodoSelect_(valor) {
 function reaplicarFiltros_() {
   renderPeriodoChips_();
   setTxt_('fin-titulo', 'Financeiro — ' + rotuloPeriodo_());
-  renderReservas(STATE.reservas);
-  renderEntradas(STATE.entradas);
-  renderDespesas(STATE.despesas);
-  renderSaques(STATE.saques);
+  agendarRepaint_();
 }
 function selecionarPeriodo_(tipo, mes) {
   periodo_ = tipo === 'mes' ? { tipo: 'mes', mes: mes } : { tipo: 'ano' };
@@ -941,12 +938,10 @@ function selecionarHospedagem_(chave) {
   hospedagemSelecionada = chave;
   renderHospedagemPills_();
   var h = hospedagemPorChave_(chave);
-  setTxt_('aura-ptitle', chave === 'Total' ? 'Todas as hospedagens' : h.nome);
-  setTxt_('aura-psub', chave === 'Total' ? 'Reservas, despesas e equilíbrio entre sócios — visão consolidada' : 'Reservas, despesas e equilíbrio entre sócios — ' + h.nome);
-  renderReservas(STATE.reservas);
-  renderEntradas(STATE.entradas);
-  renderDespesas(STATE.despesas);
-  renderSaques(STATE.saques);
+  var nome = h ? h.nome : chave;
+  setTxt_('aura-ptitle', chave === 'Total' ? 'Todas as hospedagens' : nome);
+  setTxt_('aura-psub', 'Reservas, despesas e equilíbrio entre sócios — ' + (chave === 'Total' ? 'visão consolidada' : nome));
+  agendarRepaint_();
 }
 function preencherSelectHospedagens_(id, incluirTotal) {
   var el = document.getElementById(id);
@@ -971,47 +966,20 @@ function goTo(id, btnEl) {
   window.scrollTo(0,0);
 }
 
-// ── BUSCA GLOBAL (filtra linhas/itens visíveis pelo texto digitado) ──
-(function() {
-  var input = document.getElementById('global-search');
-  if (!input) return;
-  input.addEventListener('input', function(e) {
-    var q = e.target.value.trim().toLowerCase();
-    var seletores = ['#tbl-reservas tr', '#tbl-entradas tr', '#tbl-despesas tr', '#tbl-saques tr', '#obra-lancamentos-projetos .fr', '#obra-pendencias-grid > div'];
-    seletores.forEach(function(sel) {
-      document.querySelectorAll(sel).forEach(function(el) {
-        var texto = el.textContent.toLowerCase();
-        el.style.display = (!q || texto.indexOf(q) >= 0) ? '' : 'none';
-      });
-    });
-  });
-})();
-
 // ── DADOS MENSAIS (montados só a partir das tabelas reais — Reservas e
 //    Despesas — nunca da aba "Resumo", que guardava um histórico
 //    pré-app que não corresponde a nenhum lançamento de verdade) ──
 var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-var MES = [
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false],
-  [0,0,0,0,false]
-];
-
+// Um objeto por mês de 2026: { dias, receita, despesa, temDado }.
+var MES = [];
+function diasNoMes_(i) { return new Date(2026, i + 1, 0).getDate(); }
 function reconstruirBaseMes_() {
   // Trocar de hospedagem nos pills não pode deixar no calendário/ocupação os
   // números da seleção anterior — todo mês zera antes de ser recalculado a
   // partir das reservas/despesas reais da hospedagem escolhida.
-  for (var i = 0; i < 12; i++) MES[i] = [0, 0, 0, 0, false];
+  for (var i = 0; i < 12; i++) MES[i] = { dias: 0, receita: 0, despesa: 0, temDado: false };
 }
+reconstruirBaseMes_();
 
 var chartMesInstance = null;
 
@@ -1024,24 +992,24 @@ function chartMes_atualizar() {
       datasets: [
         {
           label: 'Receita',
-          data: MES.map(function(d){ return d[1]; }),
-          backgroundColor: MES.map(function(d){ return d[4] ? '#c1622a' : '#e7c9a0'; }),
+          data: MES.map(function(d){ return d.receita; }),
+          backgroundColor: '#c1622a',
           borderRadius: 4, borderSkipped: 'bottom', order: 2
         },
         {
           label: 'Despesas',
-          data: MES.map(function(d){ return d[3]; }),
-          backgroundColor: MES.map(function(d){ return d[4] ? '#a13a1f' : '#e8c7a4'; }),
+          data: MES.map(function(d){ return d.despesa; }),
+          backgroundColor: '#a13a1f',
           borderRadius: 4, borderSkipped: 'bottom', order: 3
         },
         {
           label: 'Margem',
-          data: MES.map(function(d){ return Math.max(0, d[1] - d[3]); }),
+          data: MES.map(function(d){ return Math.max(0, d.receita - d.despesa); }),
           type: 'line',
           borderColor: '#b1503a',
-          backgroundColor: 'rgba(124,58,237,0.06)',
+          backgroundColor: 'rgba(177,80,58,0.06)',
           borderWidth: 2, pointRadius: 3,
-          pointBackgroundColor: MES.map(function(d){ return d[4] ? '#b1503a' : 'rgba(177,80,58,0.35)'; }),
+          pointBackgroundColor: '#b1503a',
           tension: 0.4, fill: true, order: 1
         }
       ]
@@ -1065,45 +1033,42 @@ function chartMes_atualizar() {
   });
 }
 
-function tbody_atualizarTabelaMes() {
-  var tbody = document.getElementById('tbl-mes');
-  if (!tbody) return; // a tabela de resumo mensal saiu da tela — só o gráfico ficou
-  tbody.innerHTML = '';
-  MES.forEach(function(d, i) {
-    var dias = d[0], rec = d[1], opReal = d[2], opPlan = d[3], real = d[4];
-    var ocup = dias > 0 ? Math.round(dias / 30 * 100) : 0;
-    var res = rec - opPlan;
-    var tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td style="color:#0d1117;font-weight:600">' + MESES[i] + '<span class="' + (real ? 'tag-r' : 'tag-e') + '">' + (real ? 'REAL' : 'EST') + '</span></td>' +
-      '<td style="color:' + (dias > 0 ? '#c1622a' : '#c4c9d1') + '">' + (dias > 0 ? dias : '—') + '</td>' +
-      '<td style="color:' + (ocup > 0 ? '#a3813f' : '#c4c9d1') + '">' + (ocup > 0 ? ocup + '%' : '—') + '</td>' +
-      '<td style="color:' + (rec > 0 ? '#c1622a' : '#c4c9d1') + ';font-weight:' + (rec > 0 ? 600 : 400) + '">' + (rec > 0 ? 'R$ ' + rec.toLocaleString('pt-BR') : '—') + '</td>' +
-      '<td style="color:' + (opReal > 0 ? '#a13a1f' : '#c4c9d1') + '">' + (opReal > 0 ? 'R$ ' + opReal.toLocaleString('pt-BR') : '—') + '</td>' +
-      '<td style="color:' + (opPlan > 0 ? '#9aa3af' : '#c4c9d1') + '">' + (opPlan > 0 ? 'R$ ' + opPlan.toLocaleString('pt-BR') : '—') + '</td>' +
-      '<td style="color:' + (res > 0 ? '#c1622a' : (res < 0 ? '#a13a1f' : '#c4c9d1')) + ';font-weight:' + (res !== 0 ? 600 : 400) + '">' + (rec > 0 ? (res >= 0 ? '+' : '') + ' R$ ' + Math.abs(res).toLocaleString('pt-BR') : '—') + '</td>' +
-      '<td>' + (real ? '<span class="chip cg">Real</span>' : '<span class="chip cw">Projeção</span>') + '</td>';
-    tbody.appendChild(tr);
-  });
-}
-
 // ── CONSTANTES ──
 var CAPITAL = 333340;
 function fmt(n){ return 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR'); }
 
 var cdiChart = null;
 
-// Soma o líquido (50% Glauco) já realizado nos meses marcados como reais em
-// MES — isso permite que o payback/retorno acumulado parta do que já
-// aconteceu de verdade, em vez de simular todo o histórico com o slider.
+// Soma o líquido (50% Glauco) já realizado pela Aura, mês a mês.
+// Lê as reservas/despesas da Aura DIRETO do STATE, e não do array MES: MES
+// acompanha a hospedagem selecionada nos pills, então usá-lo aqui fazia o
+// payback da Aura mudar sozinho quando o usuário escolhia Mantra ou Total
+// na outra aba — número errado num painel que é só sobre a Aura.
 function realAcumuladoAura_() {
-  var total = 0, meses = 0;
-  MES.forEach(function(d) {
-    if (!d[4]) return;
-    var bruta = d[1], opex = d[3];
-    total += Math.max(0, (bruta - bruta * 0.12 - opex) * 0.5);
-    meses++;
+  var ehAura = function(x) { return normalizarTexto_(x.hospedagem || '') === 'aura'; };
+  var receita = new Array(12).fill(0);
+  var despesa = new Array(12).fill(0);
+  var temDado = new Array(12).fill(false);
+
+  (STATE.reservas || []).filter(ehAura).forEach(function(r) {
+    var d = dataLocal_(r.entrada);
+    if (isNaN(d) || d.getFullYear() !== 2026) return;
+    receita[d.getMonth()] += num_(r.valorContrato);
+    temDado[d.getMonth()] = true;
   });
+  (STATE.despesas || []).filter(ehAura).forEach(function(x) {
+    var d = dataLocal_(x.dataPagamento);
+    if (isNaN(d) || d.getFullYear() !== 2026) return;
+    despesa[d.getMonth()] += num_(x.pago);
+    temDado[d.getMonth()] = true;
+  });
+
+  var total = 0, meses = 0;
+  for (var i = 0; i < 12; i++) {
+    if (!temDado[i]) continue;
+    total += Math.max(0, (receita[i] - receita[i] * 0.12 - despesa[i]) * 0.5);
+    meses++;
+  }
   return { total: total, meses: meses };
 }
 
@@ -1130,7 +1095,6 @@ function calc() {
 
   document.getElementById('tc-gl1').textContent = fmt(Math.max(0, liq50));
   document.getElementById('tc-pb1').textContent = pb > 120 ? '>10 anos' : '~' + pb + ' meses';
-  setTxt_('tc-total', fmt(Math.max(0, liq50) * 3));
   document.getElementById('tc-gl2').textContent = fmt(Math.max(0, liq50));
   document.getElementById('tc-gl3').textContent = fmt(Math.max(0, liq50));
   document.getElementById('tc-rec2').textContent = fmt(bruta);
@@ -1282,24 +1246,8 @@ function buildCDI(liq1) {
 }
 
 // ── CALENDÁRIO & OCUPAÇÃO ──
-var calMonthIdx = 6;
-
-function buildMonthButtons() {
-  // Os botões de mês do calendário saíram — a navegação agora é feita só
-  // pela caixa de seleção de data no topo, um único menu pra tela toda.
-  var c = document.getElementById('cal-month-btns');
-  if (!c) return;
-  c.innerHTML = '';
-  MESES.forEach(function(nome, i) {
-    var hasReal = MES[i][4];
-    var hasProj = MES[i][0] > 0;
-    var btn = document.createElement('button');
-    btn.className = 'mbtn' + (i === calMonthIdx ? ' on' : '') + (hasReal ? ' has-real' : '');
-    btn.textContent = nome + (hasReal ? ' ✓' : (hasProj ? ' •' : ''));
-    btn.onclick = function() { calMonthIdx = i; buildCalendar(i); buildMonthButtons(); calRunSummary(i); };
-    c.appendChild(btn);
-  });
-}
+// Abre no mês corrente quando estamos em 2026 (antes era julho fixo).
+var calMonthIdx = (new Date().getFullYear() === 2026) ? new Date().getMonth() : 6;
 
 // Retorna a reserva real (de STATE.reservas) que ocupa a data informada,
 // ou null. Substitui o destaque fixo que só reconhecia a reserva de
@@ -1323,11 +1271,8 @@ function buildCalendar(mIdx) {
   grid.innerHTML = '';
 
   var hoje = new Date();
-  var daysInMonth = new Date(2026, mIdx + 1, 0).getDate();
+  var daysInMonth = diasNoMes_(mIdx);
   var firstDay = new Date(2026, mIdx, 1).getDay();
-  var dadosMes = MES[mIdx];
-  var diasOcup = dadosMes[0];
-  var isReal = dadosMes[4];
   var diasVagos = 0;
 
   for (var i = 0; i < firstDay; i++) {
@@ -1344,17 +1289,17 @@ function buildCalendar(mIdx) {
 
     if (reserva) {
       cell.className = 'cal-cell res-real';
-      var entradaReserva = new Date(reserva.entrada);
+      // dataLocal_ (e não new Date) — datas 'YYYY-MM-DD' viram meia-noite UTC
+      // no new Date e, no fuso do Brasil, o nome do hóspede aparecia um dia
+      // antes do check-in real.
+      var entradaReserva = dataLocal_(reserva.entrada);
       if (d === entradaReserva.getDate() && mIdx === entradaReserva.getMonth()) tag = (reserva.nome || '').split(' ')[0];
-    } else if (!isReal && diasOcup > 0 && d <= diasOcup) {
-      cell.className = 'cal-cell res-proj';
     } else {
       cell.className = 'cal-cell';
+      diasVagos++;
     }
 
-    if (!reserva) diasVagos++;
-
-    cell.innerHTML = '<span>' + d + '</span>' + (tag ? '<span class="cal-tag">' + tag + '</span>' : '');
+    cell.innerHTML = '<span>' + d + '</span>' + (tag ? '<span class="cal-tag">' + esc_(tag) + '</span>' : '');
 
     if (mIdx === hoje.getMonth() && d === hoje.getDate() && hoje.getFullYear() === 2026) {
       var dot = document.createElement('div');
@@ -1369,36 +1314,37 @@ function buildCalendar(mIdx) {
   setTxt_('kpi-vacancia-sub', MESES[mIdx] + ' — ' + (diasVagos === 0 ? 'mês cheio' : 'livre'));
 }
 
+// Ocupação do mês em % — sobre os dias REAIS do mês (antes era sempre /30,
+// o que inflava fevereiro e nunca deixava um mês de 31 dias chegar a 100%).
+function ocupacaoDoMes_(i) {
+  return MES[i].dias > 0 ? Math.round(MES[i].dias / diasNoMes_(i) * 100) : 0;
+}
+
 // Faixa compacta de 12 colunas (uma por mês) em vez da lista de 12 linhas
-// cheias — mesma informação (ocupação real/projetada), numa olhada só e
-// sem tomar a tela toda. Meses sem nenhum dado mostram um traço fino, só
-// pra manter o ritmo visual da faixa sem sumir da tela.
+// cheias — mesma informação, numa olhada só e sem tomar a tela toda. Meses
+// sem nenhum dado mostram um traço fino, só pra manter o ritmo visual.
 function buildOccBars() {
   var c = document.getElementById('occ-bars');
   if (!c) return;
   c.innerHTML = '';
   MES.forEach(function(d, i) {
-    var dias = d[0], real = d[4];
-    var ocup = dias > 0 ? Math.round(dias / 30 * 100) : 0;
-    var altura = Math.max(6, ocup);
-    var cor = real ? '#cf7245' : (dias > 0 ? '#f0dcc7' : '#f0f1f3');
+    var ocup = ocupacaoDoMes_(i);
     var col = document.createElement('div');
     col.className = 'occ-col';
     col.innerHTML =
       '<div class="occ-val' + (ocup > 0 ? '' : ' muted') + '">' + (ocup > 0 ? ocup + '%' : '—') + '</div>' +
-      '<div class="occ-bar" style="height:' + altura + '%;background:' + cor + '"></div>' +
-      '<div class="occ-lbl' + (real ? ' real' : '') + '">' + MESES[i] + '</div>';
+      '<div class="occ-bar" style="height:' + Math.max(6, ocup) + '%;background:' + (ocup > 0 ? '#cf7245' : '#f0f1f3') + '"></div>' +
+      '<div class="occ-lbl' + (ocup > 0 ? ' real' : '') + '">' + MESES[i] + '</div>';
     c.appendChild(col);
   });
 }
 
 function calRunSummary(mIdx) {
   if (mIdx === undefined) mIdx = calMonthIdx;
-  var d = MES[mIdx];
-  var dias = d[0], real = d[4];
-  var ocup = dias > 0 ? Math.round(dias / 30 * 100) : 0;
-  var rotulo = MESES[mIdx] + ' 2026' + (real ? ' · real' : (dias > 0 ? ' · projeção' : ''));
-  setTxt_('kpi-diarias-ano', dias + ' diárias');
+  var dias = MES[mIdx].dias;
+  var ocup = ocupacaoDoMes_(mIdx);
+  var rotulo = MESES[mIdx] + ' 2026';
+  setTxt_('kpi-diarias-ano', dias + (dias === 1 ? ' diária' : ' diárias'));
   setTxt_('kpi-diarias-sub', rotulo);
   setTxt_('kpi-occ-media', ocup > 0 ? ocup + '%' : '—');
   setTxt_('kpi-occ-sub', rotulo);
@@ -1915,8 +1861,11 @@ function atualizarCapitalInvestimento_(projetos, totalGeral) {
 // ── AVATAR COM INICIAIS (uma cor consistente por nome) ──
 var PALETA_AVATAR_ = ['#c1622a', '#a13a1f', '#a3813f', '#b1503a', '#5f8f5f', '#dc2626'];
 function iniciais_(nome) {
-  var partes = (nome || '?').trim().split(/\s+/);
-  var ini = partes[0] ? partes[0][0] : '?';
+  // Só palavras que começam com letra: nomes com "&", "<" ou pontuação solta
+  // geravam iniciais como "A<" no avatar.
+  var partes = String(nome || '').trim().split(/\s+/).filter(function(p) { return /^[\p{L}]/u.test(p); });
+  if (!partes.length) return '?';
+  var ini = partes[0][0];
   if (partes.length > 1) ini += partes[partes.length - 1][0];
   return ini.toUpperCase();
 }
@@ -2009,12 +1958,21 @@ function sociosAtivos_() {
   return lista;
 }
 
+// Compara sócio por texto normalizado: a planilha escreve ora "Yuri/Jessica",
+// ora "YURI/JESSICA" — com === puro o total do sócio zerava silenciosamente.
+function saqueEhDoSocio_(saque, chave) {
+  return normalizarTexto_(saque.categoria) === normalizarTexto_(chave);
+}
+function totalSaquesDoSocio_(saques, chave) {
+  return saques.filter(function(s) { return saqueEhDoSocio_(s, chave); })
+    .reduce(function(a, s) { return a + num_(s.valor); }, 0);
+}
+
 function renderDistribuicaoSaques_(saques, socios) {
   var c = document.getElementById('fin-dist-lista');
   if (!c) return;
   c.innerHTML = socios.map(function(s) {
-    var total = saques.filter(function(x) { return x.categoria === s.chave; }).reduce(function(a, x) { return a + num_(x.valor); }, 0);
-    return '<div class="fr"><span class="fl">' + s.nome + '</span><span class="fv ' + s.cor + '">' + fmtR_(total) + '</span></div>';
+    return '<div class="fr"><span class="fl">' + esc_(s.nome) + '</span><span class="fv ' + s.cor + '">' + fmtR_(totalSaquesDoSocio_(saques, s.chave)) + '</span></div>';
   }).join('');
 }
 
@@ -2022,25 +1980,22 @@ function renderEquilibrioSaques_(saques, socios) {
   var c = document.getElementById('eq-container');
   if (!c) return;
 
-  function totalDe(chave) {
-    return saques.filter(function(s) { return s.categoria === chave; }).reduce(function(a, s) { return a + num_(s.valor); }, 0);
-  }
+  function totalDe(chave) { return totalSaquesDoSocio_(saques, chave); }
   function ultimoDe(chave) {
-    var lista = saques.filter(function(s) { return s.categoria === chave; });
+    var lista = saques.filter(function(s) { return saqueEhDoSocio_(s, chave); });
     if (!lista.length) return null;
     return lista.reduce(function(a, b) { return dataLocal_(a.data) > dataLocal_(b.data) ? a : b; });
   }
   function miniCard(s) {
-    var total = totalDe(s.chave);
     var ult = ultimoDe(s.chave);
-    return '<div class="mk"><div class="ml">Saques ' + s.nome + '</div><div class="mv ' + s.cor + '">' + fmtR_(total) + '</div>' +
-      '<div style="font-size:11px;color:#9aa3af;margin-top:3px">' + (ult ? fmtData_(ult.data) + ' · ' + (ult.descricao || '—') : 'Nenhum saque realizado') + '</div></div>';
+    return '<div class="mk"><div class="ml">Saques ' + esc_(s.nome) + '</div><div class="mv ' + s.cor + '">' + fmtR_(totalDe(s.chave)) + '</div>' +
+      '<div style="font-size:11px;color:#9aa3af;margin-top:3px">' + (ult ? fmtData_(ult.data) + ' · ' + esc_(ult.descricao || '—') : 'Nenhum saque realizado') + '</div></div>';
   }
 
   if (socios.length <= 1) {
     var s0 = socios[0] || { chave: '', nome: 'sócio único', cor: 'warn' };
     c.innerHTML = miniCard(s0) +
-      '<div style="font-size:11px;color:#9aa3af;margin-top:10px">100% do lucro é de ' + s0.nome + ' nesta hospedagem — sem divisão a equilibrar.</div>';
+      '<div style="font-size:11px;color:#9aa3af;margin-top:10px">100% do lucro é de ' + esc_(s0.nome) + ' nesta hospedagem — sem divisão a equilibrar.</div>';
     return;
   }
 
@@ -2056,17 +2011,17 @@ function renderEquilibrioSaques_(saques, socios) {
     c.innerHTML =
       '<div class="g2" style="margin-bottom:14px">' + miniCard(sA) + miniCard(sB) + '</div>' +
       '<div style="font-size:11px;color:#9aa3af;margin-bottom:6px">Distribuição acumulada dos saques</div>' +
-      '<div class="eq-bar"><div class="eq-g" style="width:' + pctA + '%">' + (pctA > 0 ? sA.nome + ' ' + pctA + '%' : '') + '</div><div class="eq-y" style="width:' + pctB + '%">' + (pctB > 0 ? sB.nome + ' ' + pctB + '%' : '') + '</div></div>' +
+      '<div class="eq-bar"><div class="eq-g" style="width:' + pctA + '%">' + (pctA > 0 ? esc_(sA.nome) + ' ' + pctA + '%' : '') + '</div><div class="eq-y" style="width:' + pctB + '%">' + (pctB > 0 ? esc_(sB.nome) + ' ' + pctB + '%' : '') + '</div></div>' +
       '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:14px">' +
-        '<span class="' + sA.cor + '" style="font-weight:600">' + sA.nome + ': ' + fmtR_(totalA) + ' (' + pctA + '%)</span>' +
-        '<span class="' + sB.cor + '" style="font-weight:600">' + sB.nome + ': ' + fmtR_(totalB) + ' (' + pctB + '%)</span>' +
+        '<span class="' + sA.cor + '" style="font-weight:600">' + esc_(sA.nome) + ': ' + fmtR_(totalA) + ' (' + pctA + '%)</span>' +
+        '<span class="' + sB.cor + '" style="font-weight:600">' + esc_(sB.nome) + ': ' + fmtR_(totalB) + ' (' + pctB + '%)</span>' +
       '</div>' +
       '<div class="mk">' +
         '<div class="ml" style="margin-bottom:6px">Para equilíbrio 50/50</div>' +
         '<div class="fr"><span class="fl">Total sacado acumulado</span><span class="fv">' + fmtR_(totalDois) + '</span></div>' +
         '<div class="fr"><span class="fl">Parte ideal por sócio</span><span class="fv">' + fmtR_(parteIdeal) + '</span></div>' +
-        '<div class="fr"><span class="fl">' + sA.nome + ' ' + (deltaA >= 0 ? 'a receber' : 'adiantado') + '</span><span class="fv ' + sA.cor + '">' + fmtR_(deltaA) + '</span></div>' +
-        '<div class="fr"><span class="fl">' + sB.nome + ' ' + (deltaA >= 0 ? 'adiantado' : 'a receber') + '</span><span class="fv ' + sB.cor + '">' + fmtR_(deltaA) + '</span></div>' +
+        '<div class="fr"><span class="fl">' + esc_(sA.nome) + ' ' + (deltaA >= 0 ? 'a receber' : 'adiantado') + '</span><span class="fv ' + sA.cor + '">' + fmtR_(deltaA) + '</span></div>' +
+        '<div class="fr"><span class="fl">' + esc_(sB.nome) + ' ' + (deltaA >= 0 ? 'adiantado' : 'a receber') + '</span><span class="fv ' + sB.cor + '">' + fmtR_(deltaA) + '</span></div>' +
       '</div>';
     return;
   }
@@ -2173,28 +2128,44 @@ function recalcularCalendarioDeReservas_() {
   });
 
   for (var i = 0; i < 12; i++) {
-    MES[i][0] = diasPorMes[i];
-    MES[i][1] = receitaPorMes[i];
-    MES[i][2] = despesaPorMes[i];
-    MES[i][3] = despesaPorMes[i];
-    MES[i][4] = temDadoPorMes[i];
+    MES[i] = { dias: diasPorMes[i], receita: receitaPorMes[i], despesa: despesaPorMes[i], temDado: temDadoPorMes[i] };
   }
 }
 
 // Reaplica todas as visualizações que dependem do array MES (gráfico,
-// tabela de resumo, calendário e barras de ocupação) após um recálculo.
+// calendário e barras de ocupação) após um recálculo.
 function atualizarVisoesMensais_() {
-  tbody_atualizarTabelaMes();
   try { chartMes_atualizar(); } catch (e) { console.error('Falha ao desenhar chartMes:', e); }
   buildOccBars();
   calRunSummary();
-  buildMonthButtons();
   buildCalendar(calMonthIdx);
   calAtualizarTitulos_();
   calAtualizarProximaReserva_();
   // Meses reais recém-atualizados mudam o acumulado já realizado — recalcula
   // o payback/retorno de Investimento para refletir isso.
   try { calc(); } catch (e) { console.error('Falha ao recalcular Investimento após meses reais:', e); }
+}
+
+// ── REPAINT COALESCIDO ──
+// Reservas, entradas, despesas e saques chegam em 4 respostas separadas, e
+// trocar de hospedagem/período mexe nas 4 de uma vez. Antes cada uma
+// disparava o recálculo completo na hora: os dois gráficos eram destruídos e
+// recriados 3 a 5 vezes por carregamento, com piscada visível. Agora cada
+// mudança só marca "precisa repintar" e um único passe roda no fim do turno.
+var repaintAgendado_ = false;
+function agendarRepaint_() {
+  if (repaintAgendado_) return;
+  repaintAgendado_ = true;
+  setTimeout(function() {
+    repaintAgendado_ = false;
+    recalcularPainel();
+    recalcularCalendarioDeReservas_();
+    atualizarVisoesMensais_();
+    renderTabelaReservas_();
+    renderTabelaEntradas_();
+    renderTabelaDespesas_();
+    renderTabelaSaques_();
+  }, 0);
 }
 
 // Soma as entradas já registradas para uma reserva (por nome do hóspede) —
@@ -2228,13 +2199,13 @@ function renderTabelaReservas_() {
     var statusTxt = quitado ? 'Pago' : (pct > 0 ? pct + '% pago' : 'Pendente');
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(r.hospedagem) + '</div>' : '';
     return '<tr>' +
-      '<td><div class="name-cell">' + avatarHtml_(r.nome) + '<span style="color:#0d1117;font-weight:600">' + r.nome + '</span></div>' + chip + '</td>' +
+      '<td><div class="name-cell">' + avatarHtml_(r.nome) + '<span style="color:#0d1117;font-weight:600">' + esc_(r.nome) + '</span></div>' + chip + '</td>' +
       '<td>' + fmtData_(r.entrada) + '</td>' +
       '<td>' + fmtData_(r.saida) + '</td>' +
-      '<td>' + r.diarias + '</td>' +
-      '<td style="color:#c1622a;font-weight:600">R$ ' + Math.round(r.valorContrato).toLocaleString('pt-BR') + '</td>' +
-      '<td class="warn">R$ ' + Math.round(recebido).toLocaleString('pt-BR') + '</td>' +
-      '<td><span class="chip cb">' + r.canal + '</span></td>' +
+      '<td>' + (num_(r.diarias) || '—') + '</td>' +
+      '<td style="color:#c1622a;font-weight:600">' + fmtR_(num_(r.valorContrato)) + '</td>' +
+      '<td class="warn">' + fmtR_(recebido) + '</td>' +
+      '<td><span class="chip cb">' + esc_(r.canal) + '</span></td>' +
       '<td><span class="chip ' + statusClass + '">' + statusTxt + '</span></td>' +
       '</tr>';
   }).join('');
@@ -2244,78 +2215,81 @@ function renderReservas(lista) {
   // respondendo algo inesperado) não deve corromper o estado local.
   if (!Array.isArray(lista)) return;
   STATE.reservas = lista;
-  recalcularPainel();
-  recalcularCalendarioDeReservas_();
-  atualizarVisoesMensais_();
-  renderTabelaReservas_();
+  agendarRepaint_();
 }
 function carregarReservas() {
   if (!apiConfigurada_()) return;
   apiGet_('reservas').then(renderReservas).catch(function(){});
 }
 
-function renderEntradas(lista) {
-  if (!Array.isArray(lista)) return;
-  STATE.entradas = lista;
-  recalcularPainel();
-  renderTabelaReservas_();
+function renderTabelaEntradas_() {
   var tbody = document.getElementById('tbl-entradas');
-  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'data'), ['reserva', 'obs', 'hospedagem']);
+  if (!tbody) return;
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.entradas), 'data'), ['reserva', 'obs', 'hospedagem']);
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty-note">' + (filtroBusca_ ? 'Nenhuma entrada encontrada na busca.' : 'Nenhuma entrada registrada.') + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(e) {
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(e.hospedagem) + '</div>' : '';
     return '<tr>' +
-      '<td><div class="name-cell">' + avatarHtml_(e.reserva) + '<span style="color:#0d1117">' + e.reserva + '</span></div>' + chip + '</td>' +
+      '<td><div class="name-cell">' + avatarHtml_(e.reserva) + '<span style="color:#0d1117">' + esc_(e.reserva) + '</span></div>' + chip + '</td>' +
       '<td>' + fmtData_(e.data) + '</td>' +
-      '<td class="up" style="font-weight:600">R$ ' + Math.round(e.valor).toLocaleString('pt-BR') + '</td>' +
+      '<td class="up" style="font-weight:600">' + fmtR_(num_(e.valor)) + '</td>' +
       '</tr>';
   }).join('');
+}
+function renderEntradas(lista) {
+  if (!Array.isArray(lista)) return;
+  STATE.entradas = lista;
+  agendarRepaint_();
 }
 function carregarEntradas() {
   if (!apiConfigurada_()) return;
   apiGet_('entradas').then(renderEntradas).catch(function(){});
 }
 
-function renderDespesas(lista) {
-  if (!Array.isArray(lista)) return;
-  STATE.despesas = lista;
-  recalcularPainel();
-  recalcularCalendarioDeReservas_();
-  atualizarVisoesMensais_();
+function renderTabelaDespesas_() {
   var tbody = document.getElementById('tbl-despesas');
-  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'dataPagamento'), ['categoria', 'descricao', 'hospedagem']);
+  if (!tbody) return;
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.despesas), 'dataPagamento'), ['categoria', 'descricao', 'hospedagem']);
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + (filtroBusca_ ? 'Nenhuma despesa encontrada na busca.' : 'Nenhuma despesa cadastrada.') + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(d) {
     var chip = hospedagemSelecionada === 'Total' ? ' ' + hospChipHtml_(d.hospedagem) : '';
     return '<tr>' +
-      '<td style="color:#0d1117">' + d.categoria + chip + '</td>' +
+      '<td style="color:#0d1117">' + esc_(d.categoria) + chip + '</td>' +
       '<td>' + fmtData_(d.dataPagamento) + '</td>' +
-      '<td style="color:#a13a1f;font-weight:600">R$ ' + Math.round(d.pago).toLocaleString('pt-BR') + '</td>' +
-      '<td style="color:#9aa3af">' + (d.descricao || '—') + '</td>' +
+      '<td style="color:#a13a1f;font-weight:600">' + fmtR_(num_(d.pago)) + '</td>' +
+      '<td style="color:#9aa3af">' + (d.descricao ? esc_(d.descricao) : '—') + '</td>' +
       '</tr>';
   }).join('');
+}
+function renderDespesas(lista) {
+  if (!Array.isArray(lista)) return;
+  STATE.despesas = lista;
+  agendarRepaint_();
 }
 function carregarDespesas() {
   if (!apiConfigurada_()) return;
   apiGet_('despesas').then(renderDespesas).catch(function(){});
 }
 
-function renderSaques(lista) {
-  if (!Array.isArray(lista)) return;
-  STATE.saques = lista;
-  recalcularPainel();
+function renderTabelaSaques_() {
   var tbody = document.getElementById('tbl-saques');
-  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(lista), 'data'), ['categoria', 'descricao', 'hospedagem']);
+  if (!tbody) return;
+  var visiveis = aplicarBusca_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.saques), 'data'), ['categoria', 'descricao', 'hospedagem']);
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + (filtroBusca_ ? 'Nenhum saque encontrado na busca.' : 'Nenhum saque registrado.') + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(s) {
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(s.hospedagem) + '</div>' : '';
     return '<tr>' +
-      '<td><div class="name-cell">' + avatarHtml_(s.categoria) + '<span style="color:#0d1117">' + s.categoria + '</span></div>' + chip + '</td>' +
+      '<td><div class="name-cell">' + avatarHtml_(s.categoria) + '<span style="color:#0d1117">' + esc_(s.categoria) + '</span></div>' + chip + '</td>' +
       '<td>' + fmtData_(s.data) + '</td>' +
-      '<td class="warn" style="font-weight:600">R$ ' + Math.round(s.valor).toLocaleString('pt-BR') + '</td>' +
-      '<td style="color:#9aa3af">' + (s.descricao || '—') + '</td>' +
+      '<td class="warn" style="font-weight:600">' + fmtR_(num_(s.valor)) + '</td>' +
+      '<td style="color:#9aa3af">' + (s.descricao ? esc_(s.descricao) : '—') + '</td>' +
       '</tr>';
   }).join('');
+}
+function renderSaques(lista) {
+  if (!Array.isArray(lista)) return;
+  STATE.saques = lista;
+  agendarRepaint_();
 }
 function carregarSaques() {
   if (!apiConfigurada_()) return;
@@ -2395,7 +2369,7 @@ function renderResumoTipoProjeto_(id, itens) {
   var max = lista.reduce(function(m, cat) { return Math.max(m, cat.valor); }, 1);
   c.innerHTML = lista.map(function(cat) {
     var pct = max > 0 ? Math.round(cat.valor / max * 100) : 0;
-    return '<div class="br"><div class="bl">' + cat.nome + '</div><div class="bt"><div class="bf" style="width:' + pct + '%;background:' + cat.cor + '"></div></div><div class="bv">' + fmtR_(cat.valor) + '</div></div>';
+    return '<div class="br"><div class="bl">' + esc_(cat.nome) + '</div><div class="bt"><div class="bf" style="width:' + pct + '%;background:' + cat.cor + '"></div></div><div class="bv">' + fmtR_(cat.valor) + '</div></div>';
   }).join('');
 }
 
@@ -2408,14 +2382,18 @@ function renderItensProjeto_(id, itens) {
   var c = document.getElementById(id);
   if (!c) return;
   obraItensCache_[id] = itens;
-  if (!itens.length) { c.innerHTML = '<div class="empty-note">Nenhum lançamento registrado.</div>'; return; }
+  var filtrados = aplicarBusca_(itens, ['descricao', 'classificacao']);
+  if (!filtrados.length) {
+    c.innerHTML = '<div class="empty-note">' + (filtroBusca_ ? 'Nenhum lançamento encontrado na busca.' : 'Nenhum lançamento registrado.') + '</div>';
+    return;
+  }
   var visiveis = obraItensVisiveis_[id] || 10;
-  var ordenados = itens.slice().reverse(); // mais recente primeiro
+  var ordenados = filtrados.slice().reverse(); // mais recente primeiro
   var restantes = Math.max(0, ordenados.length - visiveis);
   c.innerHTML = ordenados.slice(0, visiveis).map(function(it) {
     var deGlauco = num_(it.glauco) >= num_(it.yuri);
-    return '<div class="fr"><div class="name-cell">' + avatarHtml_(deGlauco ? 'Glauco' : 'Yuri') + '<span class="fl" style="color:#374151">' + it.descricao + ' <span style="color:#b0b6bf;font-size:10px">' + it.classificacao + '</span></span></div>' +
-      '<span class="fv ' + (deGlauco ? 'pur' : 'warn') + '">R$ ' + Math.round(num_(it.total)).toLocaleString('pt-BR') + '</span></div>';
+    return '<div class="fr"><div class="name-cell">' + avatarHtml_(deGlauco ? 'Glauco' : 'Yuri') + '<span class="fl" style="color:#374151">' + esc_(it.descricao) + ' <span style="color:#b0b6bf;font-size:10px">' + esc_(it.classificacao) + '</span></span></div>' +
+      '<span class="fv ' + (deGlauco ? 'pur' : 'warn') + '">' + fmtR_(num_(it.total)) + '</span></div>';
   }).join('') +
   (restantes > 0 ? '<div style="text-align:center;margin-top:10px"><button class="btn-toggle" onclick="mostrarMaisItensObra_(\'' + id + '\')">Mostrar mais 10 (' + restantes + ' restantes)</button></div>' : '');
 }
@@ -2427,15 +2405,21 @@ function mostrarMaisItensObra_(id) {
 function renderPendenciasProjeto_(lista) {
   var c = document.getElementById('obra-pendencias-grid');
   if (!c) return;
+  // O contador do topo mostra sempre o total de pendências abertas do escopo,
+  // independentemente da busca — é um indicador, não um resultado de filtro.
   setTxt_('badge-pend-count', lista.length);
-  if (!lista.length) { c.innerHTML = '<div class="empty-note">Nenhuma pendência registrada.</div>'; return; }
+  var visiveis = aplicarBusca_(lista, ['item', 'tipo', 'projeto']);
+  if (!visiveis.length) {
+    c.innerHTML = '<div class="empty-note">' + (filtroBusca_ ? 'Nenhuma pendência encontrada na busca.' : 'Nenhuma pendência registrada.') + '</div>';
+    return;
+  }
   var estilos = { 'Serviço': { bg: '#f4eee0', cor: '#a3813f', chip: 'cy' }, 'Compra/Melhoria': { bg: '#eef4ed', cor: '#5f8f5f', chip: 'cb' } };
-  c.innerHTML = lista.map(function(p) {
+  c.innerHTML = visiveis.map(function(p) {
     var e = estilos[p.tipo] || { bg: '#f9fafb', cor: '#6b7280', chip: 'cw' };
-    var chipProjeto = '<span class="hosp-chip" style="background:' + corProjeto_(p.projeto) + '">' + nomeAmigavelProjeto_(p.projeto) + '</span>';
+    var chipProjeto = '<span class="hosp-chip" style="background:' + corProjeto_(p.projeto) + '">' + esc_(nomeAmigavelProjeto_(p.projeto)) + '</span>';
     return '<div style="background:' + e.bg + ';border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px">' +
-      '<span style="font-size:12px;color:' + e.cor + '">' + p.item + (p.estimativa > 0 ? ' <span style="color:#9aa3af">· R$ ' + Math.round(p.estimativa).toLocaleString('pt-BR') + '</span>' : '') + '</span>' +
-      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><span class="chip ' + e.chip + '">' + (p.tipo || 'Serviço') + '</span>' + chipProjeto + '</div></div>';
+      '<span style="font-size:12px;color:' + e.cor + '">' + esc_(p.item) + (num_(p.estimativa) > 0 ? ' <span style="color:#9aa3af">· ' + fmtR_(num_(p.estimativa)) + '</span>' : '') + '</span>' +
+      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><span class="chip ' + e.chip + '">' + esc_(p.tipo || 'Serviço') + '</span>' + chipProjeto + '</div></div>';
   }).join('');
 }
 
@@ -2443,7 +2427,7 @@ function preencherSelectProjetosObra_(projetos) {
   ['g-projeto', 'p-projeto'].forEach(function(id) {
     var el = document.getElementById(id);
     if (!el) return;
-    el.innerHTML = projetos.map(function(p) { return '<option value="' + p.nome + '">' + nomeAmigavelProjeto_(p.nome) + '</option>'; }).join('');
+    el.innerHTML = projetos.map(function(p) { return '<option value="' + esc_(p.nome) + '">' + esc_(nomeAmigavelProjeto_(p.nome)) + '</option>'; }).join('');
   });
 }
 
@@ -2487,6 +2471,10 @@ function selecionarGrupoObra_(nome) {
   renderObraVisao_();
 }
 
+function obraKpiHtml_(rot, val, sub, cls) {
+  return '<div class="kpi"><div class="klbl">' + esc_(rot) + '</div><div class="kval ' + (cls || '') + '">' + val + '</div><div class="ksub">' + esc_(sub || '') + '</div></div>';
+}
+
 function renderObraVisao_() {
   var grupos = obraGruposCache_;
   var totalGeral = obraTotalGeralCache_;
@@ -2500,8 +2488,8 @@ function renderObraVisao_() {
     pills.innerHTML = opcoes.map(function(g) {
       var ativo = obraEscopo_ === g.nome;
       var estilo = ativo ? 'background:' + g.cor + ';border-color:' + g.cor + ';color:#fff' : '';
-      return '<button type="button" class="hosp-pill' + (ativo ? ' on' : '') + '" style="' + estilo + '" onclick="selecionarGrupoObra_(\'' + g.nome.replace(/'/g, "\\'") + '\')">' +
-        (g.nome !== 'TOTAL' ? '<span class="dot" style="background:' + (ativo ? '#fff' : g.cor) + '"></span>' : '') + g.rotulo + '</button>';
+      return '<button type="button" class="hosp-pill' + (ativo ? ' on' : '') + '" style="' + estilo + '" data-obra="' + esc_(g.nome) + '">' +
+        (g.nome !== 'TOTAL' ? '<span class="dot" style="background:' + (ativo ? '#fff' : g.cor) + '"></span>' : '') + esc_(g.rotulo) + '</button>';
     }).join('');
   }
 
@@ -2509,18 +2497,16 @@ function renderObraVisao_() {
   var alvo = grupoSel || totalGeral;
   var kpis = document.getElementById('obra-kpis');
   if (kpis) {
-    function kpiHtml(rot, val, sub, cls) {
-      return '<div class="kpi"><div class="klbl">' + rot + '</div><div class="kval ' + (cls || '') + '">' + val + '</div><div class="ksub">' + (sub || '') + '</div></div>';
-    }
     var pct = grupoSel && totalGeral.total > 0 ? Math.round(grupoSel.total / totalGeral.total * 100) + '% do investimento total' : 'Lote + infraestrutura + hospedagens';
-    var difere = Math.abs(num_(alvo.glauco) - num_(alvo.yuri));
-    var maior = num_(alvo.glauco) >= num_(alvo.yuri) ? 'Glauco' : 'Yuri';
+    // Quem aportou MAIS é quem tem valor a receber de volta do outro sócio.
+    var difere = num_(alvo.glauco) - num_(alvo.yuri);
+    var subDiferenca = difere === 0 ? 'Aportes equilibrados' : (difere > 0 ? 'Glauco' : 'Yuri') + ' a receber';
     kpis.innerHTML =
-      kpiHtml('Investido — ' + (grupoSel ? grupoSel.rotulo : 'Total'), fmtR_(alvo.total), pct) +
-      kpiHtml('Glauco', fmtR_(alvo.glauco), alvo.total > 0 ? Math.round(num_(alvo.glauco) / alvo.total * 100) + '%' : '—', 'pur') +
-      kpiHtml('Yuri', fmtR_(alvo.yuri), alvo.total > 0 ? Math.round(num_(alvo.yuri) / alvo.total * 100) + '%' : '—', 'warn') +
-      kpiHtml('Diferença sócios', fmtR_(difere), maior + ' a receber', 'up') +
-      kpiHtml('Dívida pendente', fmtR_(num_(alvo.divida)), grupoSel ? 'Deste grupo' : 'Saldo financiado', 'dn');
+      obraKpiHtml_('Investido — ' + (grupoSel ? grupoSel.rotulo : 'Total'), fmtR_(alvo.total), pct) +
+      obraKpiHtml_('Glauco', fmtR_(alvo.glauco), alvo.total > 0 ? Math.round(num_(alvo.glauco) / alvo.total * 100) + '%' : '—', 'pur') +
+      obraKpiHtml_('Yuri', fmtR_(alvo.yuri), alvo.total > 0 ? Math.round(num_(alvo.yuri) / alvo.total * 100) + '%' : '—', 'warn') +
+      obraKpiHtml_('Diferença sócios', fmtR_(Math.abs(difere)), subDiferenca, 'up') +
+      obraKpiHtml_('Dívida pendente', fmtR_(num_(alvo.divida)), grupoSel ? 'Deste grupo' : 'Saldo financiado', 'dn');
   }
 
   // ── card de detalhe: barras por grupo (Total) ou por classificação (grupo) ──
@@ -2530,7 +2516,7 @@ function renderObraVisao_() {
       setTxt_('obra-detalhe-titulo', 'Investimento por grupo');
       blocos.innerHTML = grupos.map(function(g) {
         var pct = totalGeral.total > 0 ? Math.round(g.total / totalGeral.total * 100) : 0;
-        return '<div class="br"><div class="bl">' + g.rotulo + '</div><div class="bt"><div class="bf" style="width:' + pct + '%;background:' + g.cor + '"></div></div><span class="bv-badge" style="background:' + g.cor + '22;color:' + g.cor + '">' + pct + '%</span><div class="bv">' + fmtObraK_(g.total) + '</div></div>';
+        return '<div class="br"><div class="bl">' + esc_(g.rotulo) + '</div><div class="bt"><div class="bf" style="width:' + pct + '%;background:' + g.cor + '"></div></div><span class="bv-badge" style="background:' + g.cor + '22;color:' + g.cor + '">' + pct + '%</span><div class="bv">' + fmtObraK_(g.total) + '</div></div>';
       }).join('');
     } else {
       setTxt_('obra-detalhe-titulo', 'Resumo por classificação — ' + grupoSel.rotulo);
@@ -2540,8 +2526,9 @@ function renderObraVisao_() {
   }
   setTxt_('obra-bloco-glauco', fmtR_(alvo.glauco) + ' total');
   setTxt_('obra-bloco-yuri', fmtR_(alvo.yuri) + ' total');
-  var maiorAportador = num_(alvo.glauco) >= num_(alvo.yuri) ? 'Glauco' : 'Yuri';
-  setTxt_('obra-bloco-diferenca', maiorAportador + ' a receber: ' + fmtR_(Math.abs(num_(alvo.glauco) - num_(alvo.yuri))));
+  var saldoSocios = num_(alvo.glauco) - num_(alvo.yuri);
+  setTxt_('obra-bloco-diferenca', saldoSocios === 0 ? 'Aportes equilibrados'
+    : (saldoSocios > 0 ? 'Glauco' : 'Yuri') + ' a receber: ' + fmtR_(Math.abs(saldoSocios)));
   setTxt_('obra-bloco-divida', fmtR_(num_(alvo.divida)));
 
   // ── Pendências do escopo (itens concluídos ficam de fora) ──
@@ -2561,11 +2548,11 @@ function renderObraVisao_() {
     var comDados = origem.filter(function(g) { return g.itens && g.itens.length; });
     container.innerHTML = comDados.map(function(g) {
       return (grupoSel ? '' : '<div class="card">' +
-        '<div class="ctitle" style="display:flex;align-items:center;gap:7px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + g.cor + ';flex-shrink:0"></span>' + g.rotulo + ' — resumo por tipo</div>' +
+        '<div class="ctitle" style="display:flex;align-items:center;gap:7px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + g.cor + ';flex-shrink:0"></span>' + esc_(g.rotulo) + ' — resumo por tipo</div>' +
         '<div id="obra-tipo-' + slugify_(g.nome) + '"></div>' +
         '</div>') +
         '<div class="card">' +
-        '<div class="ctitle">' + g.rotulo + ' — lançamentos (mais recente primeiro)</div>' +
+        '<div class="ctitle">' + esc_(g.rotulo) + ' — lançamentos (mais recente primeiro)</div>' +
         '<div id="obra-itens-' + slugify_(g.nome) + '"></div>' +
         '<div style="margin-top:8px;font-size:10.5px;color:#b0b6bf">G = Glauco &nbsp;·&nbsp; Y = Yuri</div>' +
         '</div>';
@@ -2591,21 +2578,14 @@ function carregarObraProjetos() {
   var agora = new Date();
   setTxt_('badge-month', nomes[agora.getMonth()] + ' ' + agora.getFullYear());
 })();
-try { chartMes_atualizar(); } catch (e) { console.error('Falha ao desenhar chartMes:', e); }
-tbody_atualizarTabelaMes();
-buildMonthButtons();
-buildCalendar(calMonthIdx);
-buildOccBars();
-calRunSummary();
-try { calc(); } catch (e) { console.error('Falha ao calcular simulador:', e); }
+ligarDelegacaoPills_();
 renderHospedagemPills_();
 renderPeriodoChips_();
 setTxt_('fin-titulo', 'Financeiro — ' + rotuloPeriodo_());
-recalcularPainel();
-renderReservas(STATE.reservas);
-renderEntradas(STATE.entradas);
-renderDespesas(STATE.despesas);
-renderSaques(STATE.saques);
+// Um único passe monta a tela inteira (KPIs, gráficos, calendário e tabelas)
+// a partir do STATE inicial; as respostas da API vão reagendando esse mesmo
+// passe conforme chegam, sem redesenhar os gráficos várias vezes seguidas.
+agendarRepaint_();
 
 if (apiConfigurada_()) {
   atualizarTudo();

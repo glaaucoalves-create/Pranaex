@@ -286,14 +286,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="card-head-wrap">
       <div style="min-width:0"><div class="ctitle">Reservas</div><div class="card-sum" id="sum-reservas">—</div></div>
       <div class="card-acoes">
-        <button class="fab" id="btn-importar-airbnb" style="background:#f5f6f8;color:#374151;border:1px solid #e5e7eb" onclick="document.getElementById('input-airbnb-csv').click()">⭳ Importar Airbnb</button>
-        <input type="file" id="input-airbnb-csv" accept=".csv" style="display:none" onchange="importarCSVAirbnb(this)">
         <button class="fab" onclick="abrirModal('reserva')">+ Nova</button>
         <button class="btn-toggle" id="tg-reservas" onclick="alternarDetalhes_('reservas', this)">Detalhes ▾</button>
       </div>
     </div>
     <div class="card-body-toggle" id="body-reservas" hidden>
-      <div style="font-size:11px;color:#9aa3af;margin-bottom:10px">Importa o relatório "Reservas concluídas" exportado do Airbnb — reconhece automaticamente os anúncios "Casa Prana Lumiar" e "Mantra Chalé Lumiar" e lança cada um na hospedagem certa; reservas já importadas (mesmo código de confirmação) são ignoradas automaticamente.</div>
+      <div style="font-size:11px;color:#9aa3af;margin-bottom:10px">Reservas do Airbnb entram sozinhas: a cada carregamento da tela, o app varre a pasta de CSVs do Airbnb no Drive e importa as concluídas que ainda não estão aqui — reconhece automaticamente os anúncios "Casa Prana Lumiar" e "Mantra Chalé Lumiar" e ignora reservas já importadas (mesmo código de confirmação).</div>
       <div class="tbl-wrap">
       <table style="min-width:680px">
         <thead><tr><th>Hóspede</th><th>Check-in</th><th>Checkout</th><th>Diárias</th><th>Valor</th><th>Pago</th><th>Canal</th><th>Status</th></tr></thead>
@@ -590,11 +588,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       </div>
       <div class="field">
         <label>Canal</label>
-        <select id="r-canal">
-          <option>Aluguel Instagram</option>
-          <option>Aluguel Airbnb</option>
-          <option>Outros</option>
-        </select>
+        <select id="r-canal"></select>
       </div>
       <div class="field"><label>Nome do hóspede</label><input type="text" id="r-nome" placeholder="Nome completo"></div>
       <div class="field"><label>Documento (CPF)</label><input type="text" id="r-doc" placeholder="Opcional"></div>
@@ -617,9 +611,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <div class="modal-title">Nova entrada</div>
       <div class="field">
         <label>Hospedagem</label>
-        <select id="e-hospedagem"></select>
+        <select id="e-hospedagem" onchange="atualizarReservasEntrada_()"></select>
       </div>
-      <div class="field"><label>Reserva / hóspede</label><input type="text" id="e-reserva" placeholder="Ex: Isadora Chagas G."></div>
+      <div class="field">
+        <label>Reserva / hóspede</label>
+        <select id="e-reserva" onchange="aoEscolherReservaEntrada_()"></select>
+        <div id="e-reserva-info" style="font-size:11px;color:#9aa3af;margin-top:5px"></div>
+      </div>
       <div class="field"><label>Data do pagamento</label><input type="date" id="e-data"></div>
       <div class="field"><label>Valor pago (R$)</label><input type="number" id="e-valor" step="0.01"></div>
       <div class="field"><label>Observações</label><input type="text" id="e-obs" placeholder="Opcional"></div>
@@ -635,7 +633,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <label>Hospedagem</label>
         <select id="d-hospedagem"></select>
       </div>
-      <div class="field"><label>Categoria</label><input type="text" id="d-categoria" placeholder="Ex: Jardinagem"></div>
+      <div class="field">
+        <label>Categoria</label>
+        <select id="d-categoria"></select>
+      </div>
       <div class="row2">
         <div class="field"><label>Data pagamento</label><input type="date" id="d-datapg"></div>
         <div class="field"><label>Valor pago (R$)</label><input type="number" id="d-pago" step="0.01"></div>
@@ -676,8 +677,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       </div>
       <div class="field">
         <label>Classificação</label>
-        <input type="text" id="g-classificacao" list="lista-classificacoes-obra" placeholder="Ex: Hidráulica/gás, Elétrica, Mão de obra...">
-        <datalist id="lista-classificacoes-obra"></datalist>
+        <select id="g-classificacao"></select>
       </div>
       <div class="field"><label>Descrição</label><input type="text" id="g-item" placeholder="Ex: Telhas, portão, material hidráulica..."></div>
       <div class="row2">
@@ -919,6 +919,98 @@ function atualizarSociosSaque_() {
   var socios = h ? h.socios : HOSPEDAGENS_[0].socios;
   var el = document.getElementById('s-categoria');
   if (el) el.innerHTML = socios.map(function(s) { return '<option value="' + s.chave + '">' + s.nome + '</option>'; }).join('');
+}
+
+// Igual à caixa de seleção "Reserva" da aba Entradas na planilha (que lista
+// os nomes já cadastrados na aba Reservas) — troca as opções conforme a
+// hospedagem escolhida no mesmo formulário, mais recentes primeiro, sem
+// repetir o mesmo nome duas vezes na lista.
+function atualizarReservasEntrada_() {
+  var el = document.getElementById('e-reserva');
+  if (!el) return;
+  var hospedagem = document.getElementById('e-hospedagem').value;
+  var alvo = normalizarTexto_(hospedagem);
+  var vistos = {};
+  var opcoes = (Array.isArray(STATE.reservas) ? STATE.reservas : [])
+    .filter(function(r) { return normalizarTexto_(r.hospedagem || '') === alvo; })
+    .slice().reverse()
+    .filter(function(r) {
+      var chave = normalizarTexto_(r.nome);
+      if (!chave || vistos[chave]) return false;
+      vistos[chave] = true;
+      return true;
+    });
+  el.innerHTML = opcoes.length
+    ? opcoes.map(function(r) { return '<option value="' + esc_(r.nome) + '">' + esc_(r.nome) + ' — ' + fmtData_(r.entrada) + '</option>'; }).join('')
+    : '<option value="">Nenhuma reserva cadastrada nesta hospedagem</option>';
+  el.disabled = !opcoes.length;
+  aoEscolherReservaEntrada_();
+}
+// Mostra quanto ainda falta receber da reserva escolhida e já sugere esse
+// valor no campo — o caso comum é quitar o restante, e sem essa dica era
+// preciso sair do formulário para conferir na tabela quanto faltava.
+function aoEscolherReservaEntrada_() {
+  var sel = document.getElementById('e-reserva');
+  var info = document.getElementById('e-reserva-info');
+  var campoValor = document.getElementById('e-valor');
+  if (!sel || !info) return;
+  var reserva = (STATE.reservas || []).filter(function(r) { return r.nome === sel.value; })[0];
+  if (!reserva) { info.textContent = ''; return; }
+  var contrato = num_(reserva.valorContrato);
+  var falta = Math.max(0, contrato - recebidoPorReserva_(reserva.nome));
+  info.textContent = 'Contrato ' + fmtR_(contrato) + ' · já recebido ' + fmtR_(recebidoPorReserva_(reserva.nome)) +
+    (falta > 0 ? ' · falta ' + fmtR_(falta) : ' · quitada');
+  if (campoValor && !campoValor.value && falta > 0) campoValor.value = falta.toFixed(2);
+}
+
+// Canal da reserva: mesma caixa de seleção da planilha (bloco "Entradas" da
+// aba Resumo), com as três opções fixas como reserva caso a API não responda.
+function preencherCanaisReserva_() {
+  var el = document.getElementById('r-canal');
+  if (!el) return;
+  var lista = (STATE.canais && STATE.canais.length) ? STATE.canais : ['Aluguel Instagram', 'Aluguel Airbnb', 'Outros'];
+  el.innerHTML = lista.map(function(c) { return '<option value="' + esc_(c) + '">' + esc_(c) + '</option>'; }).join('');
+}
+
+// Classificação do gasto de obra: caixa de seleção com as classificações que
+// já existem nas abas de projeto (era texto livre com datalist, que só
+// sugeria — dava pra digitar qualquer coisa e criar categoria nova por typo).
+function preencherClassificacoesObra_() {
+  var el = document.getElementById('g-classificacao');
+  if (!el) return;
+  var vistas = {}, lista = [];
+  (STATE.obraProjetos || []).forEach(function(p) {
+    (p.itens || []).forEach(function(it) {
+      var c = String(it.classificacao || '').trim();
+      if (c && !vistas[c]) { vistas[c] = true; lista.push(c); }
+    });
+  });
+  lista.sort();
+  el.innerHTML = lista.length
+    ? lista.map(function(c) { return '<option value="' + esc_(c) + '">' + esc_(c) + '</option>'; }).join('')
+    : '<option value="">Carregando classificações...</option>';
+}
+
+// Igual à caixa de seleção "Categoria" da aba Despesas na planilha
+// (Resumo!B24:B36) — busca a lista real da planilha em vez de deixar
+// digitar qualquer texto livre.
+function preencherCategoriasDespesa_() {
+  var el = document.getElementById('d-categoria');
+  if (!el) return;
+  var lista = Array.isArray(STATE.categoriasDespesa) ? STATE.categoriasDespesa : [];
+  el.innerHTML = lista.length
+    ? lista.map(function(c) { return '<option value="' + esc_(c) + '">' + esc_(c) + '</option>'; }).join('')
+    : '<option value="">Carregando categorias...</option>';
+}
+function carregarCategoriasDespesa() {
+  if (!apiConfigurada_()) return;
+  apiGet_('categoriasDespesa').then(function(res) {
+    if (!res || !res.ok || !Array.isArray(res.categorias)) return;
+    STATE.categoriasDespesa = res.categorias;
+    STATE.canais = Array.isArray(res.canais) ? res.canais : [];
+    preencherCategoriasDespesa_();
+    preencherCanaisReserva_();
+  }).catch(function(erro) { console.error('Falha ao buscar categorias de despesa:', erro); });
 }
 
 // ── NAV (sidebar) ──
@@ -1319,6 +1411,18 @@ function preselecionarHospedagem_(id) {
   var el = document.getElementById(id);
   if (el && hospedagemSelecionada !== 'Total') el.value = hospedagemSelecionada;
 }
+function hojeISO_() {
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+// Limpa só os <input>; as <select> são remontadas logo em seguida.
+function limparFormulario_(id) {
+  var form = document.getElementById(id);
+  if (!form) return;
+  form.querySelectorAll('input').forEach(function(el) { el.value = ''; });
+  var info = form.querySelector('#e-reserva-info');
+  if (info) info.textContent = '';
+}
 function abrirModal(tipo) {
   document.getElementById('form-reserva').style.display = tipo === 'reserva' ? 'block' : 'none';
   document.getElementById('form-entrada').style.display = tipo === 'entrada' ? 'block' : 'none';
@@ -1327,11 +1431,37 @@ function abrirModal(tipo) {
   document.getElementById('form-gasto-obra').style.display = tipo === 'gasto-obra' ? 'block' : 'none';
   document.getElementById('form-pendencia').style.display = tipo === 'pendencia' ? 'block' : 'none';
 
-  if (tipo === 'reserva') { preencherSelectHospedagens_('r-hospedagem', false); preselecionarHospedagem_('r-hospedagem'); }
-  if (tipo === 'entrada') { preencherSelectHospedagens_('e-hospedagem', false); preselecionarHospedagem_('e-hospedagem'); }
-  if (tipo === 'despesa') { preencherSelectHospedagens_('d-hospedagem', false); preselecionarHospedagem_('d-hospedagem'); }
-  if (tipo === 'saque') { preencherSelectHospedagens_('s-hospedagem', false); preselecionarHospedagem_('s-hospedagem'); atualizarSociosSaque_(); }
-  if ((tipo === 'gasto-obra' || tipo === 'pendencia') && Array.isArray(STATE.obraProjetos)) preencherSelectProjetosObra_(STATE.obraProjetos);
+  // Reabrir o formulário não pode trazer de volta o que foi digitado da vez
+  // anterior — era fácil salvar de novo o valor do lançamento passado.
+  limparFormulario_('form-' + tipo);
+
+  if (tipo === 'reserva') {
+    preencherSelectHospedagens_('r-hospedagem', false); preselecionarHospedagem_('r-hospedagem');
+    preencherCanaisReserva_();
+    document.getElementById('r-pago').value = '0';
+  }
+  if (tipo === 'entrada') {
+    preencherSelectHospedagens_('e-hospedagem', false); preselecionarHospedagem_('e-hospedagem');
+    document.getElementById('e-data').value = hojeISO_();
+    atualizarReservasEntrada_();
+  }
+  if (tipo === 'despesa') {
+    preencherSelectHospedagens_('d-hospedagem', false); preselecionarHospedagem_('d-hospedagem');
+    preencherCategoriasDespesa_();
+    document.getElementById('d-datapg').value = hojeISO_();
+  }
+  if (tipo === 'saque') {
+    preencherSelectHospedagens_('s-hospedagem', false); preselecionarHospedagem_('s-hospedagem');
+    atualizarSociosSaque_();
+    document.getElementById('s-data').value = hojeISO_();
+  }
+  if (tipo === 'gasto-obra' || tipo === 'pendencia') {
+    if (Array.isArray(STATE.obraProjetos)) preencherSelectProjetosObra_(STATE.obraProjetos);
+    if (tipo === 'gasto-obra') {
+      preencherClassificacoesObra_();
+      document.getElementById('g-data').value = hojeISO_();
+    }
+  }
 
   document.getElementById('modal-overlay').classList.add('on');
 }
@@ -1418,6 +1548,11 @@ function salvarReserva(btn) {
     obs: document.getElementById('r-obs').value
   };
   if (!dados.nome || !dados.entrada || !dados.saida) { alert('Preencha nome, check-in e checkout.'); finalizarEnvio_(btn); return; }
+  // O backend calcula as diárias por (saída − entrada): com o checkout antes
+  // do check-in a reserva ia pra planilha com diárias negativas.
+  if (dataLocal_(dados.saida) <= dataLocal_(dados.entrada)) { alert('O checkout precisa ser depois do check-in.'); finalizarEnvio_(btn); return; }
+  if (valorContrato <= 0) { alert('Informe o valor do contrato.'); finalizarEnvio_(btn); return; }
+  if (jaPago > valorContrato) { alert('O valor já pago não pode ser maior que o contrato.'); finalizarEnvio_(btn); return; }
   apiPost_('adicionarReserva', dados).then(function(res) {
     if (!res || !res.ok) throw new Error(res && res.erro);
     // Se já foi informado um valor pago no ato da reserva, registra a
@@ -1446,7 +1581,8 @@ function salvarEntrada(btn) {
     valor: parseFloat(document.getElementById('e-valor').value) || 0,
     obs: document.getElementById('e-obs').value
   };
-  if (!dados.reserva || !dados.data || !dados.valor) { alert('Preencha reserva, data e valor.'); finalizarEnvio_(btn); return; }
+  if (!dados.reserva) { alert('Escolha a reserva. Se ela ainda não existe, cadastre a reserva primeiro.'); finalizarEnvio_(btn); return; }
+  if (!dados.data || !dados.valor) { alert('Preencha a data e o valor do pagamento.'); finalizarEnvio_(btn); return; }
   apiPost_('adicionarEntrada', dados).then(function(res) {
     finalizarEnvio_(btn);
     if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
@@ -1466,7 +1602,9 @@ function salvarDespesa(btn) {
     pago: parseFloat(document.getElementById('d-pago').value) || 0,
     descricao: document.getElementById('d-desc').value
   };
-  if (!dados.categoria) { alert('Informe a categoria.'); finalizarEnvio_(btn); return; }
+  if (!dados.categoria) { alert('Escolha a categoria.'); finalizarEnvio_(btn); return; }
+  // Sem data a despesa não cai em nenhum mês — some de todos os filtros.
+  if (!dados.dataPagamento) { alert('Informe a data de pagamento.'); finalizarEnvio_(btn); return; }
   apiPost_('adicionarDespesa', dados).then(function(res) {
     finalizarEnvio_(btn);
     if (!res || !res.ok) { alert('Erro ao salvar: ' + (res && res.erro)); return; }
@@ -1539,212 +1677,6 @@ function salvarPendencia(btn) {
   }).catch(function(erro) { finalizarEnvio_(btn); alert('Erro: ' + erro); });
 }
 
-// ── IMPORTADOR DE RELATÓRIO AIRBNB (CSV) ──
-// O relatório "Reservas concluídas" do Airbnb traz todas as unidades do
-// anfitrião — cada anúncio reconhecido ("Casa Prana Lumiar" → Casa Prana,
-// "Mantra Chalé Lumiar" → Chalé Mantra) é lançado na hospedagem certa;
-// anúncios desconhecidos são ignorados como "outro imóvel".
-// A trava de duplicatas usa o "Código de Confirmação" do Airbnb, guardado
-// no campo "doc" da reserva (prefixado com "AIRBNB:") para sobreviver ao
-// vai-e-volta com a planilha sem precisar de coluna nova no Apps Script.
-var AIRBNB_MARCADOR_ = 'AIRBNB:';
-
-// Parser de CSV simples que respeita aspas (campos com vírgula ou quebra
-// de linha embutidas, como acontece no campo "Anúncio" do relatório).
-function parseCSV_(texto) {
-  var linhas = [];
-  var linhaAtual = [];
-  var campoAtual = '';
-  var dentroDeAspas = false;
-  for (var i = 0; i < texto.length; i++) {
-    var c = texto[i];
-    if (dentroDeAspas) {
-      if (c === '"') {
-        if (texto[i + 1] === '"') { campoAtual += '"'; i++; }
-        else { dentroDeAspas = false; }
-      } else {
-        campoAtual += c;
-      }
-    } else {
-      if (c === '"') { dentroDeAspas = true; }
-      else if (c === ',') { linhaAtual.push(campoAtual); campoAtual = ''; }
-      else if (c === '\r') { /* ignora, quebra tratada no \n */ }
-      else if (c === '\n') { linhaAtual.push(campoAtual); campoAtual = ''; linhas.push(linhaAtual); linhaAtual = []; }
-      else { campoAtual += c; }
-    }
-  }
-  if (campoAtual.length || linhaAtual.length) { linhaAtual.push(campoAtual); linhas.push(linhaAtual); }
-  return linhas;
-}
-
-// Datas do relatório Airbnb vêm em MM/DD/YYYY; convertemos para YYYY-MM-DD
-// (formato que o backend/paraData_ espera, igual aos campos <input type=date>).
-function dataAirbnbParaISO_(str) {
-  if (!str) return '';
-  var p = str.split('/');
-  if (p.length !== 3) return '';
-  var mm = p[0].padStart(2, '0'), dd = p[1].padStart(2, '0'), yyyy = p[2];
-  return yyyy + '-' + mm + '-' + dd;
-}
-
-function processarCSVAirbnb_(texto) {
-  var linhas = parseCSV_(texto);
-  if (!linhas.length) return { erros: ['Arquivo vazio ou inválido.'] };
-  var header = linhas[0].map(function(h) { return h.trim(); });
-  var idx = {};
-  header.forEach(function(h, i) { idx[h] = i; });
-
-  var obrigatorios = ['Tipo', 'Código de Confirmação', 'Data de início', 'Data de término', 'Hóspede', 'Anúncio', 'Valor', 'Ganhos brutos', 'Data'];
-  var faltando = obrigatorios.filter(function(c) { return !(c in idx); });
-  if (faltando.length) return { erros: ['Este arquivo não parece ser o relatório de reservas do Airbnb. Colunas não encontradas: ' + faltando.join(', ')] };
-
-  var codigosExistentes = {};
-  (Array.isArray(STATE.reservas) ? STATE.reservas : []).forEach(function(r) {
-    // r.doc pode vir como número do Sheets (ex.: CPF digitado sem formatação
-    // foi autoconvertido para número pela planilha) — força string antes do indexOf.
-    var docStr = String(r.doc || '');
-    if (docStr.indexOf(AIRBNB_MARCADOR_) === 0) codigosExistentes[docStr.slice(AIRBNB_MARCADOR_.length)] = true;
-  });
-
-  var novos = [], duplicados = 0, outroImovel = 0, invalidos = 0;
-  for (var i = 1; i < linhas.length; i++) {
-    var l = linhas[i];
-    if (!l || l.length < 2) continue;
-    var tipo = (l[idx['Tipo']] || '').trim();
-    if (tipo !== 'Reserva') continue;
-    var anuncio = (l[idx['Anúncio']] || '');
-    var hospedagem = hospedagemPorAnuncioAirbnb_(anuncio);
-    if (!hospedagem) { outroImovel++; continue; }
-    var codigo = (l[idx['Código de Confirmação']] || '').trim();
-    if (!codigo) { invalidos++; continue; }
-    if (codigosExistentes[codigo]) { duplicados++; continue; }
-
-    var entrada = dataAirbnbParaISO_((l[idx['Data de início']] || '').trim());
-    var saida = dataAirbnbParaISO_((l[idx['Data de término']] || '').trim());
-    var nome = (l[idx['Hóspede']] || '').trim();
-    // "Ganhos brutos" inclui taxas extras (limpeza/pet) que não são receita da
-    // diária em si; "Valor" é o repasse líquido já com a taxa de serviço do
-    // Airbnb descontada. Usamos o líquido como valorContrato E como pago —
-    // a reserva chega quitada (o hóspede já pagou tudo no Airbnb), sem nada
-    // "a receber" pendurado por causa da diferença bruto x líquido.
-    var valorLiquido = parseFloat(l[idx['Valor']] || '0') || 0;
-    var dataTransacao = dataAirbnbParaISO_((l[idx['Data']] || '').trim());
-
-    if (!nome || !entrada || !saida) { invalidos++; continue; }
-
-    codigosExistentes[codigo] = true; // evita duplicata dentro do próprio arquivo importado
-    novos.push({
-      hospedagem: hospedagem, codigo: codigo, nome: nome, entrada: entrada, saida: saida,
-      valorContrato: valorLiquido, pago: valorLiquido, dataTransacao: dataTransacao
-    });
-  }
-  return { novos: novos, duplicados: duplicados, outroImovel: outroImovel, invalidos: invalidos };
-}
-
-// Mapeia o anúncio do relatório do Airbnb pra hospedagem: "Casa Prana Lumiar"
-// é a Casa Prana, "Mantra Chalé Lumiar" é o Chalé Mantra. Qualquer outro
-// anúncio (de outro anfitrião, por exemplo) é ignorado como "outro imóvel".
-function hospedagemPorAnuncioAirbnb_(anuncio) {
-  var a = String(anuncio || '').toLowerCase();
-  if (a.indexOf('casa prana') !== -1) return 'Casa Prana';
-  if (a.indexOf('mantra') !== -1) return 'Mantra';
-  return null;
-}
-
-// Importa uma reserva por vez (reserva + entrada correspondente), em série,
-// para não sobrecarregar o Apps Script com requisições simultâneas.
-// aoProgredir(atual, total) é chamado antes de cada item — a importação
-// pode levar bem mais de um minuto com muitas reservas, e sem um contador
-// no botão parece que travou.
-function executarImportacaoAirbnb_(novos, aoProgredir) {
-  var i = 0;
-  function proximo() {
-    if (i >= novos.length) return Promise.resolve();
-    if (aoProgredir) aoProgredir(i + 1, novos.length);
-    var item = novos[i++];
-    var dadosReserva = {
-      hospedagem: item.hospedagem,
-      canal: 'Aluguel Airbnb',
-      nome: item.nome,
-      doc: AIRBNB_MARCADOR_ + item.codigo,
-      entrada: item.entrada,
-      saida: item.saida,
-      valorContrato: item.valorContrato,
-      statusPago: 'Pago',
-      obs: 'Importado do relatório Airbnb'
-    };
-    return apiPost_('adicionarReserva', dadosReserva).then(function(res) {
-      if (!res || !res.ok) throw new Error('Falha ao importar reserva de ' + item.nome + ': ' + (res && res.erro));
-      return apiPost_('adicionarEntrada', {
-        hospedagem: item.hospedagem,
-        reserva: item.nome,
-        data: item.dataTransacao || item.saida,
-        valor: item.pago,
-        obs: 'Importado do relatório Airbnb'
-      });
-    }).then(proximo);
-  }
-  return proximo();
-}
-
-function importarCSVAirbnb(inputEl) {
-  if (!apiConfigurada_()) { avisoOffline_(); return; }
-  var arquivo = inputEl.files && inputEl.files[0];
-  if (!arquivo) return;
-
-  var btn = document.getElementById('btn-importar-airbnb');
-  // Feedback imediato ao selecionar o arquivo — se travar aqui, o problema
-  // está na leitura do arquivo, não na importação em si.
-  if (btn) { btn.disabled = true; btn.textContent = 'Lendo arquivo...'; }
-
-  function falhar_(msg) {
-    if (btn) { btn.disabled = false; btn.textContent = '⭳ Importar Airbnb'; }
-    alert(msg);
-  }
-
-  var leitor = new FileReader();
-  leitor.onerror = function() {
-    inputEl.value = '';
-    falhar_('Não foi possível ler o arquivo (' + (leitor.error ? leitor.error.name : 'erro desconhecido') + '). Tente exportar o relatório novamente do Airbnb e selecionar de novo.');
-  };
-  leitor.onload = function(e) {
-    inputEl.value = ''; // permite selecionar o mesmo arquivo de novo mais tarde
-    try {
-      var resultado = processarCSVAirbnb_(e.target.result);
-      if (resultado.erros) { falhar_(resultado.erros.join('\n')); return; }
-      if (!resultado.novos.length) {
-        var motivo = [];
-        if (resultado.duplicados) motivo.push(resultado.duplicados + ' já importada(s) anteriormente');
-        if (resultado.outroImovel) motivo.push(resultado.outroImovel + ' de outro imóvel (ignoradas)');
-        falhar_('Nenhuma reserva nova para importar.' + (motivo.length ? '\n' + motivo.join(' · ') : ''));
-        return;
-      }
-      if (btn) { btn.textContent = 'Importando...'; }
-      executarImportacaoAirbnb_(resultado.novos, function(atual, total) {
-        if (btn) btn.textContent = 'Importando ' + atual + '/' + total + '...';
-      }).then(function() {
-        if (btn) { btn.disabled = false; btn.textContent = '⭳ Importar Airbnb'; }
-        var extra = [];
-        if (resultado.duplicados) extra.push(resultado.duplicados + ' duplicata(s) ignorada(s)');
-        if (resultado.outroImovel) extra.push(resultado.outroImovel + ' de outro imóvel ignorada(s)');
-        mostrarToast(resultado.novos.length + ' reserva(s) do Airbnb importada(s)!');
-        if (extra.length) alert(extra.join(' · '));
-        atualizarTudo(true);
-      }).catch(function(erro) {
-        atualizarTudo(true); // recarrega o que já foi salvo até a falha, evitando estado inconsistente na tela
-        falhar_('Erro ao importar: ' + (erro && erro.message ? erro.message : erro));
-      });
-    } catch (erroInesperado) {
-      falhar_('Erro inesperado ao processar o arquivo: ' + erroInesperado.message);
-    }
-  };
-  try {
-    leitor.readAsText(arquivo, 'UTF-8');
-  } catch (erroLeitura) {
-    falhar_('Erro ao iniciar a leitura do arquivo: ' + erroLeitura.message);
-  }
-}
-
 // ── ATUALIZAÇÃO COMPLETA DO PAINEL ──
 // Toda entrada (reserva, entrada, despesa, saque, gasto de obra ou
 // pendência) dispara o recarregamento de TODAS as listas + o recálculo de
@@ -1762,6 +1694,7 @@ function atualizarTudo(pularSincronizacao) {
   carregarDespesas();
   carregarSaques();
   carregarObraProjetos();
+  carregarCategoriasDespesa();
   if (!apiConfigurada_()) return;
   // Depois de salvar algo pelo próprio app não precisa varrer o Drive de
   // novo (nada mudou lá) — a sincronização fica só pro carregamento inicial.
@@ -1885,7 +1818,9 @@ var STATE = {
   saques: [
     { hospedagem: 'Aura', categoria: 'Yuri/Jessica', data: '2026-06-22', valor: 2275, descricao: 'Saque inicial' }
   ],
-  obraProjetos: []
+  obraProjetos: [],
+  categoriasDespesa: [],
+  canais: []
 };
 
 function num_(v) { return typeof v === 'number' && !isNaN(v) ? v : (parseFloat(v) || 0); }
@@ -2412,12 +2347,6 @@ function renderObraProjetos_(payload) {
   renderObraVisao_();
 
   preencherSelectProjetosObra_(payload.projetos);
-
-  var classificacoesUsadas = {};
-  payload.projetos.forEach(function(p) { (p.itens || []).forEach(function(it) { if (it.classificacao) classificacoesUsadas[it.classificacao] = true; }); });
-  var datalist = document.getElementById('lista-classificacoes-obra');
-  if (datalist) datalist.innerHTML = Object.keys(classificacoesUsadas).sort().map(function(c) { return '<option value="' + c + '">'; }).join('');
-
   atualizarCapitalInvestimento_(obraGruposCache_.map(function(g) { return { nome: g.nome, total: g.total, glauco: g.glauco, yuri: g.yuri }; }), totalGeral);
 }
 

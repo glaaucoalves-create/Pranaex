@@ -418,7 +418,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   </div>
 
   <div class="card">
-    <div class="ctitle">Simulador — Aura (50% Glauco)</div>
+    <div class="ctitle">Simulador — Aura</div>
     <div class="srow">
       <span class="slbl2">Ocupação mensal</span>
       <input type="range" id="sl-occ" min="30" max="100" value="75" step="5" oninput="calc()">
@@ -436,7 +436,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </div>
     <div class="g4" style="margin-top:4px">
       <div class="mk"><div class="ml">Receita bruta/mês</div><div class="mv" id="res-bruta">—</div></div>
-      <div class="mk"><div class="ml">Líquido Glauco (50%)</div><div class="mv up" id="res-liq">—</div></div>
+      <div class="mk"><div class="ml">Líquido mensal</div><div class="mv up" id="res-liq">—</div></div>
       <div class="mk"><div class="ml">Simples Nacional (12%)</div><div class="mv dn" id="res-tax">—</div></div>
       <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Payback Aura</div><div class="mv up" id="res-pb">—</div></div>
     </div>
@@ -446,9 +446,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="ctitle">Capital investido — sítio + hospedagens</div>
     <div class="g2" style="margin-bottom:16px;align-items:center">
       <div>
-        <div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px">Total capital Glauco no projeto</div>
-        <div style="font-size:30px;font-weight:800;color:#b1503a" id="inv-glauco-total">R$ 333.340</div>
-        <div style="font-size:11.5px;color:#9aa3af;margin-top:3px">Maior aportador — split 50/50 com Yuri+Jessica</div>
+        <div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px">Capital total investido no projeto</div>
+        <div style="font-size:30px;font-weight:800;color:#b1503a" id="inv-total-projeto">—</div>
+        <div style="font-size:11.5px;color:#9aa3af;margin-top:3px">Sítio, infraestrutura e hospedagens</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div>
@@ -466,20 +466,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       </div>
     </div>
     <div class="g3">
-      <div class="mk"><div class="ml">Total projeto (100%)</div><div class="mv" style="font-size:15px" id="inv-total-projeto">R$ 731.781</div></div>
-      <div class="mk"><div class="ml">Glauco (maior aportador)</div><div class="mv pur" style="font-size:15px" id="inv-total-glauco">R$ 333.340</div></div>
-      <div class="mk"><div class="ml">Yuri + Jessica</div><div class="mv warn" style="font-size:15px" id="inv-total-yuri">R$ 328.641</div></div>
+      <div class="mk"><div class="ml">Já investido</div><div class="mv" style="font-size:15px" id="inv-resumo-total">—</div></div>
+      <div class="mk"><div class="ml">Dívida pendente</div><div class="mv dn" style="font-size:15px" id="inv-resumo-divida">—</div></div>
+      <div class="mk"><div class="ml">Comprometido</div><div class="mv pur" style="font-size:15px" id="inv-resumo-comprometido">—</div></div>
     </div>
   </div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital — Aura</div>
+      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital investido</div>
       <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-capital-header">R$ 333.340</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Representa <strong style="color:#c1622a">lucro acumulado</strong>, não dinheiro sacado. Nenhum saque ocorre até o projeto (3 cabanas) estar concluído — 100% do lucro é reinvestido mês a mês nas obras seguintes (ver fluxo de caixa abaixo).
     </div>
+    <div class="nota" style="margin-top:0;margin-bottom:12px" id="inv-base-calculo">—</div>
     <div id="pb-timeline" style="display:flex;flex-direction:column;gap:5px"></div>
     <div style="margin-top:8px;display:flex;gap:14px;font-size:11px;color:#6b7280">
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c1622a;margin-right:4px"></span>Capital recuperado (em lucro gerado)</span>
@@ -520,24 +521,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="mv up" style="font-size:14px">Obra R$ 280k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap2">Calculando...</div>
         <div style="font-size:10px;color:#9aa3af;margin-top:2px">Capital total: R$ 371k · Opera Jan/28</div>
-        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido Glauco: <span id="liq2-txt" style="color:#c1622a;font-weight:600">—</span>/mês</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido: <span id="liq2-txt" style="color:#c1622a;font-weight:600">—</span>/mês</div>
       </div>
       <div class="mk" style="border-color:#f4e2d1">
         <div class="ml">Cabana 3 · Mar–Dez/28</div>
         <div class="mv dn" style="font-size:14px">Obra R$ 300k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap3">Calculando...</div>
         <div style="font-size:10px;color:#9aa3af;margin-top:2px">Capital total: R$ 391k · Opera Jan/29</div>
-        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido Glauco: <span id="liq3-txt" style="color:#a13a1f;font-weight:600">—</span>/mês</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido: <span id="liq3-txt" style="color:#a13a1f;font-weight:600">—</span>/mês</div>
       </div>
     </div>
 
     <div style="margin-top:12px;background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #edeef1">
       <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — receita acumulada financia as obras</div>
-      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Líquido Glauco varia com os sliders</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Líquido mensal varia com os sliders</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">R$ 37,1k/mês (obra+terreno+infra) por 10 meses · caixa de Aura abate primeiro</div></div><div class="mc-val up" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — início de operação</div><div class="mc-sub">Aura + Cabana 2 acumulam caixa para Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
       <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">R$ 39,1k/mês (obra+terreno+infra) por 10 meses · Cabanas 1+2 financiam primeiro</div></div><div class="mc-val up" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Receita total Glauco consolidada</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Receita total consolidada</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
     </div>
   </div>
 
@@ -545,7 +546,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="ctitle">Consolidado — 3 Cabanas</div>
     <div class="tbl-wrap">
     <table style="min-width:560px">
-      <thead><tr><th>Cabana</th><th>Obra</th><th>Capital total</th><th>Opera</th><th>Rec./mês</th><th>Glauco/mês</th><th>Payback</th></tr></thead>
+      <thead><tr><th>Cabana</th><th>Obra</th><th>Capital total</th><th>Opera</th><th>Rec./mês</th><th>Líquido/mês</th><th>Payback</th></tr></thead>
       <tbody>
         <tr>
           <td style="color:#b1503a;font-weight:600">Cabana 1 — Aura</td>
@@ -1138,11 +1139,17 @@ function fmt(n){ return 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR');
 
 var cdiChart = null;
 
-// Soma o líquido (50% Glauco) já realizado pela Aura, mês a mês.
-// Lê as reservas/despesas da Aura DIRETO do STATE, e não do array MES: MES
-// acompanha a hospedagem selecionada nos pills, então usá-lo aqui fazia o
-// payback da Aura mudar sozinho quando o usuário escolhia Mantra ou Total
-// na outra aba — número errado num painel que é só sobre a Aura.
+// Líquido já realizado pela Aura nos meses que JÁ FECHARAM.
+//
+// Dois cuidados:
+// 1. Só mês fechado conta. O mês corrente ainda está em curso — usar o
+//    parcial dele como se fosse mês cheio subestimaria o retorno. Do mês
+//    corrente em diante vale a projeção dos sliders.
+// 2. Lê as reservas/despesas da Aura DIRETO do STATE, e não do array MES:
+//    MES acompanha a hospedagem selecionada na outra aba, e usá-lo aqui
+//    fazia o payback mudar sozinho conforme o filtro de lá.
+//
+// O resultado é do projeto inteiro (100%), sem recorte por sócio.
 function realAcumuladoAura_() {
   var ehAura = function(x) { return normalizarTexto_(x.hospedagem || '') === 'aura'; };
   var receita = new Array(12).fill(0);
@@ -1162,13 +1169,35 @@ function realAcumuladoAura_() {
     temDado[d.getMonth()] = true;
   });
 
-  var total = 0, meses = 0;
-  for (var i = 0; i < 12; i++) {
-    if (!temDado[i]) continue;
-    total += Math.max(0, (receita[i] - receita[i] * 0.12 - despesa[i]) * 0.5);
-    meses++;
+  var hoje = new Date();
+  var mesCorrente = hoje.getFullYear() < 2026 ? 0 : (hoje.getFullYear() > 2026 ? 12 : hoje.getMonth());
+
+  // A operação começou no primeiro mês com lançamento; meses de 2026
+  // anteriores a isso não são "meses operando com lucro zero".
+  var inicio = -1;
+  for (var i = 0; i < 12 && inicio < 0; i++) if (temDado[i]) inicio = i;
+  if (inicio < 0 || inicio >= mesCorrente) return { total: 0, meses: 0, de: null, ate: null };
+
+  var total = 0;
+  for (var m = inicio; m < mesCorrente; m++) {
+    total += Math.max(0, receita[m] - receita[m] * 0.12 - despesa[m]);
   }
-  return { total: total, meses: meses };
+  return { total: total, meses: mesCorrente - inicio, de: inicio, ate: mesCorrente - 1 };
+}
+
+// Explica de onde vem o número: quantos meses são reais e de quando começa a
+// projeção — sem isso o gráfico mistura fato e estimativa sem avisar.
+function atualizarBaseCalculo_(real) {
+  var el = document.getElementById('inv-base-calculo');
+  if (!el) return;
+  if (!real.meses) {
+    el.textContent = 'Nenhum mês fechado ainda — tudo é projeção dos sliders acima.';
+    return;
+  }
+  var periodo = real.de === real.ate ? MESES_LONGOS_[real.de] : MESES_LONGOS_[real.de] + ' a ' + MESES_LONGOS_[real.ate];
+  el.textContent = 'Base: ' + real.meses + (real.meses === 1 ? ' mês fechado' : ' meses fechados') +
+    ' (' + periodo + ') com resultado real de ' + fmtR_(real.total) +
+    '. De ' + MESES_LONGOS_[Math.min(11, real.ate + 1)] + ' em diante o cálculo usa a projeção dos sliders.';
 }
 
 function calc() {
@@ -1176,33 +1205,35 @@ function calc() {
   var diaria = +document.getElementById('sl-diaria').value;
   var opex   = +document.getElementById('sl-opex').value;
 
-  var bruta  = 30 * occ * diaria;
-  var tax    = bruta * 0.12;
-  var liq50  = (bruta - tax - opex) * 0.5;
+  // Visão geral do projeto: líquido cheio, sem recorte por sócio.
+  var bruta   = 30 * occ * diaria;
+  var tax     = bruta * 0.12;
+  var liquido = bruta - tax - opex;
 
   var real = realAcumuladoAura_();
+  atualizarBaseCalculo_(real);
   var capitalRestante = Math.max(0, CAPITAL - real.total);
-  var pb = real.total >= CAPITAL ? real.meses : real.meses + (liq50 > 0 ? Math.ceil(capitalRestante / liq50) : 999);
+  var pb = real.total >= CAPITAL ? real.meses : real.meses + (liquido > 0 ? Math.ceil(capitalRestante / liquido) : 999);
 
   document.getElementById('out-occ').textContent    = Math.round(occ * 100) + '%';
   document.getElementById('out-diaria').textContent = 'R$ ' + diaria.toLocaleString('pt-BR');
   document.getElementById('out-opex').textContent   = fmt(opex);
   document.getElementById('res-bruta').textContent  = fmt(bruta);
   document.getElementById('res-tax').textContent    = '–' + fmt(tax);
-  document.getElementById('res-liq').textContent    = fmt(Math.max(0, liq50));
+  document.getElementById('res-liq').textContent    = fmt(Math.max(0, liquido));
   document.getElementById('res-pb').textContent     = pb > 120 ? '>10 anos' : pb + ' meses';
 
-  document.getElementById('tc-gl1').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('tc-gl1').textContent = fmt(Math.max(0, liquido));
   document.getElementById('tc-pb1').textContent = pb > 120 ? '>10 anos' : '~' + pb + ' meses';
-  document.getElementById('tc-gl2').textContent = fmt(Math.max(0, liq50));
-  document.getElementById('tc-gl3').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('tc-gl2').textContent = fmt(Math.max(0, liquido));
+  document.getElementById('tc-gl3').textContent = fmt(Math.max(0, liquido));
   document.getElementById('tc-rec2').textContent = fmt(bruta);
   document.getElementById('tc-rec3').textContent = fmt(bruta);
-  document.getElementById('liq2-txt').textContent = fmt(Math.max(0, liq50));
-  document.getElementById('liq3-txt').textContent = fmt(Math.max(0, liq50));
+  document.getElementById('liq2-txt').textContent = fmt(Math.max(0, liquido));
+  document.getElementById('liq3-txt').textContent = fmt(Math.max(0, liquido));
 
-  buildTimeline(liq50, real);
-  buildCDI(liq50);
+  buildTimeline(liquido, real);
+  buildCDI(liquido);
 }
 
 function buildTimeline(mensal, real) {
@@ -1759,15 +1790,19 @@ function fmtObraK_(v) { return Math.abs(v) >= 1000 ? 'R$ ' + Math.round(v / 1000
 // Reaproveita os 3 slots de barra do card "Capital investido" pra mostrar
 // os projetos reais (Sítio + hospedagens) em vez do antigo chalé/terreno/infra
 // fixo de uma única cabana.
+// Visão geral do investimento: tudo pelo total do projeto, sem separar por
+// sócio (a divisão entre Glauco e Yuri continua na aba Obra, que é onde ela
+// é acompanhada).
 function atualizarCapitalInvestimento_(projetos, totalGeral) {
-  var totalGlauco = num_(totalGeral.glauco);
-  if (totalGlauco > 0) CAPITAL = totalGlauco;
+  var total = num_(totalGeral.total);
+  var divida = num_(totalGeral.divida);
+  if (total > 0) CAPITAL = total;
 
-  setTxt_('inv-glauco-total', fmtR_(totalGlauco));
-  setTxt_('inv-total-projeto', fmtR_(totalGeral.total));
-  setTxt_('inv-total-glauco', fmtR_(totalGlauco));
-  setTxt_('inv-total-yuri', fmtR_(totalGeral.yuri));
-  setTxt_('inv-capital-header', fmtR_(totalGlauco));
+  setTxt_('inv-total-projeto', fmtR_(total));
+  setTxt_('inv-capital-header', fmtR_(total));
+  setTxt_('inv-resumo-total', fmtR_(total));
+  setTxt_('inv-resumo-divida', fmtR_(divida));
+  setTxt_('inv-resumo-comprometido', fmtR_(total + divida));
 
   var ordenados = projetos.slice().sort(function(a, b) { return num_(b.total) - num_(a.total); }).slice(0, 3);
   ['chale', 'terreno', 'infra'].forEach(function(slot, i) {
@@ -1775,23 +1810,22 @@ function atualizarCapitalInvestimento_(projetos, totalGeral) {
     var lbl = document.getElementById('inv-' + slot + '-lbl');
     var val = document.getElementById('inv-' + slot + '-val');
     var bar = document.getElementById('inv-' + slot + '-bar');
-    if (!p) {
-      if (lbl) lbl.textContent = '—';
-      if (val) val.textContent = '';
-      if (bar) bar.style.width = '0%';
-      return;
-    }
-    var pct = totalGlauco > 0 ? Math.round(num_(p.glauco) / totalGlauco * 100) : 0;
+    // São 3 slots fixos no HTML, mas os grupos de obra podem ser menos.
+    // Slot sem grupo some da tela, em vez de virar um traço solto.
+    var linha = lbl && lbl.parentElement ? lbl.parentElement.parentElement : null;
+    if (linha) linha.hidden = !p;
+    if (!p) return;
+    var pct = total > 0 ? Math.round(num_(p.total) / total * 100) : 0;
     if (lbl) lbl.textContent = nomeAmigavelProjeto_(p.nome) + ' ' + pct + '%';
-    if (val) val.textContent = fmtR_(p.glauco);
+    if (val) val.textContent = fmtR_(p.total);
     if (bar) { bar.style.width = pct + '%'; bar.style.background = corProjeto_(p.nome); }
   });
 
   var aura = projetos.filter(function(p) { return normalizarTexto_(p.nome) === normalizarTexto_('AURA'); })[0];
   if (aura) {
-    setTxt_('inv-cabana1-investido', fmtObraK_(aura.glauco) + ' investido');
+    setTxt_('inv-cabana1-investido', fmtObraK_(aura.total) + ' investido');
     setTxt_('inv-tabela-obra1', fmtObraK_(aura.total));
-    setTxt_('inv-tabela-capital1', fmtObraK_(aura.glauco));
+    setTxt_('inv-tabela-capital1', fmtObraK_(aura.total));
   }
 
   // recalcula payback/timeline/CDI, já que CAPITAL pode ter mudado

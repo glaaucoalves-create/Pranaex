@@ -34,12 +34,11 @@ jobs:
         with:
           path: _site
 
+      # Não adianta aumentar o "timeout" daqui: o action tem teto rígido de
+      # 600000 ms e devolve "timeout value is greater than the allowed
+      # maximum" se passar disso. Se um deploy falhar preso em
+      # "deployment_queued", é fila do Pages — reenviar num commit NOVO
+      # resolve; repetir no mesmo commit não, porque o ID do deployment é o
+      # próprio SHA e o Pages cancela o repetido na hora.
       - id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # O padrão do action é esperar 10 min o Pages publicar e então
-          # abortar. Em 06/08/2026 um deploy ficou 10 min inteiros em
-          # "deployment_queued" e falhou por isso — o artefato estava certo,
-          # só o serviço de Pages estava lento. 30 min evita perder um deploy
-          # bom por causa de fila do GitHub.
-          timeout: 1800000

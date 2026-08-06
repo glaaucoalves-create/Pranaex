@@ -1,9 +1,23 @@
 name: Deploy GitHub Pages
 
+# Gatilho por push está DESLIGADO de propósito (2026-08-06).
+#
+# A fila de deployment do Pages deste repositório parou de consumir deploys
+# vindos do Actions: todo run fica em "deployment_queued" até o teto de
+# 600000 ms do actions/deploy-pages e é abortado. Não adianta mexer no
+# "timeout" (o action tem teto rígido) nem repetir o mesmo commit (o ID do
+# deployment é o próprio SHA, então o Pages cancela o repetido na hora).
+#
+# Enquanto isso, o site é publicado pelo builder clássico do Pages:
+# Settings -> Pages -> Source = "Deploy from a branch", branch main, pasta
+# "/ (root)". O index.html está na raiz e o .nojekyll evita o Jekyll.
+#
+# Se a fila do Actions voltar a funcionar, rode este workflow pelo
+# "Run workflow" e, dando verde, devolva o gatilho de push abaixo.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+  # push:
+  #   branches: [main]
 
 permissions:
   contents: read
@@ -34,13 +48,5 @@ jobs:
         with:
           path: _site
 
-      # Não adianta aumentar o "timeout" daqui: o action tem teto rígido de
-      # 600000 ms e devolve "timeout value is greater than the allowed
-      # maximum" se passar disso. Se um deploy falhar preso em
-      # "deployment_queued", é fila do Pages — reenviar num commit NOVO
-      # resolve; repetir no mesmo commit não, porque o ID do deployment é o
-      # próprio SHA e o Pages cancela o repetido na hora.
       - id: deployment
         uses: actions/deploy-pages@v4
-
-# Reenvio: 2026-08-06T14:05Z

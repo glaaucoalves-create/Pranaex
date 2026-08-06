@@ -843,6 +843,21 @@ function limitesPeriodo_() {
   if (periodo_.tipo === 'mes') return { de: new Date(2026, periodo_.mes, 1), ate: new Date(2026, periodo_.mes + 1, 0) };
   return null; // 'ano' = sem filtro
 }
+// Um lançamento com data depois de hoje ainda não aconteceu: é previsão, não
+// movimento de caixa. Comparação por DIA (não por hora) — algo marcado para
+// hoje já conta como realizado. Data vazia ou inválida conta como realizada,
+// para um preenchimento incompleto não sumir do caixa sem explicação.
+function ehFuturo_(valorData) {
+  var d = dataLocal_(valorData);
+  if (isNaN(d)) return false;
+  var hoje = new Date();
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate())
+       > new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+}
+// Selo nas listas para explicar por que a linha não entrou no caixa.
+function chipAgendado_(valorData) {
+  return ehFuturo_(valorData) ? ' <span class="chip cw">agendado</span>' : '';
+}
 function dentroDoPeriodo_(valorData) {
   var lim = limitesPeriodo_();
   if (!lim) return true;
@@ -1968,24 +1983,42 @@ function recalcularPainel() {
   var despesas = filtrarPeriodo_(filtrarPorHospedagem_(STATE.despesas), 'dataPagamento');
   var saques   = filtrarPeriodo_(filtrarPorHospedagem_(STATE.saques), 'data');
 
-  var receitaContratada = reservas.reduce(function(s, r) { return s + num_(r.valorContrato); }, 0);
-  var recebido = entradas.reduce(function(s, e) { return s + num_(e.valor); }, 0);
+  // Data futura = ainda não aconteceu. Um pagamento marcado para semana que
+  // vem é previsão, não dinheiro em caixa — o mesmo vale para uma despesa
+  // agendada e um saque combinado. Só o que já venceu entra no caixa atual;
+  // o que está agendado entra no caixa previsto.
+  var realizadas = function(lista, campo) { return lista.filter(function(x) { return !ehFuturo_(x[campo]); }); };
+  var agendadas  = function(lista, campo) { return lista.filter(function(x) { return  ehFuturo_(x[campo]); }); };
+  var somar = function(lista, campo) { return lista.reduce(function(s, x) { return s + num_(x[campo]); }, 0); };
+
+  var receitaContratada = somar(reservas, 'valorContrato');
+
+  var recebido        = somar(realizadas(entradas, 'data'), 'valor');
+  var entradasFuturas = somar(agendadas(entradas, 'data'), 'valor');
+  // Uma entrada agendada continua sendo "a receber" — não é preciso somá-la
+  // aqui, ela já está embutida no contrato ainda não recebido.
   var aReceber = Math.max(0, receitaContratada - recebido);
 
-  var despesasPagas = despesas.reduce(function(s, d) { return s + num_(d.pago); }, 0);
-  var totalSaques = saques.reduce(function(s, x) { return s + num_(x.valor); }, 0);
+  var despesasPagas   = somar(realizadas(despesas, 'dataPagamento'), 'pago');
+  var despesasFuturas = somar(agendadas(despesas, 'dataPagamento'), 'pago');
+
+  var saquesRealizados = realizadas(saques, 'data');
+  var totalSaques      = somar(saquesRealizados, 'valor');
+  var saquesFuturos    = somar(agendadas(saques, 'data'), 'valor');
 
   var caixaAtual = recebido - despesasPagas - totalSaques;
-  var caixaPrevisto = caixaAtual + aReceber;
+  var caixaPrevisto = caixaAtual + aReceber - despesasFuturas - saquesFuturos;
+
+  var sufixoAgendado = function(valor) { return valor > 0 ? ' · ' + fmtR_(valor) + ' agendado' : ''; };
 
   // ── KPIs (topo Aura) ──
   setTxt_('kpi-receita-contratada', fmtR_(receitaContratada));
   setTxt_('kpi-receita-contratada-sub', reservas.length ? (reservas.length === 1 ? '1 reserva' : reservas.length + ' reservas') : 'Sem reservas');
   setTxt_('kpi-recebido', fmtR_(recebido));
-  setTxt_('kpi-recebido-sub', receitaContratada > 0 ? Math.round(recebido / receitaContratada * 100) + '% do contrato' : '—');
+  setTxt_('kpi-recebido-sub', (receitaContratada > 0 ? Math.round(recebido / receitaContratada * 100) + '% do contrato' : '—') + sufixoAgendado(entradasFuturas));
   setTxt_('kpi-areceber', fmtR_(aReceber));
   setTxt_('kpi-despesas-plan', fmtR_(despesasPagas));
-  setTxt_('kpi-despesas-plan-sub', despesas.length ? (despesas.length === 1 ? '1 despesa' : despesas.length + ' despesas') : 'Sem despesas');
+  setTxt_('kpi-despesas-plan-sub', (despesas.length ? (despesas.length === 1 ? '1 despesa' : despesas.length + ' despesas') : 'Sem despesas') + sufixoAgendado(despesasFuturas));
   setSinal_('kpi-caixa-atual', caixaAtual);
   setSinal_('kpi-caixa-previsto', caixaPrevisto);
 
@@ -2010,14 +2043,16 @@ function recalcularPainel() {
 
   // ── Resumos dos cards recolhíveis (mesmos filtros das tabelas) ──
   setTxt_('sum-reservas', reservas.length + ' reserva(s) · ' + fmtR_(receitaContratada) + ' contratado · ' + fmtR_(recebido) + ' recebido');
-  setTxt_('sum-despesas', despesas.length + ' despesa(s) · ' + fmtR_(despesasPagas) + ' pago');
-  setTxt_('sum-entradas', entradas.length + ' entrada(s) · ' + fmtR_(recebido) + ' recebido');
-  setTxt_('sum-saques', saques.length + ' saque(s) · ' + fmtR_(totalSaques) + ' sacado');
+  setTxt_('sum-despesas', despesas.length + ' despesa(s) · ' + fmtR_(despesasPagas) + ' pago' + sufixoAgendado(despesasFuturas));
+  setTxt_('sum-entradas', entradas.length + ' entrada(s) · ' + fmtR_(recebido) + ' recebido' + sufixoAgendado(entradasFuturas));
+  setTxt_('sum-saques', saques.length + ' saque(s) · ' + fmtR_(totalSaques) + ' sacado' + sufixoAgendado(saquesFuturos));
 
-  // ── Distribuição e equilíbrio de saques — conforme a divisão de lucro da hospedagem ──
+  // ── Distribuição e equilíbrio de saques ──
+  // Só os saques já realizados: um saque agendado ainda não saiu da conta de
+  // ninguém, e contá-lo distorceria quem está adiantado no acerto.
   var socios = sociosAtivos_();
-  renderDistribuicaoSaques_(saques, socios);
-  renderEquilibrioSaques_(saques, socios);
+  renderDistribuicaoSaques_(saquesRealizados, socios);
+  renderEquilibrioSaques_(saquesRealizados, socios);
 }
 
 // Recalcula "dias", "receita" e "despesa" de cada mês de 2026 direto das
@@ -2158,8 +2193,8 @@ function renderTabelaEntradas_() {
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(e.hospedagem) + '</div>' : '';
     return '<tr>' +
       '<td><div class="name-cell">' + avatarHtml_(e.reserva) + '<span style="color:#0d1117">' + esc_(e.reserva) + '</span></div>' + chip + '</td>' +
-      '<td>' + fmtData_(e.data) + '</td>' +
-      '<td class="up" style="font-weight:600">' + fmtR_(num_(e.valor)) + '</td>' +
+      '<td>' + fmtData_(e.data) + chipAgendado_(e.data) + '</td>' +
+      '<td class="' + (ehFuturo_(e.data) ? '' : 'up') + '" style="font-weight:600' + (ehFuturo_(e.data) ? ';color:#b0b6bf' : '') + '">' + fmtR_(num_(e.valor)) + '</td>' +
       '</tr>';
   }).join('');
 }
@@ -2182,8 +2217,8 @@ function renderTabelaDespesas_() {
     var chip = hospedagemSelecionada === 'Total' ? ' ' + hospChipHtml_(d.hospedagem) : '';
     return '<tr>' +
       '<td style="color:#0d1117">' + esc_(d.categoria) + chip + '</td>' +
-      '<td>' + fmtData_(d.dataPagamento) + '</td>' +
-      '<td style="color:#a13a1f;font-weight:600">' + fmtR_(num_(d.pago)) + '</td>' +
+      '<td>' + fmtData_(d.dataPagamento) + chipAgendado_(d.dataPagamento) + '</td>' +
+      '<td style="font-weight:600;color:' + (ehFuturo_(d.dataPagamento) ? '#b0b6bf' : '#a13a1f') + '">' + fmtR_(num_(d.pago)) + '</td>' +
       '<td style="color:#9aa3af">' + (d.descricao ? esc_(d.descricao) : '—') + '</td>' +
       '</tr>';
   }).join('');
@@ -2207,8 +2242,8 @@ function renderTabelaSaques_() {
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(s.hospedagem) + '</div>' : '';
     return '<tr>' +
       '<td><div class="name-cell">' + avatarHtml_(s.categoria) + '<span style="color:#0d1117">' + esc_(s.categoria) + '</span></div>' + chip + '</td>' +
-      '<td>' + fmtData_(s.data) + '</td>' +
-      '<td class="warn" style="font-weight:600">' + fmtR_(num_(s.valor)) + '</td>' +
+      '<td>' + fmtData_(s.data) + chipAgendado_(s.data) + '</td>' +
+      '<td class="' + (ehFuturo_(s.data) ? '' : 'warn') + '" style="font-weight:600' + (ehFuturo_(s.data) ? ';color:#b0b6bf' : '') + '">' + fmtR_(num_(s.valor)) + '</td>' +
       '<td style="color:#9aa3af">' + (s.descricao ? esc_(s.descricao) : '—') + '</td>' +
       '</tr>';
   }).join('');

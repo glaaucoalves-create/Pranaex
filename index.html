@@ -741,17 +741,29 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbypfcBN3SHIWABvVmGAtc8A-r
 // com Glauco, Ojás divide com a Kassia (50/50, a confirmar se for diferente),
 // Mantra e Casa Prana são lucro cheio de Yuri+Jessica (um só sócio, sem
 // divisão pra equilibrar).
+// "ativa" liga/desliga a hospedagem na tela. Hoje só a Aura opera pelo app —
+// as outras três ficam com ativa:false: somem do menu, dos formulários e dos
+// cálculos, mas a configuração inteira continua aqui, pronta pra voltar
+// trocando um único booleano (e apontando a planilha operacional delas).
 var HOSPEDAGENS_ = [
-  { chave: 'Aura', nome: 'Cabana Aura', projetoObra: 'AURA', cor: '#5f8f5f', corClara: '#e8f2e7',
+  { chave: 'Aura', nome: 'Cabana Aura', projetoObra: 'AURA', cor: '#5f8f5f', ativa: true,
     socios: [{ chave: 'Glauco', nome: 'Glauco', cor: 'pur' }, { chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] },
-  { chave: 'Ojás', nome: 'Domo Ojás', projetoObra: 'OJAS', cor: '#ab8f5c', corClara: '#f2ecdc',
+  { chave: 'Ojás', nome: 'Domo Ojás', projetoObra: 'OJAS', cor: '#ab8f5c', ativa: false,
     socios: [{ chave: 'Kassia', nome: 'Kassia', cor: 'pur' }, { chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] },
-  { chave: 'Mantra', nome: 'Chalé Mantra', projetoObra: 'MANTRA', cor: '#b1503a', corClara: '#f7e3dd',
+  { chave: 'Mantra', nome: 'Chalé Mantra', projetoObra: 'MANTRA', cor: '#b1503a', ativa: false,
     socios: [{ chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] },
-  { chave: 'Casa Prana', nome: 'Casa Prana', projetoObra: 'CASA PRANA', cor: '#d97a34', corClara: '#fbe9db',
+  { chave: 'Casa Prana', nome: 'Casa Prana', projetoObra: 'CASA PRANA', cor: '#d97a34', ativa: false,
     socios: [{ chave: 'Yuri/Jessica', nome: 'Yuri + Jessica', cor: 'warn' }] }
 ];
-var hospedagemSelecionada = 'Total';
+// Só as ativas aparecem na tela. hospedagemPorChave_ continua enxergando
+// TODAS — um lançamento antigo de uma hospedagem desligada ainda consegue
+// mostrar o nome e a cor certos, em vez de aparecer sem identificação.
+function hospedagensAtivas_() {
+  return HOSPEDAGENS_.filter(function(h) { return h.ativa; });
+}
+// Com uma única hospedagem ativa, "Total" e o nome dela seriam a mesma coisa:
+// o menu some e ela vira a seleção fixa.
+var hospedagemSelecionada = hospedagensAtivas_().length === 1 ? hospedagensAtivas_()[0].chave : 'Total';
 
 function normalizarTexto_(s) {
   return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -786,7 +798,13 @@ function hospChipHtml_(chave) {
 function renderHospedagemPills_() {
   var containers = document.querySelectorAll('.hosp-pills');
   if (!containers.length) return;
-  var opcoes = [{ chave: 'Total', nome: 'Total', cor: '#c1622a' }].concat(HOSPEDAGENS_);
+  var ativas = hospedagensAtivas_();
+  // Uma só hospedagem: o menu não tem escolha a oferecer, então nem aparece.
+  if (ativas.length < 2) {
+    containers.forEach(function(c) { c.innerHTML = ''; c.hidden = true; });
+    return;
+  }
+  var opcoes = [{ chave: 'Total', nome: 'Total', cor: '#c1622a' }].concat(ativas);
   var html = opcoes.map(function(h) {
     var ativo = hospedagemSelecionada === h.chave;
     var estilo = ativo ? 'background:' + h.cor + ';border-color:' + h.cor : '';
@@ -903,20 +921,30 @@ function selecionarHospedagem_(chave) {
   renderHospedagemPills_();
   var h = hospedagemPorChave_(chave);
   var nome = h ? h.nome : chave;
-  setTxt_('aura-ptitle', chave === 'Total' ? 'Todas as hospedagens' : nome);
-  setTxt_('aura-psub', 'Reservas, despesas e equilíbrio entre sócios — ' + (chave === 'Total' ? 'visão consolidada' : nome));
+  atualizarTituloHospedagem_();
   agendarRepaint_();
+}
+// Com o menu de hospedagens oculto (uma só ativa), o título deixa de ser
+// atualizado por clique — passa a ser derivado da seleção atual, e aplicado
+// também na carga inicial.
+function atualizarTituloHospedagem_() {
+  var h = hospedagemPorChave_(hospedagemSelecionada);
+  var nome = h ? h.nome : hospedagemSelecionada;
+  var ehTotal = hospedagemSelecionada === 'Total';
+  setTxt_('aura-ptitle', ehTotal ? 'Todas as hospedagens' : nome);
+  setTxt_('aura-psub', 'Reservas, despesas e equilíbrio entre sócios — ' + (ehTotal ? 'visão consolidada' : nome));
 }
 function preencherSelectHospedagens_(id, incluirTotal) {
   var el = document.getElementById(id);
   if (!el) return;
-  var opcoes = incluirTotal ? [{ chave: 'Total', nome: 'Total (todas)' }].concat(HOSPEDAGENS_) : HOSPEDAGENS_;
+  var ativas = hospedagensAtivas_();
+  var opcoes = incluirTotal ? [{ chave: 'Total', nome: 'Total (todas)' }].concat(ativas) : ativas;
   el.innerHTML = opcoes.map(function(h) { return '<option value="' + h.chave + '">' + h.nome + '</option>'; }).join('');
 }
 function atualizarSociosSaque_() {
   var hospedagem = document.getElementById('s-hospedagem').value;
   var h = hospedagemPorChave_(hospedagem);
-  var socios = h ? h.socios : HOSPEDAGENS_[0].socios;
+  var socios = h ? h.socios : hospedagensAtivas_()[0].socios;
   var el = document.getElementById('s-categoria');
   if (el) el.innerHTML = socios.map(function(s) { return '<option value="' + s.chave + '">' + s.nome + '</option>'; }).join('');
 }
@@ -1845,11 +1873,11 @@ function setSinal_(id, v) {
 function sociosAtivos_() {
   if (hospedagemSelecionada !== 'Total') {
     var h = hospedagemPorChave_(hospedagemSelecionada);
-    return h ? h.socios : HOSPEDAGENS_[0].socios;
+    return h ? h.socios : hospedagensAtivas_()[0].socios;
   }
   var vistos = {};
   var lista = [];
-  HOSPEDAGENS_.forEach(function(h) {
+  hospedagensAtivas_().forEach(function(h) {
     h.socios.forEach(function(s) {
       if (!vistos[s.chave]) { vistos[s.chave] = true; lista.push(s); }
     });
@@ -2462,6 +2490,7 @@ function carregarObraProjetos() {
 // carregar o Chart.js da CDN não pode travar o resto da inicialização.
 ligarDelegacaoPills_();
 renderHospedagemPills_();
+atualizarTituloHospedagem_();
 renderPeriodoChips_();
 setTxt_('fin-titulo', 'Financeiro — ' + rotuloPeriodo_());
 // Um único passe monta a tela inteira (KPIs, gráficos, calendário e tabelas)

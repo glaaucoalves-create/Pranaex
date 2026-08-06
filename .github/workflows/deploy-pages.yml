@@ -42,3 +42,5 @@ jobs:
       # próprio SHA e o Pages cancela o repetido na hora.
       - id: deployment
         uses: actions/deploy-pages@v4
+
+# Reenvio: 2026-08-06T14:05Z

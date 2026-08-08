@@ -988,9 +988,13 @@ function atualizarReservasEntrada_() {
   var hospedagem = document.getElementById('e-hospedagem').value;
   var alvo = normalizarTexto_(hospedagem);
   var vistos = {};
-  var opcoes = (Array.isArray(STATE.reservas) ? STATE.reservas : [])
-    .filter(function(r) { return normalizarTexto_(r.hospedagem || '') === alvo; })
-    .slice().reverse()
+  // Mesma regra das tabelas: check-in mais recente primeiro. Antes isto era
+  // só um .reverse() da ordem da planilha, que acerta por acaso enquanto as
+  // linhas estiverem em ordem lá — e erra assim que alguém insere no meio.
+  var opcoes = ordenarRecentesPrimeiro_(
+      (Array.isArray(STATE.reservas) ? STATE.reservas : [])
+        .filter(function(r) { return normalizarTexto_(r.hospedagem || '') === alvo; }),
+      'entrada')
     .filter(function(r) {
       var chave = normalizarTexto_(r.nome);
       if (!chave || vistos[chave]) return false;

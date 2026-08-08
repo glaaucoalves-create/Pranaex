@@ -871,6 +871,19 @@ function filtrarPeriodo_(lista, campo) {
   if (!limitesPeriodo_()) return lista;
   return lista.filter(function(x) { return dentroDoPeriodo_(x[campo]); });
 }
+// Toda lista de lançamento desce do mais recente para o mais antigo.
+// Copia antes de ordenar: sem período selecionado filtrarPeriodo_ devolve o
+// próprio array do STATE, e ordenar no lugar mexeria no dado compartilhado.
+// Linha sem data válida vai para o fim, em vez de embaralhar o topo.
+function ordenarRecentesPrimeiro_(lista, campo) {
+  return lista.slice().sort(function(a, b) {
+    var da = dataLocal_(a[campo]);
+    var db = dataLocal_(b[campo]);
+    var ta = isNaN(da) ? -Infinity : da.getTime();
+    var tb = isNaN(db) ? -Infinity : db.getTime();
+    return tb - ta;
+  });
+}
 function rotuloPeriodo_() {
   if (periodo_.tipo === 'mes') return MESES_LONGOS_[periodo_.mes];
   return 'Ano 2026';
@@ -2181,7 +2194,7 @@ function recebidoPorReserva_(nome) {
 function renderTabelaReservas_() {
   var tbody = document.getElementById('tbl-reservas');
   if (!tbody) return;
-  var visiveis = filtrarPeriodo_(filtrarPorHospedagem_(STATE.reservas), 'entrada');
+  var visiveis = ordenarRecentesPrimeiro_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.reservas), 'entrada'), 'entrada');
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-note">' + 'Nenhuma reserva cadastrada.' + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(r) {
     // Reservas do Airbnb: o hóspede já pagou 100% no ato da reserva — o valor
@@ -2221,7 +2234,7 @@ function carregarReservas() {
 function renderTabelaEntradas_() {
   var tbody = document.getElementById('tbl-entradas');
   if (!tbody) return;
-  var visiveis = filtrarPeriodo_(filtrarPorHospedagem_(STATE.entradas), 'data');
+  var visiveis = ordenarRecentesPrimeiro_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.entradas), 'data'), 'data');
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="3" class="empty-note">' + 'Nenhuma entrada registrada.' + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(e) {
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(e.hospedagem) + '</div>' : '';
@@ -2245,7 +2258,7 @@ function carregarEntradas() {
 function renderTabelaDespesas_() {
   var tbody = document.getElementById('tbl-despesas');
   if (!tbody) return;
-  var visiveis = filtrarPeriodo_(filtrarPorHospedagem_(STATE.despesas), 'dataPagamento');
+  var visiveis = ordenarRecentesPrimeiro_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.despesas), 'dataPagamento'), 'dataPagamento');
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + 'Nenhuma despesa cadastrada.' + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(d) {
     var chip = hospedagemSelecionada === 'Total' ? ' ' + hospChipHtml_(d.hospedagem) : '';
@@ -2270,7 +2283,7 @@ function carregarDespesas() {
 function renderTabelaSaques_() {
   var tbody = document.getElementById('tbl-saques');
   if (!tbody) return;
-  var visiveis = filtrarPeriodo_(filtrarPorHospedagem_(STATE.saques), 'data');
+  var visiveis = ordenarRecentesPrimeiro_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.saques), 'data'), 'data');
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-note">' + 'Nenhum saque registrado.' + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(s) {
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(s.hospedagem) + '</div>' : '';

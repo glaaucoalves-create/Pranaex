@@ -1,23 +1,19 @@
 name: Deploy GitHub Pages
 
-# Gatilho por push está DESLIGADO de propósito (2026-08-06).
+# Se um deploy travar, o culpado provável é um run ANTIGO parado em
+# "waiting" no ambiente github-pages: ele segura o ambiente e todo run novo
+# fica em "pending" sem nunca começar. O conserto é cancelar o run velho
+# (Actions -> o run -> Cancel), e aí o da fila anda sozinho.
 #
-# A fila de deployment do Pages deste repositório parou de consumir deploys
-# vindos do Actions: todo run fica em "deployment_queued" até o teto de
-# 600000 ms do actions/deploy-pages e é abortado. Não adianta mexer no
-# "timeout" (o action tem teto rígido) nem repetir o mesmo commit (o ID do
-# deployment é o próprio SHA, então o Pages cancela o repetido na hora).
-#
-# Enquanto isso, o site é publicado pelo builder clássico do Pages:
-# Settings -> Pages -> Source = "Deploy from a branch", branch main, pasta
-# "/ (root)". O index.html está na raiz e o .nojekyll evita o Jekyll.
-#
-# Se a fila do Actions voltar a funcionar, rode este workflow pelo
-# "Run workflow" e, dando verde, devolva o gatilho de push abaixo.
+# Já testado e descartado como conserto:
+#  - aumentar "timeout" no deploy-pages: teto rígido de 600000 ms, ignora
+#    valor maior e ainda avisa no log;
+#  - reenviar o MESMO commit: o ID do deployment é o próprio SHA, o Pages
+#    cancela o repetido em segundos ("Deployment cancelled").
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-  # push:
-  #   branches: [main]
 
 permissions:
   contents: read

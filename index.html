@@ -34,6 +34,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .content{padding:20px 20px 60px 20px;max-width:1180px;width:100%;margin:0 auto}
 
 .panel{display:none}.panel.on{display:block}
+/* Estado de carregamento: os painéis só aparecem com dado real na mão. */
+body.carregando .panel.on{display:none}
+body:not(.carregando) #carga-estado{display:none}
+.carga-spin{width:22px;height:22px;border-radius:50%;border:2.5px solid #f0f1f3;border-top-color:#c1622a;animation:carga-gira .8s linear infinite;flex-shrink:0}
+@keyframes carga-gira{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.carga-spin{animation-duration:2.4s}}
 .ptitle{font-family:'Poiret One','Inter',sans-serif;font-size:28px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:#0d1117}
 .psub{font-size:13px;color:#6b7280;margin-top:3px}
 .phead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;gap:14px;flex-wrap:wrap}
@@ -176,7 +182,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 }
 </style>
 </head>
-<body>
+<body class="carregando">
 
 <div class="brand-strip"><span style="background:#d97a34"></span><span style="background:#ab8f5c"></span><span style="background:#b1503a"></span><span style="background:#5f8f5f"></span></div>
 <div class="topbar">
@@ -195,6 +201,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 <main>
   <div class="content">
+
+<!-- Enquanto os dados não chegam, os painéis ficam escondidos e este bloco
+     ocupa o lugar. Antes a tela abria com lançamentos de exemplo e se
+     corrigia sozinha segundos depois — dado falso lido como real. -->
+<div id="carga-estado">
+  <div class="card" style="display:flex;align-items:center;gap:12px;padding:22px 18px">
+    <div class="carga-spin"></div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#0d1117">Carregando dados da planilha…</div>
+      <div style="font-size:11.5px;color:#9aa3af;margin-top:2px">Os números aparecem quando os dados chegarem — nada é exibido antes disso.</div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="carga-aviso" style="display:none;border-color:#e7b0a0;background:#fdf3f0">
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <div style="font-size:12.5px;font-weight:700;color:#a13a1f">Dados incompletos</div>
+      <div style="font-size:11.5px;color:#6b7280;margin-top:2px" id="carga-aviso-texto">—</div>
+    </div>
+    <button class="btn-toggle" onclick="recarregarTudo_()">Tentar de novo</button>
+  </div>
+</div>
 
 <!-- ═══════════ AURA / OPERACIONAL ═══════════ -->
 <div id="aura" class="panel on">
@@ -440,6 +469,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <div class="mk"><div class="ml">Simples Nacional (12%)</div><div class="mv dn" id="res-tax">—</div></div>
       <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Payback Aura</div><div class="mv up" id="res-pb">—</div></div>
     </div>
+    <div class="nota" style="margin-bottom:0">
+      Os três primeiros indicadores respondem aos sliders. O <strong style="color:#c1622a">payback</strong> não: ele projeta os meses à frente pela <strong>média já realizada</strong>, e só cai na projeção dos sliders enquanto não houver nenhum mês fechado.
+    </div>
   </div>
 
   <div class="card">
@@ -452,16 +484,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       </div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-chale-lbl">Obra / chalé 53%</span><span id="inv-chale-val">R$ 177.753</span></div>
-          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-chale-bar" style="height:100%;width:53%;background:#b1503a;border-radius:3px"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-chale-lbl">Obra / chalé</span><span id="inv-chale-val">—</span></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-chale-bar" style="height:100%;width:0%;background:#b1503a;border-radius:3px"></div></div>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-terreno-lbl">Terreno 36%</span><span id="inv-terreno-val">R$ 120.000</span></div>
-          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-terreno-bar" style="height:100%;width:36%;background:#a13a1f;border-radius:3px"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-terreno-lbl">Terreno</span><span id="inv-terreno-val">—</span></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-terreno-bar" style="height:100%;width:0%;background:#a13a1f;border-radius:3px"></div></div>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-infra-lbl">Infra terreno 11%</span><span id="inv-infra-val">R$ 35.587</span></div>
-          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-infra-bar" style="height:100%;width:11%;background:#9aa3af;border-radius:3px"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-infra-lbl">Infra terreno</span><span id="inv-infra-val">—</span></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-infra-bar" style="height:100%;width:0%;background:#9aa3af;border-radius:3px"></div></div>
         </div>
       </div>
     </div>
@@ -484,14 +516,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </div>
     <div class="g4" style="margin-bottom:12px">
       <div class="mk"><div class="ml">Margem acumulada</div><div class="mv up" style="font-size:15px" id="inv-margem-total">—</div></div>
-      <div class="mk"><div class="ml">Média mensal</div><div class="mv" style="font-size:15px" id="inv-margem-media">—</div></div>
-      <div class="mk"><div class="ml">Margem sobre receita</div><div class="mv pur" style="font-size:15px" id="inv-margem-pct">—</div></div>
-      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Retorno médio</div><div class="mv up" style="font-size:15px" id="inv-margem-retorno">—</div></div>
+      <div class="mk"><div class="ml">Margem média/mês</div><div class="mv" style="font-size:15px" id="inv-margem-media">—</div></div>
+      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Retorno acumulado</div><div class="mv up" style="font-size:15px" id="inv-margem-retorno-acum">—</div></div>
+      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Retorno médio/mês</div><div class="mv up" style="font-size:15px" id="inv-margem-retorno">—</div></div>
     </div>
     <div class="tbl-wrap">
       <table style="min-width:520px">
         <thead><tr><th>Mês</th><th>Receita</th><th>Despesa</th><th>Margem</th><th>%</th><th>Retorno</th></tr></thead>
         <tbody id="inv-margem-corpo"></tbody>
+        <tfoot id="inv-margem-rodape"></tfoot>
       </table>
     </div>
     <div class="nota" style="margin-bottom:0" id="inv-margem-nota">—</div>
@@ -500,7 +533,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital investido</div>
-      <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-capital-header">R$ 333.340</span></span>
+      <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-capital-header">—</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Representa <strong style="color:#c1622a">lucro acumulado</strong>, não dinheiro sacado. Nenhum saque ocorre até o projeto (3 cabanas) estar concluído — 100% do lucro é reinvestido mês a mês nas obras seguintes (ver fluxo de caixa abaixo).
@@ -537,7 +570,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="g3" style="margin-top:12px">
       <div class="mk" style="border-color:#f4ddd4">
         <div class="ml">Cabana 1 — Aura</div>
-        <div class="mv pur" style="font-size:14px" id="inv-cabana1-investido">R$ 333k investido</div>
+        <div class="mv pur" style="font-size:14px" id="inv-cabana1-investido">—</div>
         <div style="font-size:10px;color:#c1622a;margin-top:4px;font-weight:600">✓ Operando · Jul/2026</div>
         <div style="font-size:10px;color:#9aa3af;margin-top:2px">Gera caixa para financiar as obras</div>
       </div>
@@ -575,7 +608,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <tbody>
         <tr>
           <td style="color:#b1503a;font-weight:600">Cabana 1 — Aura</td>
-          <td id="inv-tabela-obra1">R$ 367k</td><td class="pur" id="inv-tabela-capital1">R$ 333k</td><td>Jul/26</td>
+          <td id="inv-tabela-obra1">—</td><td class="pur" id="inv-tabela-capital1">—</td><td>Jul/26</td>
           <td>R$ 4.550+</td>
           <td class="up" id="tc-gl1">—</td>
           <td class="warn" id="tc-pb1">—</td>
@@ -1251,17 +1284,19 @@ function realAcumuladoAura_() {
 
 // Explica de onde vem o número: quantos meses são reais e de quando começa a
 // projeção — sem isso o gráfico mistura fato e estimativa sem avisar.
-function atualizarBaseCalculo_(real) {
+function atualizarBaseCalculo_(real, mensalProjetado, usandoMedia) {
   var el = document.getElementById('inv-base-calculo');
   if (!el) return;
   if (!real.meses) {
-    el.textContent = 'Nenhum mês fechado ainda — tudo é projeção dos sliders acima.';
+    el.textContent = 'Nenhum mês fechado ainda — sem média realizada para projetar, o cálculo usa os sliders acima.';
     return;
   }
   var periodo = real.de === real.ate ? MESES_LONGOS_[real.de] : MESES_LONGOS_[real.de] + ' a ' + MESES_LONGOS_[real.ate];
   el.textContent = 'Base: ' + real.meses + (real.meses === 1 ? ' mês fechado' : ' meses fechados') +
     ' (' + periodo + ') com resultado real de ' + fmtR_(real.total) +
-    '. De ' + MESES_LONGOS_[Math.min(11, real.ate + 1)] + ' em diante o cálculo usa a projeção dos sliders.';
+    '. De ' + MESES_LONGOS_[Math.min(11, real.ate + 1)] + ' em diante o cálculo projeta ' +
+    fmtR_(mensalProjetado) + '/mês' +
+    (usandoMedia ? ' — a média realizada, não os sliders.' : ' (projeção dos sliders).');
 }
 
 // ── Margem e retorno real mês a mês ────────────────────────────────────
@@ -1279,9 +1314,11 @@ function renderMargemRealMensal_() {
   var base = realMensalAura_();
   setTxt_('inv-margem-capital', CAPITAL > 0 ? fmtR_(CAPITAL) : '—');
 
+  var rodape = document.getElementById('inv-margem-rodape');
   if (!base.meses.length) {
     tbody.innerHTML = '<tr><td colspan="6" class="empty-note">Nenhum mês fechado ainda — a margem real aparece quando o primeiro mês virar.</td></tr>';
-    ['inv-margem-total', 'inv-margem-media', 'inv-margem-pct', 'inv-margem-retorno'].forEach(function(id) { setTxt_(id, '—'); });
+    if (rodape) rodape.innerHTML = '';
+    ['inv-margem-total', 'inv-margem-media', 'inv-margem-retorno-acum', 'inv-margem-retorno'].forEach(function(id) { setTxt_(id, '—'); });
     setTxt_('inv-margem-nota', 'Sem mês fechado ainda — os números aparecem quando houver dado real.');
     return;
   }
@@ -1306,14 +1343,39 @@ function renderMargemRealMensal_() {
       '</tr>';
   }).join('');
 
+  // Fecha a mesma tabela com o acumulado e a média, para os dois ficarem
+  // lado a lado com os meses em vez de espalhados em outro bloco.
+  var pctTotal = receita > 0 ? Math.round((margem / receita) * 100) + '%' : '—';
+  var retAcum = CAPITAL > 0 ? (margem / CAPITAL) * 100 : 0;
+  var retMedio = CAPITAL > 0 ? (margem / n) / CAPITAL * 100 : 0;
+  if (rodape) {
+    rodape.innerHTML =
+      '<tr style="border-top:2px solid #edeef1">' +
+        '<td style="color:#0d1117;font-weight:700">Acumulado</td>' +
+        '<td style="font-weight:600">' + fmtR_(receita) + '</td>' +
+        '<td style="font-weight:600;color:#a13a1f">' + fmtR_(despesa) + '</td>' +
+        '<td style="font-weight:700;color:#c1622a">' + fmtR_(margem) + '</td>' +
+        '<td style="color:#6b7280">' + pctTotal + '</td>' +
+        '<td style="font-weight:700;color:#c1622a">' + (CAPITAL > 0 ? pct1_(retAcum) : '—') + '</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td style="color:#6b7280">Média/mês</td>' +
+        '<td style="color:#6b7280">' + fmtR_(receita / n) + '</td>' +
+        '<td style="color:#6b7280">' + fmtR_(despesa / n) + '</td>' +
+        '<td style="font-weight:600;color:#6b7280">' + fmtR_(margem / n) + '</td>' +
+        '<td style="color:#9aa3af">' + pctTotal + '</td>' +
+        '<td style="font-weight:600;color:#6b7280">' + (CAPITAL > 0 ? pct1_(retMedio) : '—') + '</td>' +
+      '</tr>';
+  }
+
   setTxt_('inv-margem-total', fmtR_(margem));
   setTxt_('inv-margem-media', fmtR_(margem / n) + '/mês');
-  setTxt_('inv-margem-pct', receita > 0 ? Math.round((margem / receita) * 100) + '%' : '—');
-  setTxt_('inv-margem-retorno', CAPITAL > 0 ? pct1_((margem / n) / CAPITAL * 100) + ' a.m.' : '—');
+  setTxt_('inv-margem-retorno-acum', CAPITAL > 0 ? pct1_(retAcum) : '—');
+  setTxt_('inv-margem-retorno', CAPITAL > 0 ? pct1_(retMedio) + ' a.m.' : '—');
 
   var periodo = base.de === base.ate ? MESES_LONGOS_[base.de] : MESES_LONGOS_[base.de] + ' a ' + MESES_LONGOS_[base.ate];
   setTxt_('inv-margem-nota', 'Base: ' + n + (n === 1 ? ' mês fechado' : ' meses fechados') + ' (' + periodo + '), ' +
-    fmtR_(margem) + ' de margem sobre um capital de ' + fmtR_(CAPITAL) + '.');
+    fmtR_(margem) + ' de margem sobre um capital de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
 }
 
 function calc() {
@@ -1327,9 +1389,16 @@ function calc() {
   var liquido = bruta - tax - opex;
 
   var real = realAcumuladoAura_();
-  atualizarBaseCalculo_(real);
+  // O que financia os meses à frente é a MÉDIA já realizada, não o slider.
+  // Enquanto não houver mês fechado não há média, e aí o slider assume —
+  // é a única estimativa disponível no começo da operação.
+  var mediaReal = real.meses ? real.total / real.meses : 0;
+  var mensalProjetado = mediaReal > 0 ? mediaReal : liquido;
+  atualizarBaseCalculo_(real, mensalProjetado, mediaReal > 0);
+
   var capitalRestante = Math.max(0, CAPITAL - real.total);
-  var pb = real.total >= CAPITAL ? real.meses : real.meses + (liquido > 0 ? Math.ceil(capitalRestante / liquido) : 999);
+  var pb = real.total >= CAPITAL ? real.meses
+         : real.meses + (mensalProjetado > 0 ? Math.ceil(capitalRestante / mensalProjetado) : 999);
 
   document.getElementById('out-occ').textContent    = Math.round(occ * 100) + '%';
   document.getElementById('out-diaria').textContent = 'R$ ' + diaria.toLocaleString('pt-BR');
@@ -1349,7 +1418,7 @@ function calc() {
   document.getElementById('liq3-txt').textContent = fmt(Math.max(0, liquido));
 
   renderMargemRealMensal_();
-  buildTimeline(liquido, real);
+  buildTimeline(mensalProjetado, real);
   buildCDI(liquido);
 }
 
@@ -1995,27 +2064,64 @@ function fmtData_(d) {
 // ── ESTADO CENTRAL DO PAINEL ──
 // Guarda a última lista conhecida de cada tipo de dado. Alimentado pelas
 // funções renderX() sempre que uma lista é (re)carregada da API.
+// Começa VAZIO de propósito. Até 2026-08-12 estas listas vinham semeadas
+// com lançamentos de exemplo (uma reserva da Isadora, um saque de R$ 2.275,
+// despesas zeradas), então a tela abria mostrando números que não existiam
+// e só depois se corrigia quando a API respondia. Quem olhasse rápido lia
+// dado falso como se fosse real. Agora a tela espera os dados e avisa
+// enquanto isso — ver CARGA_ logo abaixo.
 var STATE = {
-  reservas: [
-    { hospedagem: 'Aura', canal: 'Aluguel Instagram', nome: 'Isadora Chagas G.', entrada: '2026-07-17', saida: '2026-07-22', diarias: 5, valorContrato: 4550, statusPago: 'Parcial' }
-  ],
-  entradas: [
-    { hospedagem: 'Aura', reserva: 'Isadora Chagas G.', data: '2026-06-21', valor: 2275 }
-  ],
-  despesas: [
-    { hospedagem: 'Aura', categoria: 'Jardinagem', dataPagamento: '2026-07-15', pago: 0 },
-    { hospedagem: 'Aura', categoria: 'Custo operacional/Jéssica', dataPagamento: '2026-07-15', pago: 0 },
-    { hospedagem: 'Aura', categoria: 'Internet', dataPagamento: '2026-07-15', pago: 0 },
-    { hospedagem: 'Aura', categoria: 'Energia elétrica', dataPagamento: '2026-07-15', pago: 0 },
-    { hospedagem: 'Aura', categoria: 'Imposto DAS', dataPagamento: '2026-07-15', pago: 0 }
-  ],
-  saques: [
-    { hospedagem: 'Aura', categoria: 'Yuri/Jessica', data: '2026-06-22', valor: 2275, descricao: 'Saque inicial' }
-  ],
+  reservas: [],
+  entradas: [],
+  despesas: [],
+  saques: [],
   obraProjetos: [],
   categoriasDespesa: [],
   canais: []
 };
+
+// ── CONTROLE DE CARREGAMENTO ──
+// A tela só é liberada quando as quatro listas que alimentam os números
+// terminarem (com sucesso ou erro). Obra e categorias ficam de fora do
+// bloqueio: elas têm placeholder próprio e não fazem a tela mentir.
+var CARGA_ = { reservas: false, entradas: false, despesas: false, saques: false };
+var CARGA_FALHAS_ = [];
+var CARGA_LIBERADA_ = false;
+
+function marcarCarga_(chave, erro) {
+  CARGA_[chave] = true;
+  if (erro) {
+    console.error('Falha ao carregar ' + chave + ':', erro);
+    if (CARGA_FALHAS_.indexOf(chave) < 0) CARGA_FALHAS_.push(chave);
+  }
+  var faltando = Object.keys(CARGA_).filter(function(k) { return !CARGA_[k]; });
+  if (faltando.length) return;
+  liberarTela_();
+}
+
+function liberarTela_() {
+  if (CARGA_LIBERADA_) { atualizarAvisoCarga_(); return; }
+  CARGA_LIBERADA_ = true;
+  document.body.classList.remove('carregando');
+  atualizarAvisoCarga_();
+}
+
+function atualizarAvisoCarga_() {
+  var aviso = document.getElementById('carga-aviso');
+  if (!aviso) return;
+  if (!CARGA_FALHAS_.length) { aviso.style.display = 'none'; return; }
+  aviso.style.display = '';
+  setTxt_('carga-aviso-texto',
+    'Não foi possível carregar da planilha: ' + CARGA_FALHAS_.join(', ') +
+    '. Os números na tela estão incompletos.');
+}
+
+function recarregarTudo_() {
+  CARGA_FALHAS_ = [];
+  Object.keys(CARGA_).forEach(function(k) { CARGA_[k] = false; });
+  atualizarAvisoCarga_();
+  atualizarTudo(true);
+}
 
 function num_(v) { return typeof v === 'number' && !isNaN(v) ? v : (parseFloat(v) || 0); }
 function fmtR_(v) { return 'R$ ' + Math.round(Math.abs(v)).toLocaleString('pt-BR'); }
@@ -2332,7 +2438,9 @@ function renderReservas(lista) {
 }
 function carregarReservas() {
   if (!apiConfigurada_()) return;
-  apiGet_('reservas').then(renderReservas).catch(function(){});
+  apiGet_('reservas')
+    .then(function(lista) { renderReservas(lista); marcarCarga_('reservas'); })
+    .catch(function(erro) { marcarCarga_('reservas', erro); });
 }
 
 function renderTabelaEntradas_() {
@@ -2356,7 +2464,9 @@ function renderEntradas(lista) {
 }
 function carregarEntradas() {
   if (!apiConfigurada_()) return;
-  apiGet_('entradas').then(renderEntradas).catch(function(){});
+  apiGet_('entradas')
+    .then(function(lista) { renderEntradas(lista); marcarCarga_('entradas'); })
+    .catch(function(erro) { marcarCarga_('entradas', erro); });
 }
 
 function renderTabelaDespesas_() {
@@ -2381,7 +2491,9 @@ function renderDespesas(lista) {
 }
 function carregarDespesas() {
   if (!apiConfigurada_()) return;
-  apiGet_('despesas').then(renderDespesas).catch(function(){});
+  apiGet_('despesas')
+    .then(function(lista) { renderDespesas(lista); marcarCarga_('despesas'); })
+    .catch(function(erro) { marcarCarga_('despesas', erro); });
 }
 
 function renderTabelaSaques_() {
@@ -2406,7 +2518,9 @@ function renderSaques(lista) {
 }
 function carregarSaques() {
   if (!apiConfigurada_()) return;
-  apiGet_('saques').then(renderSaques).catch(function(){});
+  apiGet_('saques')
+    .then(function(lista) { renderSaques(lista); marcarCarga_('saques'); })
+    .catch(function(erro) { marcarCarga_('saques', erro); });
 }
 
 // ══════════════════════════════════════════════
@@ -2687,7 +2801,11 @@ agendarRepaint_();
 if (apiConfigurada_()) {
   atualizarTudo();
 } else {
-  console.warn('API_URL não configurada — rodando em modo demonstração com dados de exemplo.');
+  // Sem API não há o que esperar: libera a tela (vazia) em vez de deixar o
+  // usuário olhando um spinner que nunca termina.
+  console.warn('API_URL não configurada — a tela abre sem dados.');
+  CARGA_FALHAS_ = ['API não configurada'];
+  liberarTela_();
 }
 </script>
 </body>

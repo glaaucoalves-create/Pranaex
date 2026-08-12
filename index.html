@@ -473,44 +473,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   </div>
 
   <div class="card">
-    <div class="ctitle">Margem real mês a mês — Aura</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="ctitle" style="margin-bottom:0">Margem e retorno real mês a mês — Aura</div>
+      <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-margem-capital">—</span></span>
+    </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Só meses <strong style="color:#c1622a">fechados</strong> e só o que está lançado — o mês em curso fica de fora para não passar por mês cheio.
       <strong style="color:#c1622a">Saque não desconta</strong>: retirada de sócio é destino do lucro, não custo da operação.
+      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital investido no projeto. Nenhum slider influencia esta seção.
     </div>
-    <div class="g3" style="margin-bottom:12px">
+    <div class="g4" style="margin-bottom:12px">
       <div class="mk"><div class="ml">Margem acumulada</div><div class="mv up" style="font-size:15px" id="inv-margem-total">—</div></div>
       <div class="mk"><div class="ml">Média mensal</div><div class="mv" style="font-size:15px" id="inv-margem-media">—</div></div>
       <div class="mk"><div class="ml">Margem sobre receita</div><div class="mv pur" style="font-size:15px" id="inv-margem-pct">—</div></div>
+      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Retorno médio</div><div class="mv up" style="font-size:15px" id="inv-margem-retorno">—</div></div>
     </div>
     <div class="tbl-wrap">
-      <table style="min-width:460px">
-        <thead><tr><th>Mês</th><th>Receita</th><th>Despesa</th><th>Margem</th><th>%</th></tr></thead>
+      <table style="min-width:520px">
+        <thead><tr><th>Mês</th><th>Receita</th><th>Despesa</th><th>Margem</th><th>%</th><th>Retorno</th></tr></thead>
         <tbody id="inv-margem-corpo"></tbody>
       </table>
     </div>
-  </div>
-
-  <div class="card" id="inv-retorno-real">
-    <div class="ctitle">Retorno real × 1% ao mês</div>
-    <div style="font-size:11.5px;color:#9aa3af;margin-bottom:14px;line-height:1.5">
-      Placar do que já aconteceu, sem projeção: a margem real acumulada contra o que o <strong>mesmo capital</strong> renderia a <strong style="color:#a3813f">1% ao mês</strong> no <strong>mesmo número de meses</strong>. Nenhum slider influencia esta seção.
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-      <div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:#6b7280">Margem real da operação</span><span style="font-weight:700;color:#c1622a" id="inv-ret-real">—</span></div>
-        <div style="height:10px;background:#f0f1f3;border-radius:5px;overflow:hidden"><div id="inv-ret-bar-real" style="height:100%;width:0%;background:#c1622a;border-radius:5px;transition:width .3s"></div></div>
-      </div>
-      <div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:#6b7280">Referência a 1% ao mês</span><span style="font-weight:700;color:#a3813f" id="inv-ret-ref">—</span></div>
-        <div style="height:10px;background:#f0f1f3;border-radius:5px;overflow:hidden"><div id="inv-ret-bar-ref" style="height:100%;width:0%;background:#a3813f;border-radius:5px;transition:width .3s"></div></div>
-      </div>
-    </div>
-    <div class="g2">
-      <div class="mk"><div class="ml">Retorno médio do projeto</div><div class="mv up" style="font-size:15px" id="inv-ret-taxa">—</div></div>
-      <div class="mk"><div class="ml">Referência</div><div class="mv" style="font-size:15px;color:#a3813f">1,00% a.m.</div></div>
-    </div>
-    <div class="nota" style="margin-bottom:0" id="inv-ret-veredito">—</div>
+    <div class="nota" style="margin-bottom:0" id="inv-margem-nota">—</div>
   </div>
 
   <div class="card">
@@ -1280,27 +1264,37 @@ function atualizarBaseCalculo_(real) {
     '. De ' + MESES_LONGOS_[Math.min(11, real.ate + 1)] + ' em diante o cálculo usa a projeção dos sliders.';
 }
 
-// ── Margem real mês a mês ──────────────────────────────────────────────
-// Só mês fechado, só dado lançado. Saque não desconta: retirada de sócio é
-// destino do lucro, não custo da operação.
+// ── Margem e retorno real mês a mês ────────────────────────────────────
+// Só mês fechado, só dado lançado, nenhum slider. Duas leituras na mesma
+// tabela: margem (quanto sobra da operação) e retorno (quanto essa margem
+// representa sobre o capital investido no projeto).
+//
+// Saque não desconta: retirada de sócio é destino do lucro, não custo da
+// operação.
+function pct1_(v) { return v.toFixed(2).replace('.', ',') + '%'; }
+
 function renderMargemRealMensal_() {
   var tbody = document.getElementById('inv-margem-corpo');
   if (!tbody) return;
   var base = realMensalAura_();
+  setTxt_('inv-margem-capital', CAPITAL > 0 ? fmtR_(CAPITAL) : '—');
+
   if (!base.meses.length) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-note">Nenhum mês fechado ainda — a margem real aparece quando o primeiro mês virar.</td></tr>';
-    setTxt_('inv-margem-total', '—');
-    setTxt_('inv-margem-media', '—');
-    setTxt_('inv-margem-pct', '—');
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-note">Nenhum mês fechado ainda — a margem real aparece quando o primeiro mês virar.</td></tr>';
+    ['inv-margem-total', 'inv-margem-media', 'inv-margem-pct', 'inv-margem-retorno'].forEach(function(id) { setTxt_(id, '—'); });
+    setTxt_('inv-margem-nota', 'Sem mês fechado ainda — os números aparecem quando houver dado real.');
     return;
   }
+
   var receita = 0, despesa = 0;
   base.meses.forEach(function(m) { receita += m.receita; despesa += m.despesa; });
   var margem = receita - despesa;
+  var n = base.meses.length;
 
   // Mais recente primeiro, igual ao resto do app.
   tbody.innerHTML = base.meses.slice().reverse().map(function(m) {
     var pct = m.receita > 0 ? (m.margem / m.receita) * 100 : 0;
+    var retorno = CAPITAL > 0 ? (m.margem / CAPITAL) * 100 : 0;
     var cor = m.margem >= 0 ? '#c1622a' : '#a13a1f';
     return '<tr>' +
       '<td style="color:#0d1117;font-weight:600">' + MESES_LONGOS_[m.mes] + '</td>' +
@@ -1308,54 +1302,18 @@ function renderMargemRealMensal_() {
       '<td style="color:#a13a1f">' + fmtR_(m.despesa) + '</td>' +
       '<td style="font-weight:700;color:' + cor + '">' + fmtR_(m.margem) + '</td>' +
       '<td style="color:#9aa3af">' + (m.receita > 0 ? Math.round(pct) + '%' : '—') + '</td>' +
+      '<td style="font-weight:600;color:' + cor + '">' + (CAPITAL > 0 ? pct1_(retorno) : '—') + '</td>' +
       '</tr>';
   }).join('');
 
   setTxt_('inv-margem-total', fmtR_(margem));
-  setTxt_('inv-margem-media', fmtR_(margem / base.meses.length) + '/mês');
+  setTxt_('inv-margem-media', fmtR_(margem / n) + '/mês');
   setTxt_('inv-margem-pct', receita > 0 ? Math.round((margem / receita) * 100) + '%' : '—');
-}
-
-// ── Retorno real × 1% ao mês ───────────────────────────────────────────
-// Uma seção só, e só com dado real: compara a margem já realizada com o que
-// o MESMO capital renderia a 1% ao mês no MESMO número de meses. Nada de
-// slider entra aqui — é o placar do que aconteceu, não projeção.
-var RENDIMENTO_REF_ = 0.01;
-function renderRetornoReal1_() {
-  var el = document.getElementById('inv-retorno-real');
-  if (!el) return;
-  var base = realMensalAura_();
-  var n = base.meses.length;
-  if (!n || CAPITAL <= 0) {
-    setTxt_('inv-ret-real', '—');
-    setTxt_('inv-ret-ref', '—');
-    setTxt_('inv-ret-taxa', '—');
-    setTxt_('inv-ret-veredito', 'Sem mês fechado ainda — o comparativo aparece quando houver dado real.');
-    return;
-  }
-  var margem = base.meses.reduce(function(s, m) { return s + m.margem; }, 0);
-  // Referência composta: é assim que 1% a.m. de fato rende.
-  var referencia = CAPITAL * (Math.pow(1 + RENDIMENTO_REF_, n) - 1);
-  // Taxa média mensal equivalente do projeto, sobre o capital investido.
-  var taxa = (margem / n) / CAPITAL * 100;
-  var dif = margem - referencia;
-
-  setTxt_('inv-ret-real', fmtR_(margem));
-  setTxt_('inv-ret-ref', fmtR_(referencia));
-  setTxt_('inv-ret-taxa', taxa.toFixed(2).replace('.', ',') + '% a.m.');
+  setTxt_('inv-margem-retorno', CAPITAL > 0 ? pct1_((margem / n) / CAPITAL * 100) + ' a.m.' : '—');
 
   var periodo = base.de === base.ate ? MESES_LONGOS_[base.de] : MESES_LONGOS_[base.de] + ' a ' + MESES_LONGOS_[base.ate];
-  var veredito = dif >= 0
-    ? 'A operação rendeu ' + fmtR_(dif) + ' a mais que 1% ao mês sobre o capital de ' + fmtR_(CAPITAL) + '.'
-    : 'A operação rendeu ' + fmtR_(-dif) + ' a menos que 1% ao mês sobre o capital de ' + fmtR_(CAPITAL) + '.';
-  setTxt_('inv-ret-veredito', veredito + ' Base: ' + n + (n === 1 ? ' mês fechado' : ' meses fechados') + ' (' + periodo + ').');
-
-  // Barras proporcionais ao maior dos dois, para a comparação ser visual.
-  var maior = Math.max(margem, referencia, 1);
-  var barra = document.getElementById('inv-ret-bar-real');
-  var barraRef = document.getElementById('inv-ret-bar-ref');
-  if (barra) barra.style.width = Math.max(0, Math.min(100, (margem / maior) * 100)) + '%';
-  if (barraRef) barraRef.style.width = Math.max(0, Math.min(100, (referencia / maior) * 100)) + '%';
+  setTxt_('inv-margem-nota', 'Base: ' + n + (n === 1 ? ' mês fechado' : ' meses fechados') + ' (' + periodo + '), ' +
+    fmtR_(margem) + ' de margem sobre um capital de ' + fmtR_(CAPITAL) + '.');
 }
 
 function calc() {
@@ -1391,7 +1349,6 @@ function calc() {
   document.getElementById('liq3-txt').textContent = fmt(Math.max(0, liquido));
 
   renderMargemRealMensal_();
-  renderRetornoReal1_();
   buildTimeline(liquido, real);
   buildCDI(liquido);
 }

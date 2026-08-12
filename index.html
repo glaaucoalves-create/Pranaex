@@ -486,12 +486,12 @@ tr:last-child td{border-bottom:none}
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div class="ctitle" style="margin-bottom:0">Margem e retorno real mês a mês — Aura</div>
-      <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-margem-capital">—</span></span>
+      <span style="font-size:11px;color:#9aa3af">Comprometido: <span class="pur" style="font-weight:700" id="inv-margem-capital">—</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Tudo que foi lançado <strong style="color:#c1622a">até hoje</strong>, incluindo o mês em curso — que entra marcado como parcial e pesa nas médias só pela fração de dias já decorridos.
       <strong style="color:#c1622a">Saque não desconta</strong>: retirada de sócio é destino do lucro, não custo da operação.
-      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital investido no projeto.
+      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital <strong>comprometido</strong> — o já investido mais a dívida pendente, porque ela também é capital que o projeto ainda tem de devolver.
     </div>
     <div class="g4" style="margin-bottom:12px">
       <div class="mk"><div class="ml">Margem acumulada</div><div class="mv up" style="font-size:15px" id="inv-margem-total">—</div></div>
@@ -511,8 +511,8 @@ tr:last-child td{border-bottom:none}
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital investido</div>
-      <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-capital-header">—</span></span>
+      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital comprometido</div>
+      <span style="font-size:11px;color:#9aa3af">Comprometido: <span class="pur" style="font-weight:700" id="inv-capital-header">—</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Representa <strong style="color:#c1622a">lucro acumulado</strong>, não dinheiro sacado. Nenhum saque ocorre até o projeto (3 cabanas) estar concluído — 100% do lucro é reinvestido mês a mês nas obras seguintes (ver fluxo de caixa abaixo).
@@ -1298,7 +1298,8 @@ function atualizarBaseCalculo_(real, mensalProjetado) {
 // ── Margem e retorno real mês a mês ────────────────────────────────────
 // Tudo lançado até hoje, incluindo o mês em curso (marcado como parcial).
 // Duas leituras na mesma tabela: margem (quanto sobra da operação) e
-// retorno (quanto essa margem representa sobre o capital investido).
+// retorno (quanto essa margem representa sobre o capital comprometido:
+// o já investido mais a dívida pendente).
 //
 // As médias dividem pelos meses EQUIVALENTES, não pelo número de linhas: o
 // mês em curso vale a fração de dias já decorridos, senão um mês recém
@@ -1376,7 +1377,7 @@ function renderMargemRealMensal_() {
 
   var periodo = base.de === base.ate ? MESES_LONGOS_[base.de] : MESES_LONGOS_[base.de] + ' a ' + MESES_LONGOS_[base.ate];
   setTxt_('inv-margem-nota', 'Base: ' + n.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (' + periodo + '), ' +
-    fmtR_(margem) + ' de margem sobre um capital de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
+    fmtR_(margem) + ' de margem sobre um capital comprometido de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
 }
 
 // Toda a aba roda em cima das médias realizadas até hoje. Não há mais
@@ -1983,13 +1984,17 @@ function fmtObraK_(v) { return Math.abs(v) >= 1000 ? 'R$ ' + Math.round(v / 1000
 function atualizarCapitalInvestimento_(projetos, totalGeral) {
   var total = num_(totalGeral.total);
   var divida = num_(totalGeral.divida);
-  if (total > 0) CAPITAL = total;
+  var comprometido = total + divida;
+  // Retorno e payback medem contra o COMPROMETIDO, não só o desembolsado:
+  // a dívida pendente é capital que o projeto já deve devolver, então
+  // ignorá-la faria o retorno parecer melhor do que é.
+  if (comprometido > 0) CAPITAL = comprometido;
 
   setTxt_('inv-total-projeto', fmtR_(total));
-  setTxt_('inv-capital-header', fmtR_(total));
+  setTxt_('inv-capital-header', fmtR_(comprometido));
   setTxt_('inv-resumo-total', fmtR_(total));
   setTxt_('inv-resumo-divida', fmtR_(divida));
-  setTxt_('inv-resumo-comprometido', fmtR_(total + divida));
+  setTxt_('inv-resumo-comprometido', fmtR_(comprometido));
 
   var ordenados = projetos.slice().sort(function(a, b) { return num_(b.total) - num_(a.total); }).slice(0, 3);
   ['chale', 'terreno', 'infra'].forEach(function(slot, i) {

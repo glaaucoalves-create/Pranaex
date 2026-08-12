@@ -96,11 +96,6 @@ tr:last-child td{border-bottom:none}
 .occ-bar{width:100%;max-width:20px;border-radius:6px 6px 3px 3px;transition:height .25s ease}
 .occ-lbl{font-size:9px;color:#b0b6bf;text-transform:uppercase;letter-spacing:.03em;margin-top:6px}
 .occ-lbl.real{color:#c1622a;font-weight:700}
-.srow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.slbl2{font-size:11.5px;color:#6b7280;width:130px;flex-shrink:0}
-.sval{font-size:13px;font-weight:700;color:#c1622a;width:80px;text-align:right;flex-shrink:0}
-input[type=range]{flex:1;-webkit-appearance:none;height:4px;background:#e5e7eb;border-radius:2px;outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#c1622a;border:3px solid #fff;box-shadow:0 0 0 1px #c1622a;cursor:pointer}
 .mk{background:#f9fafb;border-radius:10px;padding:11px 13px;border:1px solid #edeef1}
 .mk .ml{font-size:10px;color:#9aa3af;margin-bottom:4px}
 .mk .mv{font-size:16px;font-weight:800;color:#0d1117}
@@ -171,7 +166,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   .user-avatar{display:none}
   .g2,.g3{grid-template-columns:1fr}
   .ptitle{font-size:20px}
-  .slbl2{width:96px}
   /* obra no celular: grade de pendências vira coluna única e as barras
      ganham rótulos mais curtos — sem isso um bloco estourava a largura */
   #obra-pendencias-grid{grid-template-columns:1fr !important}
@@ -442,35 +436,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="phead">
     <div>
       <div class="ptitle">Investimento &amp; Payback</div>
-      <div class="psub">Simulação e projeção das 3 cabanas</div>
+      <div class="psub">Projeção das 3 cabanas pela média realizada da Aura</div>
     </div>
   </div>
 
   <div class="card">
-    <div class="ctitle">Simulador — Aura</div>
-    <div class="srow">
-      <span class="slbl2">Ocupação mensal</span>
-      <input type="range" id="sl-occ" min="30" max="100" value="75" step="5" oninput="calc()">
-      <span class="sval" id="out-occ">75%</span>
-    </div>
-    <div class="srow">
-      <span class="slbl2">Diária média (R$)</span>
-      <input type="range" id="sl-diaria" min="400" max="1800" value="910" step="10" oninput="calc()">
-      <span class="sval" id="out-diaria">R$ 910</span>
-    </div>
-    <div class="srow">
-      <span class="slbl2">OPEX mensal (R$)</span>
-      <input type="range" id="sl-opex" min="1000" max="6000" value="2400" step="100" oninput="calc()">
-      <span class="sval" id="out-opex">R$ 2.400</span>
-    </div>
+    <div class="ctitle">Média realizada — Aura</div>
     <div class="g4" style="margin-top:4px">
-      <div class="mk"><div class="ml">Receita bruta/mês</div><div class="mv" id="res-bruta">—</div></div>
-      <div class="mk"><div class="ml">Líquido mensal</div><div class="mv up" id="res-liq">—</div></div>
-      <div class="mk"><div class="ml">Simples Nacional (12%)</div><div class="mv dn" id="res-tax">—</div></div>
+      <div class="mk"><div class="ml">Receita média/mês</div><div class="mv" id="res-bruta">—</div></div>
+      <div class="mk"><div class="ml">Despesa média/mês</div><div class="mv dn" id="res-tax">—</div></div>
+      <div class="mk"><div class="ml">Margem média/mês</div><div class="mv up" id="res-liq">—</div></div>
       <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Payback Aura</div><div class="mv up" id="res-pb">—</div></div>
     </div>
-    <div class="nota" style="margin-bottom:0">
-      Os três primeiros indicadores respondem aos sliders. O <strong style="color:#c1622a">payback</strong> não: ele projeta os meses à frente pela <strong>média já realizada</strong>, e só cai na projeção dos sliders enquanto não houver nenhum mês fechado.
+    <div class="nota" style="margin-bottom:0" id="res-nota">
+      Tudo aqui vem do que já foi lançado até hoje — não há mais estimativa manual na aba. O payback projeta os meses à frente por esta mesma média.
     </div>
   </div>
 
@@ -510,9 +489,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <span style="font-size:11px;color:#9aa3af">Capital: <span class="pur" style="font-weight:700" id="inv-margem-capital">—</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
-      Só meses <strong style="color:#c1622a">fechados</strong> e só o que está lançado — o mês em curso fica de fora para não passar por mês cheio.
+      Tudo que foi lançado <strong style="color:#c1622a">até hoje</strong>, incluindo o mês em curso — que entra marcado como parcial e pesa nas médias só pela fração de dias já decorridos.
       <strong style="color:#c1622a">Saque não desconta</strong>: retirada de sócio é destino do lucro, não custo da operação.
-      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital investido no projeto. Nenhum slider influencia esta seção.
+      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital investido no projeto.
     </div>
     <div class="g4" style="margin-bottom:12px">
       <div class="mk"><div class="ml">Margem acumulada</div><div class="mv up" style="font-size:15px" id="inv-margem-total">—</div></div>
@@ -592,7 +571,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
     <div style="margin-top:12px;background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #edeef1">
       <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — receita acumulada financia as obras</div>
-      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Líquido mensal varia com os sliders</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Margem mensal pela média já realizada</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">R$ 37,1k/mês (obra+terreno+infra) por 10 meses · caixa de Aura abate primeiro</div></div><div class="mc-val up" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — início de operação</div><div class="mc-sub">Aura + Cabana 2 acumulam caixa para Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
       <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">R$ 39,1k/mês (obra+terreno+infra) por 10 meses · Cabanas 1+2 financiam primeiro</div></div><div class="mc-val up" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
@@ -1214,25 +1193,26 @@ function fmt(n){ return 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR');
 
 var cdiChart = null;
 
-// Líquido já realizado pela Aura nos meses que JÁ FECHARAM.
+// Base mensal real da Aura, fonte única de TODOS os números desta aba.
 //
-// Dois cuidados:
-// 1. Só mês fechado conta. O mês corrente ainda está em curso — usar o
-//    parcial dele como se fosse mês cheio subestimaria o retorno. Do mês
-//    corrente em diante vale a projeção dos sliders.
-// 2. Lê as reservas/despesas da Aura DIRETO do STATE, e não do array MES:
-//    MES acompanha a hospedagem selecionada na outra aba, e usá-lo aqui
-//    fazia o payback mudar sozinho conforme o filtro de lá.
+// Três decisões que valem ficar registradas:
 //
-// O resultado é do projeto inteiro (100%), sem recorte por sócio.
-// Base mensal real da Aura, fonte única dos números desta aba. Devolve os
-// meses FECHADOS (do primeiro com lançamento até o anterior ao corrente),
-// nunca o mês em curso — o parcial dele passaria por mês cheio e puxaria
-// todo cálculo para baixo.
+// 1. Conta até HOJE, inclusive o mês em curso. Ele entra como mês parcial:
+//    o acumulado soma o que já foi lançado, e a média divide pelos meses
+//    EQUIVALENTES (o corrente vale a fração de dias já decorridos). Assim o
+//    mês pela metade não derruba a média como se fosse mês cheio vazio, nem
+//    é jogado fora. Nada com data futura entra — mesma regra do caixa.
+// 2. Não há mais estimativa de Simples Nacional. O que desconta da receita
+//    é a DESPESA MÉDIA de fato lançada. Antes o payback tirava 12% fixos por
+//    cima, o que fazia esta aba conviver com dois "resultados reais"
+//    diferentes para o mesmo período.
+// 3. Saque não desconta: retirada de sócio é destino do lucro, não custo da
+//    operação. Descontá-la faria a margem cair quanto mais os sócios
+//    tirassem, o oposto do que a margem mede.
 //
-// Saque não entra aqui de propósito: retirada de sócio é destino do lucro,
-// não custo da operação. Descontá-la faria a margem cair quanto mais os
-// sócios tirassem, que é o oposto do que a margem quer medir.
+// Lê reservas/despesas da Aura DIRETO do STATE, e não do array MES: MES
+// acompanha a hospedagem selecionada na outra aba, e usá-lo aqui fazia o
+// payback mudar sozinho conforme o filtro de lá.
 function realMensalAura_() {
   var ehAura = function(x) { return normalizarTexto_(x.hospedagem || '') === 'aura'; };
   var receita = new Array(12).fill(0);
@@ -1241,68 +1221,88 @@ function realMensalAura_() {
 
   (STATE.reservas || []).filter(ehAura).forEach(function(r) {
     var d = dataLocal_(r.entrada);
-    if (isNaN(d) || d.getFullYear() !== 2026) return;
+    if (isNaN(d) || d.getFullYear() !== 2026 || ehFuturo_(r.entrada)) return;
     receita[d.getMonth()] += num_(r.valorContrato);
     temDado[d.getMonth()] = true;
   });
   (STATE.despesas || []).filter(ehAura).forEach(function(x) {
     var d = dataLocal_(x.dataPagamento);
-    if (isNaN(d) || d.getFullYear() !== 2026) return;
+    if (isNaN(d) || d.getFullYear() !== 2026 || ehFuturo_(x.dataPagamento)) return;
     despesa[d.getMonth()] += num_(x.pago);
     temDado[d.getMonth()] = true;
   });
 
   var hoje = new Date();
-  var mesCorrente = hoje.getFullYear() < 2026 ? 0 : (hoje.getFullYear() > 2026 ? 12 : hoje.getMonth());
+  var anoCorrente = hoje.getFullYear();
+  var mesCorrente = anoCorrente < 2026 ? -1 : (anoCorrente > 2026 ? 12 : hoje.getMonth());
 
   // A operação começou no primeiro mês com lançamento; meses de 2026
   // anteriores a isso não são "meses operando com lucro zero".
   var inicio = -1;
   for (var i = 0; i < 12 && inicio < 0; i++) if (temDado[i]) inicio = i;
 
+  var vazio = { meses: [], de: null, ate: null, mesesEquivalentes: 0 };
+  if (inicio < 0 || mesCorrente < 0) return vazio;
+
+  var ultimo = Math.min(mesCorrente, 11);
   var meses = [];
-  if (inicio >= 0) {
-    for (var m = inicio; m < mesCorrente; m++) {
-      meses.push({ mes: m, receita: receita[m], despesa: despesa[m], margem: receita[m] - despesa[m] });
-    }
+  for (var m = inicio; m <= ultimo; m++) {
+    meses.push({
+      mes: m,
+      receita: receita[m],
+      despesa: despesa[m],
+      margem: receita[m] - despesa[m],
+      parcial: m === mesCorrente
+    });
   }
-  return { meses: meses, de: meses.length ? inicio : null, ate: meses.length ? mesCorrente - 1 : null };
+  if (!meses.length) return vazio;
+
+  // O mês corrente vale a fração de dias já decorridos; se 2026 já passou,
+  // todos os 12 são cheios.
+  var fracao = mesCorrente > 11 ? 0 : hoje.getDate() / diasNoMes_(mesCorrente);
+  var mesesEquivalentes = (Math.min(mesCorrente, 12) - inicio) + fracao;
+
+  return {
+    meses: meses,
+    de: inicio,
+    ate: ultimo,
+    mesesEquivalentes: Math.max(mesesEquivalentes, 1 / 31)
+  };
 }
 
-// Resultado acumulado usado no payback. Aqui o Simples Nacional (12%) entra
-// como estimativa, porque ele ainda não aparece como despesa lançada — por
-// isso este número é menor que a "margem real" da seção nova, que só soma o
-// que está de fato registrado.
+// Resultado acumulado da operação: receita menos despesa lançada, sem
+// nenhuma estimativa por cima. "meses" é fracionário de propósito — é o
+// divisor honesto para a média quando o mês corrente está pela metade.
 function realAcumuladoAura_() {
   var base = realMensalAura_();
   if (!base.meses.length) return { total: 0, meses: 0, de: null, ate: null };
-  var total = base.meses.reduce(function(s, m) {
-    return s + Math.max(0, m.receita - m.receita * 0.12 - m.despesa);
-  }, 0);
-  return { total: total, meses: base.meses.length, de: base.de, ate: base.ate };
+  var total = base.meses.reduce(function(s, m) { return s + m.margem; }, 0);
+  return { total: total, meses: base.mesesEquivalentes, de: base.de, ate: base.ate };
 }
 
 // Explica de onde vem o número: quantos meses são reais e de quando começa a
 // projeção — sem isso o gráfico mistura fato e estimativa sem avisar.
-function atualizarBaseCalculo_(real, mensalProjetado, usandoMedia) {
+function atualizarBaseCalculo_(real, mensalProjetado) {
   var el = document.getElementById('inv-base-calculo');
   if (!el) return;
   if (!real.meses) {
-    el.textContent = 'Nenhum mês fechado ainda — sem média realizada para projetar, o cálculo usa os sliders acima.';
+    el.textContent = 'Sem lançamento até hoje — não há média realizada para projetar.';
     return;
   }
   var periodo = real.de === real.ate ? MESES_LONGOS_[real.de] : MESES_LONGOS_[real.de] + ' a ' + MESES_LONGOS_[real.ate];
-  el.textContent = 'Base: ' + real.meses + (real.meses === 1 ? ' mês fechado' : ' meses fechados') +
-    ' (' + periodo + ') com resultado real de ' + fmtR_(real.total) +
-    '. De ' + MESES_LONGOS_[Math.min(11, real.ate + 1)] + ' em diante o cálculo projeta ' +
-    fmtR_(mensalProjetado) + '/mês' +
-    (usandoMedia ? ' — a média realizada, não os sliders.' : ' (projeção dos sliders).');
+  el.textContent = 'Base: ' + real.meses.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (' + periodo +
+    ') com resultado real de ' + fmtR_(real.total) +
+    '. Daqui em diante o cálculo projeta ' + fmtR_(mensalProjetado) + '/mês — a média realizada.';
 }
 
 // ── Margem e retorno real mês a mês ────────────────────────────────────
-// Só mês fechado, só dado lançado, nenhum slider. Duas leituras na mesma
-// tabela: margem (quanto sobra da operação) e retorno (quanto essa margem
-// representa sobre o capital investido no projeto).
+// Tudo lançado até hoje, incluindo o mês em curso (marcado como parcial).
+// Duas leituras na mesma tabela: margem (quanto sobra da operação) e
+// retorno (quanto essa margem representa sobre o capital investido).
+//
+// As médias dividem pelos meses EQUIVALENTES, não pelo número de linhas: o
+// mês em curso vale a fração de dias já decorridos, senão um mês recém
+// começado derrubaria a média como se fosse um mês cheio quase vazio.
 //
 // Saque não desconta: retirada de sócio é destino do lucro, não custo da
 // operação.
@@ -1316,17 +1316,17 @@ function renderMargemRealMensal_() {
 
   var rodape = document.getElementById('inv-margem-rodape');
   if (!base.meses.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-note">Nenhum mês fechado ainda — a margem real aparece quando o primeiro mês virar.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-note">Nenhum lançamento até hoje — a margem real aparece com o primeiro dado.</td></tr>';
     if (rodape) rodape.innerHTML = '';
     ['inv-margem-total', 'inv-margem-media', 'inv-margem-retorno-acum', 'inv-margem-retorno'].forEach(function(id) { setTxt_(id, '—'); });
-    setTxt_('inv-margem-nota', 'Sem mês fechado ainda — os números aparecem quando houver dado real.');
+    setTxt_('inv-margem-nota', 'Sem lançamento até hoje — os números aparecem quando houver dado real.');
     return;
   }
 
   var receita = 0, despesa = 0;
   base.meses.forEach(function(m) { receita += m.receita; despesa += m.despesa; });
   var margem = receita - despesa;
-  var n = base.meses.length;
+  var n = base.mesesEquivalentes;
 
   // Mais recente primeiro, igual ao resto do app.
   tbody.innerHTML = base.meses.slice().reverse().map(function(m) {
@@ -1334,7 +1334,8 @@ function renderMargemRealMensal_() {
     var retorno = CAPITAL > 0 ? (m.margem / CAPITAL) * 100 : 0;
     var cor = m.margem >= 0 ? '#c1622a' : '#a13a1f';
     return '<tr>' +
-      '<td style="color:#0d1117;font-weight:600">' + MESES_LONGOS_[m.mes] + '</td>' +
+      '<td style="color:#0d1117;font-weight:600">' + MESES_LONGOS_[m.mes] +
+        (m.parcial ? ' <span class="chip cw">em curso</span>' : '') + '</td>' +
       '<td>' + fmtR_(m.receita) + '</td>' +
       '<td style="color:#a13a1f">' + fmtR_(m.despesa) + '</td>' +
       '<td style="font-weight:700;color:' + cor + '">' + fmtR_(m.margem) + '</td>' +
@@ -1374,52 +1375,52 @@ function renderMargemRealMensal_() {
   setTxt_('inv-margem-retorno', CAPITAL > 0 ? pct1_(retMedio) + ' a.m.' : '—');
 
   var periodo = base.de === base.ate ? MESES_LONGOS_[base.de] : MESES_LONGOS_[base.de] + ' a ' + MESES_LONGOS_[base.ate];
-  setTxt_('inv-margem-nota', 'Base: ' + n + (n === 1 ? ' mês fechado' : ' meses fechados') + ' (' + periodo + '), ' +
+  setTxt_('inv-margem-nota', 'Base: ' + n.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (' + periodo + '), ' +
     fmtR_(margem) + ' de margem sobre um capital de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
 }
 
+// Toda a aba roda em cima das médias realizadas até hoje. Não há mais
+// slider nem taxa estimada: o que entra é receita lançada, o que sai é
+// despesa lançada, e é essa média que projeta os meses à frente.
 function calc() {
-  var occ    = +document.getElementById('sl-occ').value / 100;
-  var diaria = +document.getElementById('sl-diaria').value;
-  var opex   = +document.getElementById('sl-opex').value;
-
-  // Visão geral do projeto: líquido cheio, sem recorte por sócio.
-  var bruta   = 30 * occ * diaria;
-  var tax     = bruta * 0.12;
-  var liquido = bruta - tax - opex;
-
+  var base = realMensalAura_();
   var real = realAcumuladoAura_();
-  // O que financia os meses à frente é a MÉDIA já realizada, não o slider.
-  // Enquanto não houver mês fechado não há média, e aí o slider assume —
-  // é a única estimativa disponível no começo da operação.
-  var mediaReal = real.meses ? real.total / real.meses : 0;
-  var mensalProjetado = mediaReal > 0 ? mediaReal : liquido;
-  atualizarBaseCalculo_(real, mensalProjetado, mediaReal > 0);
+  var n = real.meses || 0;
+
+  var receitaTotal = base.meses.reduce(function(s, m) { return s + m.receita; }, 0);
+  var despesaTotal = base.meses.reduce(function(s, m) { return s + m.despesa; }, 0);
+  var receitaMedia = n ? receitaTotal / n : 0;
+  var despesaMedia = n ? despesaTotal / n : 0;
+  var margemMedia  = n ? real.total / n : 0;
+
+  atualizarBaseCalculo_(real, margemMedia);
 
   var capitalRestante = Math.max(0, CAPITAL - real.total);
-  var pb = real.total >= CAPITAL ? real.meses
-         : real.meses + (mensalProjetado > 0 ? Math.ceil(capitalRestante / mensalProjetado) : 999);
+  // Meses decorridos arredondados só na exibição; o cálculo usa o
+  // fracionário para o mês em curso não contar como mês inteiro.
+  var pb = real.total >= CAPITAL ? Math.ceil(n)
+         : (margemMedia > 0 ? Math.ceil(n + capitalRestante / margemMedia) : 999);
 
-  document.getElementById('out-occ').textContent    = Math.round(occ * 100) + '%';
-  document.getElementById('out-diaria').textContent = 'R$ ' + diaria.toLocaleString('pt-BR');
-  document.getElementById('out-opex').textContent   = fmt(opex);
-  document.getElementById('res-bruta').textContent  = fmt(bruta);
-  document.getElementById('res-tax').textContent    = '–' + fmt(tax);
-  document.getElementById('res-liq').textContent    = fmt(Math.max(0, liquido));
-  document.getElementById('res-pb').textContent     = pb > 120 ? '>10 anos' : pb + ' meses';
+  setTxt_('res-bruta', fmt(receitaMedia));
+  setTxt_('res-tax', '–' + fmt(despesaMedia));
+  setTxt_('res-liq', fmt(Math.max(0, margemMedia)));
+  setTxt_('res-pb', margemMedia > 0 ? (pb > 120 ? '>10 anos' : pb + ' meses') : '—');
+  setTxt_('res-nota', n
+    ? 'Média de ' + n.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (o mês em curso conta pela fração de dias já vividos). Receita e despesa são as lançadas; não há estimativa de imposto por cima. O payback projeta ' + fmt(margemMedia) + '/mês.'
+    : 'Sem lançamento até hoje — os números aparecem quando houver dado real.');
 
-  document.getElementById('tc-gl1').textContent = fmt(Math.max(0, liquido));
-  document.getElementById('tc-pb1').textContent = pb > 120 ? '>10 anos' : '~' + pb + ' meses';
-  document.getElementById('tc-gl2').textContent = fmt(Math.max(0, liquido));
-  document.getElementById('tc-gl3').textContent = fmt(Math.max(0, liquido));
-  document.getElementById('tc-rec2').textContent = fmt(bruta);
-  document.getElementById('tc-rec3').textContent = fmt(bruta);
-  document.getElementById('liq2-txt').textContent = fmt(Math.max(0, liquido));
-  document.getElementById('liq3-txt').textContent = fmt(Math.max(0, liquido));
+  setTxt_('tc-gl1', fmt(Math.max(0, margemMedia)));
+  setTxt_('tc-pb1', margemMedia > 0 ? (pb > 120 ? '>10 anos' : '~' + pb + ' meses') : '—');
+  setTxt_('tc-gl2', fmt(Math.max(0, margemMedia)));
+  setTxt_('tc-gl3', fmt(Math.max(0, margemMedia)));
+  setTxt_('tc-rec2', fmt(receitaMedia));
+  setTxt_('tc-rec3', fmt(receitaMedia));
+  setTxt_('liq2-txt', fmt(Math.max(0, margemMedia)));
+  setTxt_('liq3-txt', fmt(Math.max(0, margemMedia)));
 
   renderMargemRealMensal_();
-  buildTimeline(mensalProjetado, real);
-  buildCDI(liquido);
+  buildTimeline(margemMedia, real);
+  buildCDI(margemMedia);
 }
 
 function buildTimeline(mensal, real) {

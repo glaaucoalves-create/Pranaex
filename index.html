@@ -51,6 +51,9 @@ body:not(.carregando) #carga-estado{display:none}
 .hosp-chip{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:5px;color:#fff}
 
 .krow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+/* A linha principal tem 8 KPIs: cartões mais largos fecham 2 fileiras de 4
+   em vez de deixar um órfão sozinho na segunda linha. */
+#krow-aura{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .kpi{background:#fff;border:1px solid #edeef1;border-radius:16px;padding:16px}
 .klbl{font-size:10.5px;color:#9aa3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
 .kval{font-size:19px;font-weight:700;color:#0d1117}
@@ -240,13 +243,18 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <div class="krow">
-    <div class="kpi"><div class="klbl">Receita contratada</div><div class="kval" id="kpi-receita-contratada">R$ 4.550</div><div class="ksub" id="kpi-receita-contratada-sub">Isadora · 17–22/jul</div></div>
-    <div class="kpi"><div class="klbl">Recebido</div><div class="kval up" id="kpi-recebido">R$ 2.275</div><div class="ksub up" id="kpi-recebido-sub">50% do contrato</div></div>
-    <div class="kpi"><div class="klbl">A receber</div><div class="kval warn" id="kpi-areceber">R$ 2.275</div><div class="ksub">Saldo pendente</div></div>
-    <div class="kpi"><div class="klbl">Despesas</div><div class="kval" id="kpi-despesas-plan">R$ 2.400</div><div class="ksub dn" id="kpi-despesas-plan-sub">R$ 0 pago até agora</div></div>
-    <div class="kpi"><div class="klbl">Caixa atual</div><div class="kval dn" id="kpi-caixa-atual">R$ 0</div><div class="ksub" style="color:#9aa3af">Dado real</div></div>
-    <div class="kpi"><div class="klbl">Caixa previsto</div><div class="kval dn" id="kpi-caixa-previsto">–R$ 125</div><div class="ksub dn">Após despesas jul</div></div>
+  <!-- A linha conta uma história de cima a baixo: entrou, falta entrar, saiu
+       em despesa, sobrou (Margem), foi retirado (Saques) e o que restou em
+       caixa. Margem e Saques fecham a conta: caixa atual = margem − saques. -->
+  <div class="krow" id="krow-aura">
+    <div class="kpi"><div class="klbl">Receita contratada</div><div class="kval" id="kpi-receita-contratada">—</div><div class="ksub" id="kpi-receita-contratada-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Recebido</div><div class="kval up" id="kpi-recebido">—</div><div class="ksub up" id="kpi-recebido-sub">—</div></div>
+    <div class="kpi"><div class="klbl">A receber</div><div class="kval warn" id="kpi-areceber">—</div><div class="ksub">Saldo pendente</div></div>
+    <div class="kpi"><div class="klbl">Despesas</div><div class="kval" id="kpi-despesas-plan">—</div><div class="ksub dn" id="kpi-despesas-plan-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Margem</div><div class="kval up" id="kpi-margem">—</div><div class="ksub" id="kpi-margem-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Saques</div><div class="kval warn" id="kpi-saques">—</div><div class="ksub" id="kpi-saques-sub">—</div></div>
+    <div class="kpi"><div class="klbl">Caixa atual</div><div class="kval dn" id="kpi-caixa-atual">—</div><div class="ksub" style="color:#9aa3af">Dado real</div></div>
+    <div class="kpi"><div class="klbl">Caixa previsto</div><div class="kval dn" id="kpi-caixa-previsto">—</div><div class="ksub dn">Após despesas jul</div></div>
   </div>
 
   <div class="card">
@@ -2269,7 +2277,12 @@ function recalcularPainel() {
   var totalSaques      = somar(saquesRealizados, 'valor');
   var saquesFuturos    = somar(agendadas(saques, 'data'), 'valor');
 
-  var caixaAtual = recebido - despesasPagas - totalSaques;
+  // Margem do período: o que entrou menos o que saiu em despesa, ANTES de
+  // qualquer retirada. Saque não é custo da operação — ele aparece no KPI
+  // ao lado, e é a diferença entre esta margem e o caixa atual.
+  var margem = recebido - despesasPagas;
+
+  var caixaAtual = margem - totalSaques;
   var caixaPrevisto = caixaAtual + aReceber - despesasFuturas - saquesFuturos;
 
   var sufixoAgendado = function(valor) { return valor > 0 ? ' · ' + fmtR_(valor) + ' agendado' : ''; };
@@ -2282,6 +2295,13 @@ function recalcularPainel() {
   setTxt_('kpi-areceber', fmtR_(aReceber));
   setTxt_('kpi-despesas-plan', fmtR_(despesasPagas));
   setTxt_('kpi-despesas-plan-sub', (despesas.length ? (despesas.length === 1 ? '1 despesa' : despesas.length + ' despesas') : 'Sem despesas') + sufixoAgendado(despesasFuturas));
+  setSinal_('kpi-margem', margem);
+  setTxt_('kpi-margem-sub', (recebido > 0 ? Math.round(margem / recebido * 100) + '% do recebido' : 'Sem receita no período') + ' · antes dos saques');
+  // Só o total: quem sacou fica na tabela de saques, não no topo.
+  setTxt_('kpi-saques', fmtR_(totalSaques));
+  setTxt_('kpi-saques-sub', (saquesRealizados.length
+      ? (saquesRealizados.length === 1 ? '1 saque' : saquesRealizados.length + ' saques')
+      : 'Sem saques') + sufixoAgendado(saquesFuturos));
   setSinal_('kpi-caixa-atual', caixaAtual);
   setSinal_('kpi-caixa-previsto', caixaPrevisto);
 

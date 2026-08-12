@@ -169,6 +169,15 @@ tr:last-child td{border-bottom:none}
   .user-avatar{display:none}
   .g2,.g3{grid-template-columns:1fr}
   .ptitle{font-size:20px}
+  /* Hospedagens no celular: os KPIs em DUAS colunas. Com um cartão por
+     linha, os 8 blocos viravam uma rolagem longa antes de chegar ao
+     gráfico. O minmax do desktop não serve aqui — 230px não cabe duas
+     vezes em 390px, então a grade é fixada em 2. */
+  #aura .krow{grid-template-columns:repeat(2,1fr);gap:10px}
+  #aura .kpi{padding:13px 12px;min-width:0}
+  #aura .klbl{font-size:9.5px;letter-spacing:.04em;margin-bottom:5px}
+  #aura .kval{font-size:17px;overflow-wrap:anywhere}
+  #aura .ksub{font-size:10px;overflow-wrap:anywhere}
   /* obra no celular: grade de pendências vira coluna única e as barras
      ganham rótulos mais curtos — sem isso um bloco estourava a largura */
   #obra-pendencias-grid{grid-template-columns:1fr !important}

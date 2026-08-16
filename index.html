@@ -2190,12 +2190,42 @@ function totalSaquesDoSocio_(saques, chave) {
     .reduce(function(a, s) { return a + num_(s.valor); }, 0);
 }
 
+// Saque que não é de nenhum sócio — o do sítio, por exemplo — é NEUTRO: o
+// bem é dos dois, então o dinheiro não foi para um lado, virou
+// reinvestimento. Antes essas linhas sumiam da distribuição e do equilíbrio
+// (o total do card as incluía, mas a divisão não), o que fazia as duas
+// leituras não fecharem. Agora aparecem à parte, fora da conta do 50/50.
+function saquesNeutros_(saques, socios) {
+  return saques.filter(function(s) {
+    return !socios.some(function(so) { return saqueEhDoSocio_(s, so.chave); });
+  });
+}
+function totalNeutro_(saques, socios) {
+  return saquesNeutros_(saques, socios).reduce(function(a, s) { return a + num_(s.valor); }, 0);
+}
+// Agrupa por categoria para "Sítio" aparecer com o próprio nome, em vez de
+// virar um "outros" genérico.
+function neutrosPorCategoria_(saques, socios) {
+  var mapa = {}, ordem = [];
+  saquesNeutros_(saques, socios).forEach(function(s) {
+    var nome = String(s.categoria || '').trim() || 'Sem categoria';
+    if (!(nome in mapa)) { mapa[nome] = 0; ordem.push(nome); }
+    mapa[nome] += num_(s.valor);
+  });
+  return ordem.map(function(n) { return { nome: n, total: mapa[n] }; });
+}
+
 function renderDistribuicaoSaques_(saques, socios) {
   var c = document.getElementById('fin-dist-lista');
   if (!c) return;
-  c.innerHTML = socios.map(function(s) {
+  var linhas = socios.map(function(s) {
     return '<div class="fr"><span class="fl">' + esc_(s.nome) + '</span><span class="fv ' + s.cor + '">' + fmtR_(totalSaquesDoSocio_(saques, s.chave)) + '</span></div>';
-  }).join('');
+  });
+  neutrosPorCategoria_(saques, socios).forEach(function(n) {
+    linhas.push('<div class="fr"><span class="fl">' + esc_(n.nome) +
+      ' <span class="chip cw">neutro</span></span><span class="fv">' + fmtR_(n.total) + '</span></div>');
+  });
+  c.innerHTML = linhas.join('');
 }
 
 function renderEquilibrioSaques_(saques, socios) {
@@ -2214,10 +2244,26 @@ function renderEquilibrioSaques_(saques, socios) {
       '<div style="font-size:11px;color:#9aa3af;margin-top:3px">' + (ult ? fmtData_(ult.data) + ' · ' + esc_(ult.descricao || '—') : 'Nenhum saque realizado') + '</div></div>';
   }
 
+  // Bloco dos neutros: fica fora do 50/50 de propósito, e o texto diz por quê.
+  var neutros = neutrosPorCategoria_(saques, socios);
+  var somaNeutra = totalNeutro_(saques, socios);
+  function blocoNeutro() {
+    if (!neutros.length) return '';
+    return '<div class="mk" style="margin-top:12px;background:#f9fafb">' +
+      '<div class="ml" style="margin-bottom:6px">Saques neutros — não entram no equilíbrio</div>' +
+      neutros.map(function(n) {
+        return '<div class="fr"><span class="fl">' + esc_(n.nome) + '</span><span class="fv">' + fmtR_(n.total) + '</span></div>';
+      }).join('') +
+      (neutros.length > 1 ? '<div class="fr"><span class="fl" style="font-weight:600">Total neutro</span><span class="fv" style="font-weight:700">' + fmtR_(somaNeutra) + '</span></div>' : '') +
+      '<div style="font-size:11px;color:#9aa3af;margin-top:6px">O bem é dos dois sócios, então esse dinheiro não foi para um lado — conta como reinvestimento, não como retirada de ninguém.</div>' +
+      '</div>';
+  }
+
   if (socios.length <= 1) {
     var s0 = socios[0] || { chave: '', nome: 'sócio único', cor: 'warn' };
     c.innerHTML = miniCard(s0) +
-      '<div style="font-size:11px;color:#9aa3af;margin-top:10px">100% do lucro é de ' + esc_(s0.nome) + ' nesta hospedagem — sem divisão a equilibrar.</div>';
+      '<div style="font-size:11px;color:#9aa3af;margin-top:10px">100% do lucro é de ' + esc_(s0.nome) + ' nesta hospedagem — sem divisão a equilibrar.</div>' +
+      blocoNeutro();
     return;
   }
 
@@ -2244,7 +2290,12 @@ function renderEquilibrioSaques_(saques, socios) {
         '<div class="fr"><span class="fl">Parte ideal por sócio</span><span class="fv">' + fmtR_(parteIdeal) + '</span></div>' +
         '<div class="fr"><span class="fl">' + esc_(sA.nome) + ' ' + (deltaA >= 0 ? 'a receber' : 'adiantado') + '</span><span class="fv ' + sA.cor + '">' + fmtR_(deltaA) + '</span></div>' +
         '<div class="fr"><span class="fl">' + esc_(sB.nome) + ' ' + (deltaA >= 0 ? 'adiantado' : 'a receber') + '</span><span class="fv ' + sB.cor + '">' + fmtR_(deltaA) + '</span></div>' +
-      '</div>';
+        (somaNeutra > 0
+          ? '<div class="fr"><span class="fl">Neutros, fora do rateio</span><span class="fv">' + fmtR_(somaNeutra) + '</span></div>' +
+            '<div class="fr"><span class="fl" style="font-weight:600">Total geral sacado</span><span class="fv" style="font-weight:700">' + fmtR_(totalDois + somaNeutra) + '</span></div>'
+          : '') +
+      '</div>' +
+      blocoNeutro();
     return;
   }
 
@@ -2252,7 +2303,8 @@ function renderEquilibrioSaques_(saques, socios) {
   // diferentes) — mostra só os totais, sem tentar equilibrar entre partes
   // que nem sempre dividem a mesma hospedagem.
   c.innerHTML = '<div class="g2" style="margin-bottom:6px">' + socios.map(miniCard).join('') + '</div>' +
-    '<div style="font-size:11px;color:#9aa3af">Visão consolidada de todas as hospedagens — cada uma tem sua própria regra de divisão de lucro.</div>';
+    '<div style="font-size:11px;color:#9aa3af">Visão consolidada de todas as hospedagens — cada uma tem sua própria regra de divisão de lucro.</div>' +
+    blocoNeutro();
 }
 
 function recalcularPainel() {

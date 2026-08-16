@@ -497,23 +497,18 @@ tr:last-child td{border-bottom:none}
       <div class="mk"><div class="ml">Já investido</div><div class="mv" style="font-size:15px" id="inv-resumo-total">—</div></div>
       <div class="mk"><div class="ml">Dívida pendente</div><div class="mv dn" style="font-size:15px" id="inv-resumo-divida">—</div></div>
       <div class="mk"><div class="ml">Comprometido</div><div class="mv pur" style="font-size:15px" id="inv-resumo-comprometido">—</div></div>
-      <div class="mk"><div class="ml">Reinvestimento — Sítio</div><div class="mv up" style="font-size:15px" id="inv-resumo-reinvestido">—</div></div>
-      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">A recuperar pelos sócios</div><div class="mv" style="font-size:15px" id="inv-resumo-arecuperar">—</div></div>
-    </div>
-    <div class="nota" style="margin-bottom:0">
-      O <strong style="color:#c1622a">reinvestimento</strong> é a parte da obra paga pelo caixa da própria operação, não pelo bolso dos sócios. Por isso ele sai da base do retorno e do payback: <em>a recuperar = comprometido − reinvestimento</em>.
     </div>
   </div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div class="ctitle" style="margin-bottom:0">Margem e retorno real mês a mês — Aura</div>
-      <span style="font-size:11px;color:#9aa3af">A recuperar: <span class="pur" style="font-weight:700" id="inv-margem-capital">—</span></span>
+      <span style="font-size:11px;color:#9aa3af">Comprometido: <span class="pur" style="font-weight:700" id="inv-margem-capital">—</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Tudo que foi lançado <strong style="color:#c1622a">até hoje</strong>, incluindo o mês em curso — que entra marcado como parcial e pesa nas médias só pela fração de dias já decorridos.
       <strong style="color:#c1622a">Saque não desconta</strong>: retirada de sócio é destino do lucro, não custo da operação.
-      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital <strong>a recuperar</strong> — investido mais dívida pendente, menos o que a própria operação já reinvestiu na obra.
+      O <strong style="color:#c1622a">retorno</strong> é a margem do mês sobre o capital <strong>comprometido</strong> — o já investido mais a dívida pendente, porque ela também é capital que o projeto ainda tem de devolver.
     </div>
     <div class="g4" style="margin-bottom:12px">
       <div class="mk"><div class="ml">Margem acumulada</div><div class="mv up" style="font-size:15px" id="inv-margem-total">—</div></div>
@@ -533,8 +528,8 @@ tr:last-child td{border-bottom:none}
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital a recuperar</div>
-      <span style="font-size:11px;color:#9aa3af">A recuperar: <span class="pur" style="font-weight:700" id="inv-capital-header">—</span></span>
+      <div class="ctitle" style="margin-bottom:0">Retorno acumulado × capital comprometido</div>
+      <span style="font-size:11px;color:#9aa3af">Comprometido: <span class="pur" style="font-weight:700" id="inv-capital-header">—</span></span>
     </div>
     <div style="font-size:11.5px;color:#9aa3af;margin-bottom:12px;line-height:1.5">
       Representa <strong style="color:#c1622a">lucro acumulado</strong>, não dinheiro sacado. Nenhum saque ocorre até o projeto (3 cabanas) estar concluído — 100% do lucro é reinvestido mês a mês nas obras seguintes (ver fluxo de caixa abaixo).
@@ -1399,7 +1394,7 @@ function renderMargemRealMensal_() {
 
   var periodo = base.de === base.ate ? MESES_LONGOS_[base.de] : MESES_LONGOS_[base.de] + ' a ' + MESES_LONGOS_[base.ate];
   setTxt_('inv-margem-nota', 'Base: ' + n.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (' + periodo + '), ' +
-    fmtR_(margem) + ' de margem sobre um capital a recuperar de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
+    fmtR_(margem) + ' de margem sobre um capital comprometido de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
 }
 
 // Toda a aba roda em cima das médias realizadas até hoje. Não há mais
@@ -2006,24 +2001,19 @@ function fmtObraK_(v) { return Math.abs(v) >= 1000 ? 'R$ ' + Math.round(v / 1000
 function atualizarCapitalInvestimento_(projetos, totalGeral) {
   var total = num_(totalGeral.total);
   var divida = num_(totalGeral.divida);
-  var reinvestido = num_(totalGeral.reinvestido);
   var comprometido = total + divida;
-  // Retorno e payback medem contra o capital que os SÓCIOS ainda têm a
-  // recuperar. A dívida entra (é capital que o projeto deve devolver); o
-  // reinvestimento sai, porque esse pedaço da obra foi pago pelo caixa da
-  // própria operação, não pelo bolso de ninguém. Sem descontá-lo, o mesmo
-  // dinheiro contaria duas vezes: uma na margem que o gerou e outra como
-  // capital a recuperar.
-  var aRecuperar = Math.max(0, comprometido - reinvestido);
-  if (aRecuperar > 0) CAPITAL = aRecuperar;
+  // Retorno e payback medem contra o COMPROMETIDO: investido mais dívida
+  // pendente, que é capital que o projeto ainda tem de devolver.
+  // O reinvestimento NÃO desconta daqui — ele é acompanhado na aba Obra,
+  // onde é uma das fontes que bancaram a obra, e não muda o tamanho do
+  // capital que o projeto precisa devolver.
+  if (comprometido > 0) CAPITAL = comprometido;
 
   setTxt_('inv-total-projeto', fmtR_(total));
-  setTxt_('inv-capital-header', fmtR_(aRecuperar));
+  setTxt_('inv-capital-header', fmtR_(comprometido));
   setTxt_('inv-resumo-total', fmtR_(total));
   setTxt_('inv-resumo-divida', fmtR_(divida));
   setTxt_('inv-resumo-comprometido', fmtR_(comprometido));
-  setTxt_('inv-resumo-reinvestido', reinvestido > 0 ? fmtR_(reinvestido) : 'R$ 0');
-  setTxt_('inv-resumo-arecuperar', fmtR_(aRecuperar));
 
   var ordenados = projetos.slice().sort(function(a, b) { return num_(b.total) - num_(a.total); }).slice(0, 3);
   ['chale', 'terreno', 'infra'].forEach(function(slot, i) {
@@ -2818,17 +2808,25 @@ function renderObraVisao_() {
     // Quem aportou MAIS é quem tem valor a receber de volta do outro sócio.
     var difere = num_(alvo.glauco) - num_(alvo.yuri);
     var subDiferenca = difere === 0 ? 'Aportes equilibrados' : (difere > 0 ? 'Glauco' : 'Yuri') + ' a receber';
-    // Reinvestimento primeiro: é entrada, não aporte de sócio, e some no
-    // meio dos números se ficar depois de Glauco/Yuri.
+    // O reinvestimento fica ENTRE Glauco e Yuri: é a terceira fonte que
+    // bancou a obra, então lê-se na mesma sequência de quem pagou o quê.
+    // No topo, antes do "Investido", ele parecia um total do grupo.
     var reinv = num_(alvo.reinvestido);
+    // Abaixo de 1% mostra uma casa: o reinvestimento de R$ 790 num total de
+    // R$ 737 mil virava "0%", que lê como "nada" em vez de "pouco".
+    var pctDe = function(v) {
+      if (!(alvo.total > 0)) return '—';
+      var pct = num_(v) / alvo.total * 100;
+      if (pct > 0 && pct < 1) return pct.toFixed(1).replace('.', ',') + '%';
+      return Math.round(pct) + '%';
+    };
     kpis.innerHTML =
-      (reinv > 0
-        ? obraKpiHtml_('Reinvestimento — Sítio', fmtR_(reinv),
-            alvo.total > 0 ? Math.round(reinv / alvo.total * 100) + '% da obra · caixa da operação' : 'Caixa da operação', 'up')
-        : '') +
       obraKpiHtml_('Investido — ' + (grupoSel ? grupoSel.rotulo : 'Total'), fmtR_(alvo.total), pct) +
-      obraKpiHtml_('Glauco', fmtR_(alvo.glauco), alvo.total > 0 ? Math.round(num_(alvo.glauco) / alvo.total * 100) + '%' : '—', 'pur') +
-      obraKpiHtml_('Yuri', fmtR_(alvo.yuri), alvo.total > 0 ? Math.round(num_(alvo.yuri) / alvo.total * 100) + '%' : '—', 'warn') +
+      obraKpiHtml_('Glauco', fmtR_(alvo.glauco), pctDe(alvo.glauco), 'pur') +
+      (reinv > 0
+        ? obraKpiHtml_('Reinvestimento — Sítio', fmtR_(reinv), pctDe(reinv) + ' · caixa da operação', 'up')
+        : '') +
+      obraKpiHtml_('Yuri', fmtR_(alvo.yuri), pctDe(alvo.yuri), 'warn') +
       obraKpiHtml_('Diferença sócios', fmtR_(Math.abs(difere)), subDiferenca, 'up') +
       obraKpiHtml_('Dívida pendente', fmtR_(num_(alvo.divida)), grupoSel ? 'Deste grupo' : 'Saldo financiado', 'dn');
   }

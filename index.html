@@ -331,7 +331,7 @@ tr:last-child td{border-bottom:none}
       </div>
     </div>
     <div class="card-body-toggle" id="body-reservas" hidden>
-      <div style="font-size:11px;color:#9aa3af;margin-bottom:10px">Reservas do Airbnb entram sozinhas: a cada carregamento da tela, o app varre a pasta de CSVs do Airbnb no Drive e importa as concluídas que ainda não estão aqui — reconhece automaticamente os anúncios "Casa Prana Lumiar" e "Mantra Chalé Lumiar" e ignora reservas já importadas (mesmo código de confirmação).</div>
+      <div style="font-size:11px;color:#9aa3af;margin-bottom:10px">Reservas do Airbnb entram sozinhas: a cada carregamento da tela, o app varre a pasta de CSVs no Drive e importa o que ainda não está aqui, incluindo as <strong>reservas futuras</strong>. Reconhece o anúncio "Cabana Aura Lumiar" e não duplica o que já existe — nem o que foi lançado à mão, achado pelo código de confirmação ou por nome + data de entrada. O repasse do Airbnb cai no primeiro dia da reserva, então a entrada fica datada no check-in e aparece como agendada até lá.</div>
       <div class="tbl-wrap">
       <table style="min-width:680px">
         <thead><tr><th>Hóspede</th><th>Check-in</th><th>Checkout</th><th>Diárias</th><th>Valor</th><th>Pago</th><th>Canal</th><th>Status</th></tr></thead>
@@ -2545,6 +2545,15 @@ function recebidoPorReserva_(nome) {
     .filter(function(e) { return normalizarTexto_(e.reserva || '') === alvo; })
     .reduce(function(s, e) { return s + num_(e.valor); }, 0);
 }
+// Só o que já venceu. É este valor que decide o status da reserva: uma
+// entrada marcada para daqui a três meses não é dinheiro recebido, e o KPI
+// "Recebido" do topo já a exclui — a tabela precisa contar a mesma história.
+function recebidoRealizadoPorReserva_(nome) {
+  var alvo = normalizarTexto_(nome);
+  return (Array.isArray(STATE.entradas) ? STATE.entradas : [])
+    .filter(function(e) { return normalizarTexto_(e.reserva || '') === alvo && !ehFuturo_(e.data); })
+    .reduce(function(s, e) { return s + num_(e.valor); }, 0);
+}
 
 // A tabela de reservas depende de STATE.entradas (pra somar o recebido de
 // cada reserva) — como reservas e entradas chegam por fetches separados e
@@ -2556,15 +2565,20 @@ function renderTabelaReservas_() {
   var visiveis = ordenarRecentesPrimeiro_(filtrarPeriodo_(filtrarPorHospedagem_(STATE.reservas), 'entrada'), 'entrada');
   if (!visiveis.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-note">' + 'Nenhuma reserva cadastrada.' + '</td></tr>'; return; }
   tbody.innerHTML = visiveis.map(function(r) {
-    // Reservas do Airbnb: o hóspede já pagou 100% no ato da reserva — o valor
-    // recebido pode ser o repasse líquido (após taxa da plataforma), não um
-    // saldo pendente. Por isso não comparamos recebido x contrato nesse canal.
-    var ehAirbnb = String(r.canal || '').indexOf('Airbnb') >= 0;
-    var recebido = recebidoPorReserva_(r.nome);
+    // O status vem do que JÁ ENTROU, não do canal. Antes toda reserva de
+    // Airbnb era marcada "Pago" por regra fixa — fazia sentido quando só
+    // havia reserva passada e quitada, mas com as reservas futuras vindas do
+    // CSV a tabela passou a escrever "Pago" em quem ainda não pagou nada.
+    // O valorContrato do Airbnb já é o repasse líquido, o mesmo valor da
+    // entrada, então a comparação recebido x contrato fecha em 100% sozinha
+    // quando o repasse cai — não precisa mais do caso especial.
+    var recebido = recebidoRealizadoPorReserva_(r.nome);
+    var agendado = recebidoPorReserva_(r.nome) - recebido;
     var pct = r.valorContrato > 0 ? Math.round((recebido / r.valorContrato) * 100) : 0;
-    var quitado = ehAirbnb || pct >= 100;
+    var quitado = pct >= 100;
     var statusClass = quitado ? 'cg' : (pct > 0 ? 'cy' : 'cw');
-    var statusTxt = quitado ? 'Pago' : (pct > 0 ? pct + '% pago' : 'Pendente');
+    var statusTxt = quitado ? 'Pago'
+      : (pct > 0 ? pct + '% pago' : (agendado > 0 ? 'Agendado' : 'Pendente'));
     var chip = hospedagemSelecionada === 'Total' ? '<div style="margin-top:4px">' + hospChipHtml_(r.hospedagem) + '</div>' : '';
     return '<tr>' +
       '<td><div class="name-cell">' + avatarHtml_(r.nome) + '<span style="color:#0d1117;font-weight:600">' + esc_(r.nome) + '</span></div>' + chip + '</td>' +
@@ -2572,7 +2586,8 @@ function renderTabelaReservas_() {
       '<td>' + fmtData_(r.saida) + '</td>' +
       '<td>' + (num_(r.diarias) || '—') + '</td>' +
       '<td style="color:#c1622a;font-weight:600">' + fmtR_(num_(r.valorContrato)) + '</td>' +
-      '<td class="warn">' + fmtR_(recebido) + '</td>' +
+      '<td class="' + (recebido > 0 ? 'warn' : '') + '"' + (recebido > 0 ? '' : ' style="color:#9aa3af"') + '>' + fmtR_(recebido) +
+        (agendado > 0 ? ' <span class="chip cw">+' + fmtR_(agendado) + ' agendado</span>' : '') + '</td>' +
       '<td><span class="chip cb">' + esc_(r.canal) + '</span></td>' +
       '<td><span class="chip ' + statusClass + '">' + statusTxt + '</span></td>' +
       '</tr>';

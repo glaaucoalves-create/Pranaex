@@ -1299,17 +1299,23 @@ function realAcumuladoAura_() {
 
 // Explica de onde vem o número: quantos meses são reais e de quando começa a
 // projeção — sem isso o gráfico mistura fato e estimativa sem avisar.
-function atualizarBaseCalculo_(real, mensalProjetado) {
+function atualizarBaseCalculo_(real, mensalProjetado, contratado) {
   var el = document.getElementById('inv-base-calculo');
   if (!el) return;
   if (!real.meses) {
     el.textContent = 'Sem lançamento até hoje — não há média realizada para projetar.';
     return;
   }
+  var chaves = Object.keys(contratado || {});
+  var somaContratada = chaves.reduce(function(s, k) { return s + contratado[k]; }, 0);
   var periodo = real.de === real.ate ? MESES_LONGOS_[real.de] : MESES_LONGOS_[real.de] + ' a ' + MESES_LONGOS_[real.ate];
   el.textContent = 'Base: ' + real.meses.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (' + periodo +
-    ') com resultado real de ' + fmtR_(real.total) +
-    '. Daqui em diante o cálculo projeta ' + fmtR_(mensalProjetado) + '/mês — a média realizada.';
+    ') com resultado real de ' + fmtR_(real.total) + '. ' +
+    (somaContratada > 0
+      ? 'À frente entram ' + fmtR_(somaContratada) + ' já contratados em ' + chaves.length +
+        (chaves.length === 1 ? ' mês' : ' meses') + '; nos demais, a média de ' + fmtR_(mensalProjetado) +
+        '/mês. A despesa é sempre a média realizada.'
+      : 'Daqui em diante o cálculo projeta ' + fmtR_(mensalProjetado) + '/mês — a média realizada.');
 }
 
 // ── Margem e retorno real mês a mês ────────────────────────────────────
@@ -1397,9 +1403,53 @@ function renderMargemRealMensal_() {
     fmtR_(margem) + ' de margem sobre um capital comprometido de ' + fmtR_(CAPITAL) + '. Margem sobre receita: ' + pctTotal + '.');
 }
 
-// Toda a aba roda em cima das médias realizadas até hoje. Não há mais
-// slider nem taxa estimada: o que entra é receita lançada, o que sai é
-// despesa lançada, e é essa média que projeta os meses à frente.
+// Receita JÁ CONTRATADA nos meses à frente, por 'ano-mês'. São as reservas
+// com check-in futuro — inclusive as que a sincronização do Airbnb acabou de
+// importar. Sem isso a projeção ignorava tudo que já está vendido.
+function receitaContratadaFutura_() {
+  var mapa = {};
+  var ehAura = function(x) { return normalizarTexto_(x.hospedagem || '') === 'aura'; };
+  (STATE.reservas || []).filter(ehAura).forEach(function(r) {
+    if (!ehFuturo_(r.entrada)) return;
+    var d = dataLocal_(r.entrada);
+    if (isNaN(d)) return;
+    var chave = d.getFullYear() + '-' + d.getMonth();
+    mapa[chave] = (mapa[chave] || 0) + num_(r.valorContrato);
+  });
+  return mapa;
+}
+
+// Acumula o resultado esperado mês a mês, a partir do realizado de hoje.
+//
+// Receita de um mês futuro = o MAIOR entre o que já está contratado e a média
+// realizada. Reserva só entra até o mês fechar, então o contratado é piso, não
+// teto; e um mês ainda vazio não deve valer zero quando o histórico diz outra
+// coisa. Despesa é SEMPRE a média realizada.
+//
+// O mês corrente entra à parte: o que já aconteceu nele já está em real.total,
+// então aqui só somam as reservas futuras dele, com a despesa proporcional aos
+// dias que faltam — senão o mês seria contado duas vezes.
+function acumuladoProjetado_(real, receitaMedia, despesaMedia, mesesAFrente) {
+  var contratado = receitaContratadaFutura_();
+  var hoje = new Date();
+  var acumulado = real.total;
+
+  var diasMes = diasNoMes_(hoje.getMonth());
+  var fracaoRestante = Math.max(0, (diasMes - hoje.getDate()) / diasMes);
+  var chaveCorrente = hoje.getFullYear() + '-' + hoje.getMonth();
+  acumulado += (contratado[chaveCorrente] || 0) - despesaMedia * fracaoRestante;
+
+  for (var k = 1; k <= mesesAFrente; k++) {
+    var d = new Date(hoje.getFullYear(), hoje.getMonth() + k, 1);
+    var booked = contratado[d.getFullYear() + '-' + d.getMonth()] || 0;
+    acumulado += Math.max(booked, receitaMedia) - despesaMedia;
+  }
+  return acumulado;
+}
+
+// Toda a aba roda em cima do realizado até hoje mais o que já está contratado
+// à frente. Não há slider nem taxa estimada: o que entra é receita lançada ou
+// vendida, o que sai é sempre a despesa média realizada.
 function calc() {
   var base = realMensalAura_();
   var real = realAcumuladoAura_();
@@ -1411,13 +1461,21 @@ function calc() {
   var despesaMedia = n ? despesaTotal / n : 0;
   var margemMedia  = n ? real.total / n : 0;
 
-  atualizarBaseCalculo_(real, margemMedia);
+  atualizarBaseCalculo_(real, margemMedia, receitaContratadaFutura_());
 
-  var capitalRestante = Math.max(0, CAPITAL - real.total);
-  // Meses decorridos arredondados só na exibição; o cálculo usa o
-  // fracionário para o mês em curso não contar como mês inteiro.
-  var pb = real.total >= CAPITAL ? Math.ceil(n)
-         : (margemMedia > 0 ? Math.ceil(n + capitalRestante / margemMedia) : 999);
+  // Payback: caminha mês a mês somando o esperado até cobrir o capital, em
+  // vez de dividir pelo mesmo valor todo mês. É o que permite a reserva já
+  // vendida encurtar a conta.
+  var pb;
+  if (real.total >= CAPITAL) {
+    pb = Math.ceil(n);
+  } else if (margemMedia > 0 || Object.keys(receitaContratadaFutura_()).length) {
+    var k = 0;
+    while (k < 600 && acumuladoProjetado_(real, receitaMedia, despesaMedia, k) < CAPITAL) k++;
+    pb = k >= 600 ? 999 : Math.ceil(n + k);
+  } else {
+    pb = 999;
+  }
 
   setTxt_('res-bruta', fmt(receitaMedia));
   setTxt_('res-tax', '–' + fmt(despesaMedia));
@@ -1437,17 +1495,19 @@ function calc() {
   setTxt_('liq3-txt', fmt(Math.max(0, margemMedia)));
 
   renderMargemRealMensal_();
-  buildTimeline(margemMedia, real);
+  buildTimeline(margemMedia, real, receitaMedia, despesaMedia);
   buildCDI(margemMedia);
 }
 
-function buildTimeline(mensal, real) {
+function buildTimeline(mensal, real, receitaMedia, despesaMedia) {
   real = real || realAcumuladoAura_();
   var c = document.getElementById('pb-timeline');
   c.innerHTML = '';
   [6, 12, 18, 24, 30, 36, 42, 48, 54, 60].forEach(function(m){
-    var mesesProjecao = Math.max(0, m - real.meses);
-    var acum = Math.max(0, real.total + mensal * mesesProjecao);
+    var mesesProjecao = Math.max(0, Math.round(m - real.meses));
+    // Mesma projeção do payback: as barras e o número têm de contar a mesma
+    // história, senão a linha do tempo diz uma coisa e o KPI outra.
+    var acum = Math.max(0, acumuladoProjetado_(real, receitaMedia, despesaMedia, mesesProjecao));
     var pct  = Math.min(100, Math.round(acum / CAPITAL * 100));
     var paid = acum >= CAPITAL;
     var row  = document.createElement('div');

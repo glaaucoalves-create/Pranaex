@@ -544,13 +544,13 @@ tr:last-child td{border-bottom:none}
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div class="ctitle" style="margin-bottom:0">Fluxo de caixa — quanto de cada obra sai da margem</div>
+      <div class="ctitle" style="margin-bottom:0">Retorno × investimento — as 3 cabanas até se pagarem</div>
       <span style="font-size:11px;color:#c1622a;background:#f7e6d8;padding:3px 10px;border-radius:20px">🔒 Zero saques até concluir</span>
     </div>
     <div class="leg">
-      <span><div class="ld" style="background:#c1622a"></div>Caixa acumulado (sobra da margem)</span>
+      <span><div class="ld" style="background:#c1622a"></div>Retorno acumulado (margem gerada)</span>
+      <span><div class="ld" style="background:#b1503a"></div>Investimento acumulado (capital + aportes)</span>
       <span><div class="ld-dash" style="border-color:#a13a1f"></div>Aporte de bolso acumulado</span>
-      <span><div class="ld" style="background:#5f8f5f"></div>Obra paga pela margem</span>
       <span><div class="ld-dash" style="border-color:#a3813f"></div>CDI sobre capital comprometido</span>
     </div>
     <div style="position:relative;height:260px;margin-top:10px"><canvas id="chartCDI"></canvas></div>
@@ -558,7 +558,8 @@ tr:last-child td{border-bottom:none}
     <div class="nota">
       Cada cabana nova custa <strong>R$ 300 mil</strong>, desembolsados em 10 parcelas de <strong id="inv-obra-mensal">—</strong>. A cada mês de obra, a margem das cabanas <strong>já operando</strong> abate a parcela daquele mês; o que faltar é aporte de bolso.
       <br><br>💡 Por isso o aporte da Cabana 3 é menor: quando a obra dela começa, são <strong>duas</strong> cabanas operando, então a margem mensal é o dobro e cobre uma fatia maior da mesma parcela.
-      <br><br>Somando as duas obras (R$ 600 mil): <strong style="color:#5f8f5f" id="inv-obra-margem-total">—</strong> saem da margem e <strong style="color:#a13a1f" id="inv-aporte-total">—</strong> saem do bolso. O caixa acumulado antes das obras aparece na curva e fica disponível, mas não é consumido automaticamente — o modelo dilui a margem do mês contra a parcela do mês.
+      <br><br>Somando as duas obras (R$ 600 mil): <strong style="color:#5f8f5f" id="inv-obra-margem-total">—</strong> saem da margem e <strong style="color:#a13a1f" id="inv-aporte-total">—</strong> saem do bolso.
+      <br><br>A curva vai até o <strong style="color:#c1622a">retorno acumulado</strong> cruzar o <strong style="color:#b1503a">investimento acumulado</strong> — o ponto em que o projeto inteiro se pagou. Com o investimento final de <strong id="inv-investimento-final">—</strong>, isso acontece no <strong id="inv-cruzamento">—</strong>. O retorno parte do que a Aura já realizou, então o mês 1 do gráfico é a partir de hoje. Este cruzamento é mais longo que o payback do card acima porque inclui as duas cabanas novas.
     </div>
 
     <div class="g3" style="margin-top:12px">
@@ -1494,7 +1495,7 @@ function calc() {
 
   renderMargemRealMensal_();
   buildTimeline(margemMedia, real, receitaMedia, despesaMedia);
-  buildCDI(margemMedia);
+  buildCDI(margemMedia, real.total);
 }
 
 function buildTimeline(mensal, real, receitaMedia, despesaMedia) {
@@ -1543,51 +1544,68 @@ var MESES_OBRA = 10;
 // Calendário do plano, em meses a partir de hoje.
 var OBRA2_INICIO = 9,  OBRA2_FIM = 18, CAB2_OPERA = 19;
 var OBRA3_INICIO = 21, OBRA3_FIM = 30, CAB3_OPERA = 31;
-// A curva para 2 meses depois das três operando: daí em diante é só uma reta
-// crescendo, que esticava o eixo e achatava justamente o trecho das obras,
-// que é o que interessa ler.
-var HORIZONTE_CURVA = CAB3_OPERA + 2;
+// A curva vai até o RETORNO cruzar o INVESTIMENTO, mais dois meses de folga
+// para o cruzamento não ficar colado na borda. O teto existe só para o caso
+// de margem zero, em que o cruzamento nunca acontece e o laço não pararia.
+var FOLGA_APOS_CRUZAMENTO = 2;
+var TETO_CURVA = 240;
 
 function cabanasOperando_(m) {
   return m >= CAB3_OPERA ? 3 : (m >= CAB2_OPERA ? 2 : 1);
 }
 
-function buildCDI(margemPorCabana) {
+function buildCDI(margemPorCabana, retornoJaRealizado) {
   var M = Math.max(0, margemPorCabana);
   var custoMes = OBRA_POR_CABANA / MESES_OBRA;
   var CDI_M = Math.pow(1.105, 1 / 12) - 1;
 
-  var caixa = 0, aporteAcum = 0, obraPelaMargem = 0;
-  var capCDI = CAPITAL, acCDI = 0;
+  // Duas linhas contam a história do projeto:
+  //   RETORNO    = margem acumulada gerada pela operação, venha ela a virar
+  //                caixa ou a pagar a parcela da obra — é resultado dos dois
+  //                jeitos. Parte do que a Aura já realizou, para o mês 1 do
+  //                gráfico ser "a partir de hoje".
+  //   INVESTIMENTO = capital comprometido hoje + os aportes que ainda vão
+  //                entrar nas obras. Sobe em degraus durante as obras.
+  // O cruzamento é o ponto em que o projeto inteiro se pagou.
+  var retorno = Math.max(0, retornoJaRealizado || 0);
+  var investimento = CAPITAL;
+  var aporteAcum = 0, obraPelaMargem = 0, acCDI = 0, capCDI = CAPITAL;
   var aporteCab2 = 0, aporteCab3 = 0;
   var margemNaObra2 = 0, margemNaObra3 = 0;
-  var labels = [], dsCaixa = [], dsAporte = [], dsObraMargem = [], dsCDI = [];
+  var mesCruzamento = 0;
 
-  for (var m = 1; m <= HORIZONTE_CURVA; m++) {
+  var labels = [], dsRetorno = [], dsInvestimento = [], dsAporte = [], dsCDI = [];
+
+  for (var m = 1; m <= TETO_CURVA; m++) {
     var margemMes = cabanasOperando_(m) * M;
     var emObra2 = m >= OBRA2_INICIO && m <= OBRA2_FIM;
     var emObra3 = m >= OBRA3_INICIO && m <= OBRA3_FIM;
+
+    retorno += margemMes;
 
     if (emObra2 || emObra3) {
       var coberto = Math.min(margemMes, custoMes);
       var falta = custoMes - coberto;
       obraPelaMargem += coberto;
       aporteAcum += falta;
+      investimento += falta;
       capCDI += falta;
-      caixa += margemMes - coberto; // só o que sobrou da margem do mês
       if (emObra2) { aporteCab2 += falta; margemNaObra2 += coberto; }
       else         { aporteCab3 += falta; margemNaObra3 += coberto; }
-    } else {
-      caixa += margemMes;
     }
 
     acCDI += capCDI * CDI_M;
 
     labels.push('M' + String(m).padStart(2, '0'));
-    dsCaixa.push(Math.round(caixa));
+    dsRetorno.push(Math.round(retorno));
+    dsInvestimento.push(Math.round(investimento));
     dsAporte.push(Math.round(aporteAcum));
-    dsObraMargem.push(Math.round(obraPelaMargem));
     dsCDI.push(Math.round(acCDI));
+
+    // Só para depois do cruzamento — e nunca antes da última obra terminar,
+    // senão um projeto muito lucrativo cortaria o gráfico no meio das obras.
+    if (!mesCruzamento && retorno >= investimento && m > OBRA3_FIM) mesCruzamento = m;
+    if (mesCruzamento && m >= mesCruzamento + FOLGA_APOS_CRUZAMENTO) break;
   }
 
   function textoAporte(el, aporte, coberto) {
@@ -1608,6 +1626,10 @@ function buildCDI(margemPorCabana) {
   setTxt_('inv-obra-mensal', fmt(custoMes));
   setTxt_('inv-aporte-total', fmt(aporteCab2 + aporteCab3));
   setTxt_('inv-obra-margem-total', fmt(margemNaObra2 + margemNaObra3));
+  setTxt_('inv-investimento-final', fmt(investimento));
+  setTxt_('inv-cruzamento', mesCruzamento
+    ? 'mês ' + mesCruzamento + ' do plano (' + (mesCruzamento / 12).toFixed(1).replace('.', ',') + ' anos a partir de hoje)'
+    : 'não acontece dentro de 20 anos com a margem atual');
 
   setTxt_('mc-liq1', fmt(M) + '/mês');
   setTxt_('mc-abate2', fmt(Math.min(M, custoMes)));
@@ -1623,9 +1645,9 @@ function buildCDI(margemPorCabana) {
     data: {
       labels: labels,
       datasets: [
-        { label: 'Caixa acumulado', data: dsCaixa, borderColor: '#c1622a', backgroundColor: 'rgba(193,98,42,0.07)', borderWidth: 2.5, pointRadius: 0, tension: 0.4, fill: true, order: 1 },
-        { label: 'Aporte de bolso', data: dsAporte, borderColor: '#a13a1f', backgroundColor: 'rgba(161,58,31,0.05)', borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: 0.3, fill: true, order: 2 },
-        { label: 'Obra paga pela margem', data: dsObraMargem, borderColor: '#5f8f5f', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3, order: 3 },
+        { label: 'Retorno acumulado', data: dsRetorno, borderColor: '#c1622a', backgroundColor: 'rgba(193,98,42,0.07)', borderWidth: 2.5, pointRadius: 0, tension: 0.3, fill: true, order: 1 },
+        { label: 'Investimento acumulado', data: dsInvestimento, borderColor: '#b1503a', backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, stepped: true, order: 2 },
+        { label: 'Aporte de bolso', data: dsAporte, borderColor: '#a13a1f', backgroundColor: 'transparent', borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: 0.3, order: 3 },
         { label: 'CDI sobre capital', data: dsCDI, borderColor: '#a3813f', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0, tension: 0.4, order: 4 }
       ]
     },

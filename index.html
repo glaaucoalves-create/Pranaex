@@ -585,12 +585,12 @@ tr:last-child td{border-bottom:none}
     </div>
 
     <div style="margin-top:12px;background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #edeef1">
-      <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — receita acumulada financia as obras</div>
-      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Margem mensal pela média já realizada</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">R$ 30k/mês por 10 meses · a margem da Aura abate parte de cada parcela</div></div><div class="mc-val up" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — início de operação</div><div class="mc-sub">Aura + Cabana 2 acumulam caixa para Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">R$ 30k/mês por 10 meses · a margem de Cabanas 1+2 abate o dobro por parcela</div></div><div class="mc-val up" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Receita total consolidada</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
+      <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — a margem abate a parcela de cada obra</div>
+      <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando</div><div class="mc-sub">Margem mensal pela média já realizada — é ela que abate a obra da Cabana 2</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">Parcela de R$ 30k/mês por 10 meses · 1 cabana operando abate <span id="mc-abate2">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — 2 unidades operando</div><div class="mc-sub">A margem mensal dobra, e é ela que vai abater a obra da Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">Mesma parcela de R$ 30k/mês · 2 cabanas operando abatem <span id="mc-abate3">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Fim das obras: margem cheia, sem parcela para abater</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
     </div>
   </div>
 
@@ -1543,6 +1543,10 @@ var MESES_OBRA = 10;
 // Calendário do plano, em meses a partir de hoje.
 var OBRA2_INICIO = 9,  OBRA2_FIM = 18, CAB2_OPERA = 19;
 var OBRA3_INICIO = 21, OBRA3_FIM = 30, CAB3_OPERA = 31;
+// A curva para 2 meses depois das três operando: daí em diante é só uma reta
+// crescendo, que esticava o eixo e achatava justamente o trecho das obras,
+// que é o que interessa ler.
+var HORIZONTE_CURVA = CAB3_OPERA + 2;
 
 function cabanasOperando_(m) {
   return m >= CAB3_OPERA ? 3 : (m >= CAB2_OPERA ? 2 : 1);
@@ -1559,7 +1563,7 @@ function buildCDI(margemPorCabana) {
   var margemNaObra2 = 0, margemNaObra3 = 0;
   var labels = [], dsCaixa = [], dsAporte = [], dsObraMargem = [], dsCDI = [];
 
-  for (var m = 1; m <= 90; m++) {
+  for (var m = 1; m <= HORIZONTE_CURVA; m++) {
     var margemMes = cabanasOperando_(m) * M;
     var emObra2 = m >= OBRA2_INICIO && m <= OBRA2_FIM;
     var emObra3 = m >= OBRA3_INICIO && m <= OBRA3_FIM;
@@ -1579,15 +1583,11 @@ function buildCDI(margemPorCabana) {
 
     acCDI += capCDI * CDI_M;
 
-    if (m % 3 === 0) {
-      var ano = Math.floor((m - 1) / 12) + 1;
-      var mes = ((m - 1) % 12) + 1;
-      labels.push('A' + ano + 'M' + String(mes).padStart(2, '0'));
-      dsCaixa.push(Math.round(caixa));
-      dsAporte.push(Math.round(aporteAcum));
-      dsObraMargem.push(Math.round(obraPelaMargem));
-      dsCDI.push(Math.round(acCDI));
-    }
+    labels.push('M' + String(m).padStart(2, '0'));
+    dsCaixa.push(Math.round(caixa));
+    dsAporte.push(Math.round(aporteAcum));
+    dsObraMargem.push(Math.round(obraPelaMargem));
+    dsCDI.push(Math.round(acCDI));
   }
 
   function textoAporte(el, aporte, coberto) {
@@ -1610,9 +1610,11 @@ function buildCDI(margemPorCabana) {
   setTxt_('inv-obra-margem-total', fmt(margemNaObra2 + margemNaObra3));
 
   setTxt_('mc-liq1', fmt(M) + '/mês');
-  setTxt_('mc-cx2', 'Aporte ' + fmt(aporteCab2 / MESES_OBRA) + '/mês');
-  setTxt_('mc-cx3', 'Aporte ' + fmt(aporteCab3 / MESES_OBRA) + '/mês');
-  setTxt_('mc-liq2', '+ ' + fmt(M) + '/mês');
+  setTxt_('mc-abate2', fmt(Math.min(M, custoMes)));
+  setTxt_('mc-abate3', fmt(Math.min(2 * M, custoMes)));
+  setTxt_('mc-cx2', '–' + fmt(aporteCab2 / MESES_OBRA) + '/mês');
+  setTxt_('mc-cx3', '–' + fmt(aporteCab3 / MESES_OBRA) + '/mês');
+  setTxt_('mc-liq2', fmt(2 * M) + '/mês');
   setTxt_('mc-total', fmt(3 * M) + '/mês');
 
   if (cdiChart) cdiChart.destroy();
@@ -1636,7 +1638,7 @@ function buildCDI(margemPorCabana) {
           backgroundColor: '#0d1117', titleColor: '#fff', bodyColor: '#e5e7eb', borderWidth: 0,
           padding: 10, cornerRadius: 10, displayColors: true, boxPadding: 4,
           callbacks: {
-            title: function(t){ return 'Período: ' + t[0].label; },
+            title: function(t){ return 'Mês ' + String(t[0].label).replace(/^M0?/, '') + ' do plano'; },
             label: function(c){ return c.dataset.label + ': R$ ' + c.raw.toLocaleString('pt-BR'); }
           }
         }

@@ -544,23 +544,21 @@ tr:last-child td{border-bottom:none}
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div class="ctitle" style="margin-bottom:0">Fluxo de caixa — Cabanas 1, 2 e 3 vs. CDI</div>
+      <div class="ctitle" style="margin-bottom:0">Fluxo de caixa — quanto de cada obra sai da margem</div>
       <span style="font-size:11px;color:#c1622a;background:#f7e6d8;padding:3px 10px;border-radius:20px">🔒 Zero saques até concluir</span>
     </div>
     <div class="leg">
-      <span><div class="ld" style="background:#c1622a"></div>Caixa acumulado (100% reinvestido, zero saques)</span>
+      <span><div class="ld" style="background:#c1622a"></div>Caixa acumulado (sobra da margem)</span>
       <span><div class="ld-dash" style="border-color:#a13a1f"></div>Aporte de bolso acumulado</span>
+      <span><div class="ld" style="background:#5f8f5f"></div>Obra paga pela margem</span>
       <span><div class="ld-dash" style="border-color:#a3813f"></div>CDI sobre capital comprometido</span>
-      <span><div class="ld" style="background:#b1503a;opacity:.5"></div>Capital total comprometido</span>
     </div>
     <div style="position:relative;height:260px;margin-top:10px"><canvas id="chartCDI"></canvas></div>
 
     <div class="nota">
-      📌 <strong style="color:#c1622a">Verde (caixa)</strong> — receita líquida acumulada de cada cabana operando, descontada a cada saída para financiar a obra seguinte.
-      <strong style="color:#a13a1f">Laranja (aporte)</strong> — só aparece quando o caixa acumulado não cobre a saída mensal da obra (obra+terreno+infra ratados igualmente nos 10 meses de construção).
-      <strong style="color:#a3813f">Amarelo (CDI)</strong> — referência de rendimento se o mesmo capital estivesse aplicado.
-      <strong style="color:#b1503a">Roxo (capital)</strong> — total comprometido no projeto.
-      <br><br>💡 O caixa de Cabana 1 é consumido primeiro na obra da Cabana 2; depois, caixa de Cabana 1+2 financia a Cabana 3 — por isso o aporte tende a cair conforme mais cabanas entram em operação.
+      Cada cabana nova custa <strong>R$ 300 mil</strong>, desembolsados em 10 parcelas de <strong id="inv-obra-mensal">—</strong>. A cada mês de obra, a margem das cabanas <strong>já operando</strong> abate a parcela daquele mês; o que faltar é aporte de bolso.
+      <br><br>💡 Por isso o aporte da Cabana 3 é menor: quando a obra dela começa, são <strong>duas</strong> cabanas operando, então a margem mensal é o dobro e cobre uma fatia maior da mesma parcela.
+      <br><br>Somando as duas obras (R$ 600 mil): <strong style="color:#5f8f5f" id="inv-obra-margem-total">—</strong> saem da margem e <strong style="color:#a13a1f" id="inv-aporte-total">—</strong> saem do bolso. O caixa acumulado antes das obras aparece na curva e fica disponível, mas não é consumido automaticamente — o modelo dilui a margem do mês contra a parcela do mês.
     </div>
 
     <div class="g3" style="margin-top:12px">
@@ -572,26 +570,26 @@ tr:last-child td{border-bottom:none}
       </div>
       <div class="mk" style="border-color:#f7e6d8">
         <div class="ml">Cabana 2 · Mar–Dez/27</div>
-        <div class="mv up" style="font-size:14px">Obra R$ 280k</div>
+        <div class="mv up" style="font-size:14px">Obra R$ 300k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap2">Calculando...</div>
-        <div style="font-size:10px;color:#9aa3af;margin-top:2px">Capital total: R$ 371k · Opera Jan/28</div>
-        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido: <span id="liq2-txt" style="color:#c1622a;font-weight:600">—</span>/mês</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">1 cabana operando abate <span id="cab2-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera Jan/28</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Depois de pronta gera <span id="liq2-txt" style="color:#c1622a;font-weight:600">—</span>/mês</div>
       </div>
       <div class="mk" style="border-color:#f4e2d1">
         <div class="ml">Cabana 3 · Mar–Dez/28</div>
         <div class="mv dn" style="font-size:14px">Obra R$ 300k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap3">Calculando...</div>
-        <div style="font-size:10px;color:#9aa3af;margin-top:2px">Capital total: R$ 391k · Opera Jan/29</div>
-        <div style="font-size:10px;color:#6b7280;margin-top:2px">Líquido: <span id="liq3-txt" style="color:#a13a1f;font-weight:600">—</span>/mês</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">2 cabanas operando abatem <span id="cab3-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera Jan/29</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Depois de pronta gera <span id="liq3-txt" style="color:#a13a1f;font-weight:600">—</span>/mês</div>
       </div>
     </div>
 
     <div style="margin-top:12px;background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #edeef1">
       <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — receita acumulada financia as obras</div>
       <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando — acumula caixa para Cabana 2</div><div class="mc-sub">Margem mensal pela média já realizada</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">R$ 37,1k/mês (obra+terreno+infra) por 10 meses · caixa de Aura abate primeiro</div></div><div class="mc-val up" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">R$ 30k/mês por 10 meses · a margem da Aura abate parte de cada parcela</div></div><div class="mc-val up" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — início de operação</div><div class="mc-sub">Aura + Cabana 2 acumulam caixa para Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">R$ 39,1k/mês (obra+terreno+infra) por 10 meses · Cabanas 1+2 financiam primeiro</div></div><div class="mc-val up" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">R$ 30k/mês por 10 meses · a margem de Cabanas 1+2 abate o dobro por parcela</div></div><div class="mc-val up" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
       <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Receita total consolidada</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
     </div>
   </div>
@@ -1525,48 +1523,61 @@ function buildTimeline(mensal, real, receitaMedia, despesaMedia) {
   });
 }
 
-function buildCDI(liq1) {
-  var liq2 = liq1;
-  var liq3 = liq1;
+// ── Fluxo de caixa das cabanas 2 e 3 ──────────────────────────────────
+//
+// Regra do projeto: cada cabana nova custa OBRA_POR_CABANA, desembolsado em
+// parcelas iguais ao longo de MESES_OBRA. A cada mês de obra, a margem que as
+// cabanas JÁ OPERANDO geram abate a parcela daquele mês; o que faltar é
+// aporte de bolso.
+//
+// Por isso a cabana 3 exige menos aporte que a 2: quando a obra dela começa,
+// são duas cabanas operando, então a margem mensal é o dobro e cobre uma
+// fatia maior da mesma parcela.
+//
+// O que NÃO se faz aqui: consumir o caixa acumulado antes da obra para zerar
+// o aporte. O modelo pedido dilui a margem do MÊS contra a parcela do MÊS —
+// o caixa que sobrou antes fica visível na curva, disponível, mas não é
+// gasto automaticamente.
+var OBRA_POR_CABANA = 300000;
+var MESES_OBRA = 10;
+// Calendário do plano, em meses a partir de hoje.
+var OBRA2_INICIO = 9,  OBRA2_FIM = 18, CAB2_OPERA = 19;
+var OBRA3_INICIO = 21, OBRA3_FIM = 30, CAB3_OPERA = 31;
 
-  var CAP2_TOTAL = 280000 + 75000 + 16279;
-  var CAP3_TOTAL = 300000 + 75000 + 16279;
-  var MENSAL2 = CAP2_TOTAL / 10;
-  var MENSAL3 = CAP3_TOTAL / 10;
+function cabanasOperando_(m) {
+  return m >= CAB3_OPERA ? 3 : (m >= CAB2_OPERA ? 2 : 1);
+}
 
-  var CDI_M = Math.pow(1.105, 1/12) - 1;
+function buildCDI(margemPorCabana) {
+  var M = Math.max(0, margemPorCabana);
+  var custoMes = OBRA_POR_CABANA / MESES_OBRA;
+  var CDI_M = Math.pow(1.105, 1 / 12) - 1;
 
-  var caixa = 0, aporteAcum = 0, capCDI = CAPITAL, acCDI = 0;
+  var caixa = 0, aporteAcum = 0, obraPelaMargem = 0;
+  var capCDI = CAPITAL, acCDI = 0;
   var aporteCab2 = 0, aporteCab3 = 0;
-  var labels = [], dsCaixa = [], dsAporte = [], dsCDI = [], dsCapital = [];
-  var caixaNoInicioObra2 = 0, caixaNoInicioObra3 = 0;
+  var margemNaObra2 = 0, margemNaObra3 = 0;
+  var labels = [], dsCaixa = [], dsAporte = [], dsObraMargem = [], dsCDI = [];
 
   for (var m = 1; m <= 90; m++) {
-    var r1 = Math.max(0, liq1);
-    var r2 = m >= 19 ? liq2 : 0;
-    var r3 = m >= 31 ? liq3 : 0;
-    caixa += r1 + r2 + r3;
+    var margemMes = cabanasOperando_(m) * M;
+    var emObra2 = m >= OBRA2_INICIO && m <= OBRA2_FIM;
+    var emObra3 = m >= OBRA3_INICIO && m <= OBRA3_FIM;
 
-    var saida = 0;
-    if (m >= 9  && m <= 18) saida = MENSAL2;
-    if (m >= 21 && m <= 30) saida = MENSAL3;
-
-    if (saida > 0) {
-      var cobre = Math.min(caixa, saida);
-      var falta = saida - cobre;
-      caixa -= cobre;
-      if (falta > 0) {
-        aporteAcum += falta;
-        capCDI += falta;
-        if (m >= 9  && m <= 18) aporteCab2 += falta;
-        if (m >= 21 && m <= 30) aporteCab3 += falta;
-      }
+    if (emObra2 || emObra3) {
+      var coberto = Math.min(margemMes, custoMes);
+      var falta = custoMes - coberto;
+      obraPelaMargem += coberto;
+      aporteAcum += falta;
+      capCDI += falta;
+      caixa += margemMes - coberto; // só o que sobrou da margem do mês
+      if (emObra2) { aporteCab2 += falta; margemNaObra2 += coberto; }
+      else         { aporteCab3 += falta; margemNaObra3 += coberto; }
+    } else {
+      caixa += margemMes;
     }
 
     acCDI += capCDI * CDI_M;
-
-    if (m === 8)  caixaNoInicioObra2 = caixa;
-    if (m === 20) caixaNoInicioObra3 = caixa;
 
     if (m % 3 === 0) {
       var ano = Math.floor((m - 1) / 12) + 1;
@@ -1574,34 +1585,35 @@ function buildCDI(liq1) {
       labels.push('A' + ano + 'M' + String(mes).padStart(2, '0'));
       dsCaixa.push(Math.round(caixa));
       dsAporte.push(Math.round(aporteAcum));
+      dsObraMargem.push(Math.round(obraPelaMargem));
       dsCDI.push(Math.round(acCDI));
-      dsCapital.push(Math.round(capCDI));
     }
   }
 
-  var card2 = document.getElementById('card-ap2');
-  if (aporteCab2 <= 0) {
-    card2.textContent = '✓ 100% financiada pela Aura';
-    card2.style.color = '#c1622a';
-  } else {
-    card2.textContent = 'Aporte necessário: ~' + fmt(aporteCab2);
-    card2.style.color = '#a3813f';
+  function textoAporte(el, aporte, coberto) {
+    if (!el) return;
+    if (aporte <= 0) {
+      el.textContent = '✓ Obra 100% paga pela margem';
+      el.style.color = '#c1622a';
+    } else {
+      el.textContent = 'Aporte: ' + fmt(aporte) + ' · margem cobre ' + fmt(coberto);
+      el.style.color = '#a3813f';
+    }
   }
+  textoAporte(document.getElementById('card-ap2'), aporteCab2, margemNaObra2);
+  textoAporte(document.getElementById('card-ap3'), aporteCab3, margemNaObra3);
 
-  var card3 = document.getElementById('card-ap3');
-  if (aporteCab3 <= 0) {
-    card3.textContent = '✓ Financiada pelas cabanas 1+2';
-    card3.style.color = '#c1622a';
-  } else {
-    card3.textContent = 'Aporte necessário: ~' + fmt(aporteCab3);
-    card3.style.color = '#a3813f';
-  }
+  setTxt_('cab2-abate', fmt(Math.min(M, custoMes)) + '/mês');
+  setTxt_('cab3-abate', fmt(Math.min(2 * M, custoMes)) + '/mês');
+  setTxt_('inv-obra-mensal', fmt(custoMes));
+  setTxt_('inv-aporte-total', fmt(aporteCab2 + aporteCab3));
+  setTxt_('inv-obra-margem-total', fmt(margemNaObra2 + margemNaObra3));
 
-  document.getElementById('mc-liq1').textContent = fmt(liq1) + '/mês';
-  document.getElementById('mc-cx2').textContent  = 'Caixa: ' + fmt(caixaNoInicioObra2);
-  document.getElementById('mc-cx3').textContent  = 'Caixa: ' + fmt(caixaNoInicioObra3);
-  document.getElementById('mc-liq2').textContent = '+ ' + fmt(liq2) + '/mês';
-  document.getElementById('mc-total').textContent = fmt(liq1 + liq2 + liq3) + '/mês';
+  setTxt_('mc-liq1', fmt(M) + '/mês');
+  setTxt_('mc-cx2', 'Aporte ' + fmt(aporteCab2 / MESES_OBRA) + '/mês');
+  setTxt_('mc-cx3', 'Aporte ' + fmt(aporteCab3 / MESES_OBRA) + '/mês');
+  setTxt_('mc-liq2', '+ ' + fmt(M) + '/mês');
+  setTxt_('mc-total', fmt(3 * M) + '/mês');
 
   if (cdiChart) cdiChart.destroy();
   cdiChart = new Chart(document.getElementById('chartCDI'), {
@@ -1611,8 +1623,8 @@ function buildCDI(liq1) {
       datasets: [
         { label: 'Caixa acumulado', data: dsCaixa, borderColor: '#c1622a', backgroundColor: 'rgba(193,98,42,0.07)', borderWidth: 2.5, pointRadius: 0, tension: 0.4, fill: true, order: 1 },
         { label: 'Aporte de bolso', data: dsAporte, borderColor: '#a13a1f', backgroundColor: 'rgba(161,58,31,0.05)', borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: 0.3, fill: true, order: 2 },
-        { label: 'CDI sobre capital', data: dsCDI, borderColor: '#a3813f', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0, tension: 0.4, order: 3 },
-        { label: 'Capital comprometido', data: dsCapital, borderColor: '#b1503a', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [2, 5], pointRadius: 0, stepped: true, order: 4 }
+        { label: 'Obra paga pela margem', data: dsObraMargem, borderColor: '#5f8f5f', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3, order: 3 },
+        { label: 'CDI sobre capital', data: dsCDI, borderColor: '#a3813f', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0, tension: 0.4, order: 4 }
       ]
     },
     options: {
@@ -1625,10 +1637,7 @@ function buildCDI(liq1) {
           padding: 10, cornerRadius: 10, displayColors: true, boxPadding: 4,
           callbacks: {
             title: function(t){ return 'Período: ' + t[0].label; },
-            label: function(c){
-              var nms = ['Caixa acumulado', 'Aporte de bolso acum.', 'CDI acumulado', 'Capital comprometido'];
-              return nms[c.datasetIndex] + ': R$ ' + c.raw.toLocaleString('pt-BR');
-            }
+            label: function(c){ return c.dataset.label + ': R$ ' + c.raw.toLocaleString('pt-BR'); }
           }
         }
       },

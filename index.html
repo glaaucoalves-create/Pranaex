@@ -58,7 +58,7 @@ body:not(.carregando) #carga-estado{display:none}
 .klbl{font-size:10.5px;color:#9aa3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
 .kval{font-size:19px;font-weight:700;color:#0d1117}
 .ksub{font-size:11px;margin-top:3px;color:#9aa3af}
-.up{color:#c1622a}.dn{color:#a13a1f}.warn{color:#a3813f}.pur{color:#b1503a}
+.up{color:#c1622a}.dn{color:#93291e}.warn{color:#a3813f}.pur{color:#b1503a}
 
 .card{background:#fff;border:1px solid #edeef1;border-radius:18px;padding:18px;margin-bottom:14px}
 .ctitle{font-size:12px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
@@ -122,7 +122,7 @@ tr:last-child td{border-bottom:none}
 .cal-cell{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#c9cdd3;background:#fafbfc;border:1px solid #f0f1f3;position:relative;transition:background .15s,border-color .15s}
 .cal-cell.empty{background:transparent;border:none}
 .cal-cell.res-real{background:#cf7245;color:#fff;border-color:#cf7245}
-.cal-cell .dot{position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:#a13a1f}
+.cal-cell .dot{position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:#93291e}
 .cal-tag{font-size:7px;font-weight:700;margin-top:1px}
 
 .fab{background:#c1622a;color:#fff;border:none;border-radius:20px;padding:7px 15px;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap}
@@ -224,7 +224,7 @@ tr:last-child td{border-bottom:none}
 <div class="card" id="carga-aviso" style="display:none;border-color:#e7b0a0;background:#fdf3f0">
   <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px">
-      <div style="font-size:12.5px;font-weight:700;color:#a13a1f">Dados incompletos</div>
+      <div style="font-size:12.5px;font-weight:700;color:#93291e">Dados incompletos</div>
       <div style="font-size:11.5px;color:#6b7280;margin-top:2px" id="carga-aviso-texto">—</div>
     </div>
     <button class="btn-toggle" onclick="recarregarTudo_()">Tentar de novo</button>
@@ -270,8 +270,8 @@ tr:last-child td{border-bottom:none}
     <div class="ctitle">Receita × Despesas — mês a mês 2026</div>
     <div class="leg">
       <span><div class="ld" style="background:#c1622a"></div>Receita bruta</span>
-      <span><div class="ld" style="background:#a13a1f"></div>Despesas</span>
-      <span><div class="ld" style="background:#b1503a"></div>Margem líquida</span>
+      <span><div class="ld" style="background:#93291e"></div>Despesas</span>
+      <span><div class="ld" style="background:#2f7d5a"></div>Margem líquida</span>
     </div>
     <div style="position:relative;height:210px;margin-top:10px"><canvas id="chartMes"></canvas></div>
   </div>
@@ -307,7 +307,7 @@ tr:last-child td{border-bottom:none}
     <div class="ctitle" id="fin-titulo">Financeiro — Julho</div>
     <div style="display:flex;gap:34px;margin-bottom:14px;flex-wrap:wrap">
       <div><div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Receita</div><div id="fin-receita" style="font-size:22px;font-weight:800;color:#c1622a">R$ 4.550</div></div>
-      <div><div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Despesas pagas</div><div id="fin-despesas-plan" style="font-size:22px;font-weight:800;color:#a13a1f">R$ 2.400</div></div>
+      <div><div style="font-size:10.5px;color:#9aa3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Despesas pagas</div><div id="fin-despesas-plan" style="font-size:22px;font-weight:800;color:#93291e">R$ 2.400</div></div>
     </div>
     <div class="slbl">Distribuição dos saques</div>
     <div id="fin-dist-lista"></div>
@@ -358,7 +358,7 @@ tr:last-child td{border-bottom:none}
       </div>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid #edeef1;display:flex;justify-content:space-between;align-items:center">
         <span style="color:#6b7280;font-size:12px">Total gasto</span>
-        <span style="font-size:15px;font-weight:800;color:#a13a1f" id="despesas-total-planejado">R$ 2.400</span>
+        <span style="font-size:15px;font-weight:800;color:#93291e" id="despesas-total-planejado">R$ 2.400</span>
       </div>
     </div>
   </div>
@@ -485,7 +485,7 @@ tr:last-child td{border-bottom:none}
         </div>
         <div>
           <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-terreno-lbl">Terreno</span><span id="inv-terreno-val">—</span></div>
-          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-terreno-bar" style="height:100%;width:0%;background:#a13a1f;border-radius:3px"></div></div>
+          <div style="height:6px;background:#f0f1f3;border-radius:3px;overflow:hidden"><div id="inv-terreno-bar" style="height:100%;width:0%;background:#93291e;border-radius:3px"></div></div>
         </div>
         <div>
           <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#9aa3af;margin-bottom:3px"><span id="inv-infra-lbl">Infra terreno</span><span id="inv-infra-val">—</span></div>
@@ -538,7 +538,7 @@ tr:last-child td{border-bottom:none}
     <div id="pb-timeline" style="display:flex;flex-direction:column;gap:5px"></div>
     <div style="margin-top:8px;display:flex;gap:14px;font-size:11px;color:#6b7280">
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c1622a;margin-right:4px"></span>Capital recuperado (em lucro gerado)</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#b1503a;margin-right:4px"></span>Em progresso</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e8c39a;margin-right:4px"></span>Em progresso</span>
     </div>
   </div>
 
@@ -549,17 +549,17 @@ tr:last-child td{border-bottom:none}
     </div>
     <div class="leg">
       <span><div class="ld" style="background:#c1622a"></div>Retorno acumulado (margem gerada)</span>
-      <span><div class="ld" style="background:#b1503a"></div>Investimento acumulado (capital + aportes)</span>
-      <span><div class="ld-dash" style="border-color:#a13a1f"></div>Aporte de bolso acumulado</span>
-      <span><div class="ld-dash" style="border-color:#a3813f"></div>CDI sobre capital comprometido</span>
+      <span><div class="ld" style="background:#2f4858"></div>Investimento acumulado (capital + aportes)</span>
+      <span><div class="ld-dash" style="border-color:#0891b2"></div>Aporte de bolso acumulado</span>
+      <span><div class="ld-dash" style="border-color:#9aa3af"></div>CDI sobre capital comprometido</span>
     </div>
     <div style="position:relative;height:260px;margin-top:10px"><canvas id="chartCDI"></canvas></div>
 
     <div class="nota">
       Cada cabana nova custa <strong>R$ 300 mil</strong>, desembolsados em 10 parcelas de <strong id="inv-obra-mensal">—</strong>. A cada mês de obra, a margem das cabanas <strong>já operando</strong> abate a parcela daquele mês; o que faltar é aporte de bolso.
       <br><br>💡 Por isso o aporte da Cabana 3 é menor: quando a obra dela começa, são <strong>duas</strong> cabanas operando, então a margem mensal é o dobro e cobre uma fatia maior da mesma parcela.
-      <br><br>Somando as duas obras (R$ 600 mil): <strong style="color:#5f8f5f" id="inv-obra-margem-total">—</strong> saem da margem e <strong style="color:#a13a1f" id="inv-aporte-total">—</strong> saem do bolso.
-      <br><br>A curva vai até o <strong style="color:#c1622a">retorno acumulado</strong> cruzar o <strong style="color:#b1503a">investimento acumulado</strong> — o ponto em que o projeto inteiro se pagou. Com o investimento final de <strong id="inv-investimento-final">—</strong>, isso acontece no <strong id="inv-cruzamento">—</strong>. O retorno parte do que a Aura já realizou, então o mês 1 do gráfico é a partir de hoje. Este cruzamento é mais longo que o payback do card acima porque inclui as duas cabanas novas.
+      <br><br>Somando as duas obras (R$ 600 mil): <strong style="color:#2f7d5a" id="inv-obra-margem-total">—</strong> saem da margem e <strong style="color:#0891b2" id="inv-aporte-total">—</strong> saem do bolso.
+      <br><br>A curva vai até o <strong style="color:#c1622a">retorno acumulado</strong> cruzar o <strong style="color:#2f4858">investimento acumulado</strong> — o ponto em que o projeto inteiro se pagou. Com o investimento final de <strong id="inv-investimento-final">—</strong>, isso acontece no <strong id="inv-cruzamento">—</strong>. O retorno parte do que a Aura já realizou, então o mês 1 do gráfico é a partir de hoje. Este cruzamento é mais longo que o payback do card acima porque inclui as duas cabanas novas.
     </div>
 
     <div class="g3" style="margin-top:12px">
@@ -581,7 +581,7 @@ tr:last-child td{border-bottom:none}
         <div class="mv dn" style="font-size:14px">Obra R$ 300k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap3">Calculando...</div>
         <div style="font-size:10px;color:#9aa3af;margin-top:2px">2 cabanas operando abatem <span id="cab3-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera Jan/29</div>
-        <div style="font-size:10px;color:#6b7280;margin-top:2px">Depois de pronta gera <span id="liq3-txt" style="color:#a13a1f;font-weight:600">—</span>/mês</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px">Depois de pronta gera <span id="liq3-txt" style="color:#93291e;font-weight:600">—</span>/mês</div>
       </div>
     </div>
 
@@ -590,8 +590,8 @@ tr:last-child td{border-bottom:none}
       <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando</div><div class="mc-sub">Margem mensal pela média já realizada — é ela que abate a obra da Cabana 2</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">Parcela de R$ 30k/mês por 10 meses · 1 cabana operando abate <span id="mc-abate2">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
       <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — 2 unidades operando</div><div class="mc-sub">A margem mensal dobra, e é ela que vai abater a obra da Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#a13a1f"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">Mesma parcela de R$ 30k/mês · 2 cabanas operando abatem <span id="mc-abate3">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#a13a1f;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Fim das obras: margem cheia, sem parcela para abater</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#93291e"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">Mesma parcela de R$ 30k/mês · 2 cabanas operando abatem <span id="mc-abate3">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#93291e;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Fim das obras: margem cheia, sem parcela para abater</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
     </div>
   </div>
 
@@ -616,7 +616,7 @@ tr:last-child td{border-bottom:none}
           <td class="warn">~40 meses</td>
         </tr>
         <tr>
-          <td style="color:#a13a1f;font-weight:600">Cabana 3</td>
+          <td style="color:#93291e;font-weight:600">Cabana 3</td>
           <td>R$ 300k</td><td class="dn">R$ 391k</td><td>Jan/29</td>
           <td id="tc-rec3">—</td>
           <td class="up" id="tc-gl3">—</td>
@@ -1169,17 +1169,17 @@ function chartMes_atualizar() {
         {
           label: 'Despesas',
           data: MES.map(function(d){ return d.despesa; }),
-          backgroundColor: '#a13a1f',
+          backgroundColor: '#93291e',
           borderRadius: 4, borderSkipped: 'bottom', order: 3
         },
         {
           label: 'Margem',
           data: MES.map(function(d){ return Math.max(0, d.receita - d.despesa); }),
           type: 'line',
-          borderColor: '#b1503a',
-          backgroundColor: 'rgba(177,80,58,0.06)',
+          borderColor: '#2f7d5a',
+          backgroundColor: 'rgba(47,125,90,0.07)',
           borderWidth: 2, pointRadius: 3,
-          pointBackgroundColor: '#b1503a',
+          pointBackgroundColor: '#2f7d5a',
           tension: 0.4, fill: true, order: 1
         }
       ]
@@ -1355,12 +1355,12 @@ function renderMargemRealMensal_() {
   tbody.innerHTML = base.meses.slice().reverse().map(function(m) {
     var pct = m.receita > 0 ? (m.margem / m.receita) * 100 : 0;
     var retorno = CAPITAL > 0 ? (m.margem / CAPITAL) * 100 : 0;
-    var cor = m.margem >= 0 ? '#c1622a' : '#a13a1f';
+    var cor = m.margem >= 0 ? '#c1622a' : '#93291e';
     return '<tr>' +
       '<td style="color:#0d1117;font-weight:600">' + MESES_LONGOS_[m.mes] +
         (m.parcial ? ' <span class="chip cw">em curso</span>' : '') + '</td>' +
       '<td>' + fmtR_(m.receita) + '</td>' +
-      '<td style="color:#a13a1f">' + fmtR_(m.despesa) + '</td>' +
+      '<td style="color:#93291e">' + fmtR_(m.despesa) + '</td>' +
       '<td style="font-weight:700;color:' + cor + '">' + fmtR_(m.margem) + '</td>' +
       '<td style="color:#9aa3af">' + (m.receita > 0 ? Math.round(pct) + '%' : '—') + '</td>' +
       '<td style="font-weight:600;color:' + cor + '">' + (CAPITAL > 0 ? pct1_(retorno) : '—') + '</td>' +
@@ -1377,7 +1377,7 @@ function renderMargemRealMensal_() {
       '<tr style="border-top:2px solid #edeef1">' +
         '<td style="color:#0d1117;font-weight:700">Acumulado</td>' +
         '<td style="font-weight:600">' + fmtR_(receita) + '</td>' +
-        '<td style="font-weight:600;color:#a13a1f">' + fmtR_(despesa) + '</td>' +
+        '<td style="font-weight:600;color:#93291e">' + fmtR_(despesa) + '</td>' +
         '<td style="font-weight:700;color:#c1622a">' + fmtR_(margem) + '</td>' +
         '<td style="color:#6b7280">' + pctTotal + '</td>' +
         '<td style="font-weight:700;color:#c1622a">' + (CAPITAL > 0 ? pct1_(retAcum) : '—') + '</td>' +
@@ -1514,8 +1514,10 @@ function buildTimeline(mensal, real, receitaMedia, despesaMedia) {
     row.innerHTML =
       '<div style="width:52px;font-size:10.5px;color:#9aa3af;text-align:right;flex-shrink:0">mês ' + m + '</div>' +
       '<div style="flex:1;height:20px;background:#f0f1f3;border-radius:6px;overflow:hidden;position:relative">' +
-        '<div style="height:100%;width:' + pct + '%;background:' + (paid ? '#c1622a' : '#b1503a') + ';border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px">' +
-          (pct > 14 ? '<span style="font-size:9px;font-weight:700;color:#fff">' + pct + '%</span>' : '') +
+        // Recuperado e em progresso precisam se distinguir de longe: laranja
+        // cheio contra areia clara, com o texto escurecido na barra clara.
+        '<div style="height:100%;width:' + pct + '%;background:' + (paid ? '#c1622a' : '#e8c39a') + ';border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px">' +
+          (pct > 14 ? '<span style="font-size:9px;font-weight:700;color:' + (paid ? '#fff' : '#7a4a1c') + '">' + pct + '%</span>' : '') +
         '</div>' +
         (pct <= 14 ? '<span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:9px;color:#9aa3af">' + pct + '%</span>' : '') +
       '</div>' +
@@ -1645,10 +1647,13 @@ function buildCDI(margemPorCabana, retornoJaRealizado) {
     data: {
       labels: labels,
       datasets: [
-        { label: 'Retorno acumulado', data: dsRetorno, borderColor: '#c1622a', backgroundColor: 'rgba(193,98,42,0.07)', borderWidth: 2.5, pointRadius: 0, tension: 0.3, fill: true, order: 1 },
-        { label: 'Investimento acumulado', data: dsInvestimento, borderColor: '#b1503a', backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, stepped: true, order: 2 },
-        { label: 'Aporte de bolso', data: dsAporte, borderColor: '#a13a1f', backgroundColor: 'transparent', borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: 0.3, order: 3 },
-        { label: 'CDI sobre capital', data: dsCDI, borderColor: '#a3813f', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0, tension: 0.4, order: 4 }
+        // Quatro famílias de cor bem separadas — laranja, azul-ardósia, ciano e
+        // cinza. As duas que o leitor precisa cruzar com o olho (retorno x
+        // investimento) são as mais distantes entre si.
+        { label: 'Retorno acumulado', data: dsRetorno, borderColor: '#c1622a', backgroundColor: 'rgba(193,98,42,0.08)', borderWidth: 2.5, pointRadius: 0, tension: 0.3, fill: true, order: 1 },
+        { label: 'Investimento acumulado', data: dsInvestimento, borderColor: '#2f4858', backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, stepped: true, order: 2 },
+        { label: 'Aporte de bolso', data: dsAporte, borderColor: '#0891b2', backgroundColor: 'transparent', borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: 0.3, order: 3 },
+        { label: 'CDI sobre capital', data: dsCDI, borderColor: '#9aa3af', backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0, tension: 0.4, order: 4 }
       ]
     },
     options: {
@@ -2137,7 +2142,7 @@ function atualizarCapitalInvestimento_(projetos, totalGeral) {
 }
 
 // ── AVATAR COM INICIAIS (uma cor consistente por nome) ──
-var PALETA_AVATAR_ = ['#c1622a', '#a13a1f', '#a3813f', '#b1503a', '#5f8f5f', '#dc2626'];
+var PALETA_AVATAR_ = ['#c1622a', '#93291e', '#a3813f', '#b1503a', '#5f8f5f', '#dc2626'];
 function iniciais_(nome) {
   // Só palavras que começam com letra: nomes com "&", "<" ou pontuação solta
   // geravam iniciais como "A<" no avatar.
@@ -2676,7 +2681,7 @@ function renderTabelaDespesas_() {
     return '<tr>' +
       '<td style="color:#0d1117">' + esc_(d.categoria) + chip + '</td>' +
       '<td>' + fmtData_(d.dataPagamento) + chipAgendado_(d.dataPagamento) + '</td>' +
-      '<td style="font-weight:600;color:' + (ehFuturo_(d.dataPagamento) ? '#b0b6bf' : '#a13a1f') + '">' + fmtR_(num_(d.pago)) + '</td>' +
+      '<td style="font-weight:600;color:' + (ehFuturo_(d.dataPagamento) ? '#b0b6bf' : '#93291e') + '">' + fmtR_(num_(d.pago)) + '</td>' +
       '<td style="color:#9aa3af">' + (d.descricao ? esc_(d.descricao) : '—') + '</td>' +
       '</tr>';
   }).join('');
@@ -2726,7 +2731,7 @@ function carregarSaques() {
 // Obra" — não precisa mais adivinhar categoria por palavra-chave.
 // ══════════════════════════════════════════════
 
-var CORES_CLASSIFICACAO_ = ['#dc2626', '#5f8f5f', '#a3813f', '#b1503a', '#0891b2', '#c1622a', '#a13a1f', '#0d9488', '#db2777', '#6366f1', '#9333ea', '#0369a1'];
+var CORES_CLASSIFICACAO_ = ['#dc2626', '#5f8f5f', '#a3813f', '#b1503a', '#0891b2', '#c1622a', '#93291e', '#0d9488', '#db2777', '#6366f1', '#9333ea', '#0369a1'];
 function corClassificacao_(nome) {
   var soma = 0;
   for (var i = 0; i < nome.length; i++) soma += nome.charCodeAt(i);

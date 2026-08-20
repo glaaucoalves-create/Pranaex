@@ -463,7 +463,7 @@ tr:last-child td{border-bottom:none}
       <div class="mk"><div class="ml">Receita média/mês</div><div class="mv" id="res-bruta">—</div></div>
       <div class="mk"><div class="ml">Despesa média/mês</div><div class="mv dn" id="res-tax">—</div></div>
       <div class="mk"><div class="ml">Margem média/mês</div><div class="mv up" id="res-liq">—</div></div>
-      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Payback Aura</div><div class="mv up" id="res-pb">—</div></div>
+      <div class="mk" style="background:#fdf6ef;border-color:#e7c9a0"><div class="ml">Payback Aura</div><div class="mv up" id="res-pb">—</div><div style="font-size:10px;color:#a3813f;font-weight:700;margin-top:2px" id="res-pb-data">—</div></div>
     </div>
     <div class="nota" style="margin-bottom:0" id="res-nota">
       Tudo aqui vem do que já foi lançado até hoje — não há mais estimativa manual na aba. O payback projeta os meses à frente por esta mesma média.
@@ -566,21 +566,21 @@ tr:last-child td{border-bottom:none}
       <div class="mk" style="border-color:#f4ddd4">
         <div class="ml">Cabana 1 — Aura</div>
         <div class="mv pur" style="font-size:14px" id="inv-cabana1-investido">—</div>
-        <div style="font-size:10px;color:#c1622a;margin-top:4px;font-weight:600">✓ Operando · Jul/2026</div>
+        <div style="font-size:10px;color:#c1622a;margin-top:4px;font-weight:600" id="inv-cabana1-opera">✓ Operando</div>
         <div style="font-size:10px;color:#9aa3af;margin-top:2px">Gera caixa para financiar as obras</div>
       </div>
       <div class="mk" style="border-color:#f7e6d8">
-        <div class="ml">Cabana 2 · Mar–Dez/27</div>
+        <div class="ml" id="cab2-obra-datas">Cabana 2</div>
         <div class="mv up" style="font-size:14px">Obra R$ 300k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap2">Calculando...</div>
-        <div style="font-size:10px;color:#9aa3af;margin-top:2px">1 cabana operando abate <span id="cab2-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera Jan/28</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">1 cabana operando abate <span id="cab2-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera <span id="cab2-opera">—</span></div>
         <div style="font-size:10px;color:#6b7280;margin-top:2px">Depois de pronta gera <span id="liq2-txt" style="color:#c1622a;font-weight:600">—</span>/mês</div>
       </div>
       <div class="mk" style="border-color:#f4e2d1">
-        <div class="ml">Cabana 3 · Mar–Dez/28</div>
+        <div class="ml" id="cab3-obra-datas">Cabana 3</div>
         <div class="mv dn" style="font-size:14px">Obra R$ 300k</div>
         <div style="font-size:11px;font-weight:700;margin-top:4px;color:#a3813f" id="card-ap3">Calculando...</div>
-        <div style="font-size:10px;color:#9aa3af;margin-top:2px">2 cabanas operando abatem <span id="cab3-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera Jan/29</div>
+        <div style="font-size:10px;color:#9aa3af;margin-top:2px">2 cabanas operando abatem <span id="cab3-abate" style="color:#5f8f5f;font-weight:600">—</span> · Opera <span id="cab3-opera">—</span></div>
         <div style="font-size:10px;color:#6b7280;margin-top:2px">Depois de pronta gera <span id="liq3-txt" style="color:#93291e;font-weight:600">—</span>/mês</div>
       </div>
     </div>
@@ -588,10 +588,10 @@ tr:last-child td{border-bottom:none}
     <div style="margin-top:12px;background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #edeef1">
       <div style="font-size:11px;font-weight:700;color:#0d1117;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cronograma — a margem abate a parcela de cada obra</div>
       <div class="mc"><div class="mc-dot" style="background:#b1503a"></div><div class="mc-body"><div class="mc-title">Aura operando</div><div class="mc-sub">Margem mensal pela média já realizada — é ela que abate a obra da Cabana 2</div></div><div class="mc-val up" id="mc-liq1">—</div><div class="mc-date">Jul/26 →</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">Parcela de R$ 30k/mês por 10 meses · 1 cabana operando abate <span id="mc-abate2">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx2">—</div><div class="mc-date">Mar/27</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — 2 unidades operando</div><div class="mc-sub">A margem mensal dobra, e é ela que vai abater a obra da Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date">Jan/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#93291e"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">Mesma parcela de R$ 30k/mês · 2 cabanas operando abatem <span id="mc-abate3">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx3">—</div><div class="mc-date">Mar/28</div></div>
-      <div class="mc"><div class="mc-dot" style="background:#93291e;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Fim das obras: margem cheia, sem parcela para abater</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date">Jan/29</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a"></div><div class="mc-body"><div class="mc-title">Cabana 2 — início da obra</div><div class="mc-sub">Parcela de R$ 30k/mês por 10 meses · 1 cabana operando abate <span id="mc-abate2">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx2">—</div><div class="mc-date" id="mc-data2">—</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#c1622a;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 2 entrega — 2 unidades operando</div><div class="mc-sub">A margem mensal dobra, e é ela que vai abater a obra da Cabana 3</div></div><div class="mc-val warn" id="mc-liq2">—</div><div class="mc-date" id="mc-data2e">—</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#93291e"></div><div class="mc-body"><div class="mc-title">Cabana 3 — início da obra</div><div class="mc-sub">Mesma parcela de R$ 30k/mês · 2 cabanas operando abatem <span id="mc-abate3">—</span> de cada uma</div></div><div class="mc-val dn" id="mc-cx3">—</div><div class="mc-date" id="mc-data3">—</div></div>
+      <div class="mc"><div class="mc-dot" style="background:#93291e;opacity:.5"></div><div class="mc-body"><div class="mc-title">Cabana 3 entrega — 3 unidades operando</div><div class="mc-sub">Fim das obras: margem cheia, sem parcela para abater</div></div><div class="mc-val up" id="mc-total">—</div><div class="mc-date" id="mc-data3e">—</div></div>
     </div>
   </div>
 
@@ -610,14 +610,14 @@ tr:last-child td{border-bottom:none}
         </tr>
         <tr>
           <td style="color:#c1622a;font-weight:600">Cabana 2</td>
-          <td>R$ 280k</td><td class="up">R$ 371k</td><td>Jan/28</td>
+          <td>R$ 280k</td><td class="up">R$ 371k</td><td id="tc-opera2">—</td>
           <td id="tc-rec2">—</td>
           <td class="up" id="tc-gl2">—</td>
           <td class="warn">~40 meses</td>
         </tr>
         <tr>
           <td style="color:#93291e;font-weight:600">Cabana 3</td>
-          <td>R$ 300k</td><td class="dn">R$ 391k</td><td>Jan/29</td>
+          <td>R$ 300k</td><td class="dn">R$ 391k</td><td id="tc-opera3">—</td>
           <td id="tc-rec3">—</td>
           <td class="up" id="tc-gl3">—</td>
           <td class="warn">~40 meses</td>
@@ -1140,6 +1140,27 @@ function goTo(id, btnEl) {
 //    Despesas — nunca da aba "Resumo", que guardava um histórico
 //    pré-app que não corresponde a nenhum lançamento de verdade) ──
 var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+// ── Datas do plano ─────────────────────────────────────────────────────
+// O modelo pensa em "mês N a partir de hoje"; quem lê a tela pensa em
+// "jan/29". A tradução mora aqui, num lugar só, para o gráfico, as barras
+// do payback e o cronograma nunca contarem datas diferentes entre si —
+// era o que acontecia enquanto essas datas ficavam escritas à mão no HTML.
+function mesDoPlano_(k) {
+  var h = new Date();
+  return new Date(h.getFullYear(), h.getMonth() + k, 1);
+}
+function rotuloMes_(d) { return MESES[d.getMonth()] + '/' + String(d.getFullYear()).slice(2); }
+function rotuloMesAno_(d) { return MESES[d.getMonth()] + '/' + d.getFullYear(); }
+function rotuloPlano_(k) { return rotuloMes_(mesDoPlano_(k)); }
+function rotuloPlanoAno_(k) { return rotuloMesAno_(mesDoPlano_(k)); }
+// Faixa de obra: "mai/27 – fev/28", ou "mai–dez/27" quando cabe no mesmo ano.
+function faixaPlano_(de, ate) {
+  var a = mesDoPlano_(de), b = mesDoPlano_(ate);
+  return a.getFullYear() === b.getFullYear()
+    ? MESES[a.getMonth()] + '–' + rotuloMes_(b)
+    : rotuloMes_(a) + ' – ' + rotuloMes_(b);
+}
 // Um objeto por mês de 2026: { dias, receita, despesa, temDado }.
 var MES = [];
 function diasNoMes_(i) { return new Date(2026, i + 1, 0).getDate(); }
@@ -1466,12 +1487,16 @@ function calc() {
   // vez de dividir pelo mesmo valor todo mês. É o que permite a reserva já
   // vendida encurtar a conta.
   var pb;
+  // Quantos meses à frente de hoje o capital se fecha — é o que vira data.
+  var pbAFrente = null;
   if (real.total >= CAPITAL) {
     pb = Math.ceil(n);
+    pbAFrente = 0;
   } else if (margemMedia > 0 || Object.keys(receitaContratadaFutura_()).length) {
     var k = 0;
     while (k < 600 && acumuladoProjetado_(real, receitaMedia, despesaMedia, k) < CAPITAL) k++;
     pb = k >= 600 ? 999 : Math.ceil(n + k);
+    if (k < 600) pbAFrente = k;
   } else {
     pb = 999;
   }
@@ -1480,6 +1505,9 @@ function calc() {
   setTxt_('res-tax', '–' + fmt(despesaMedia));
   setTxt_('res-liq', fmt(Math.max(0, margemMedia)));
   setTxt_('res-pb', margemMedia > 0 ? (pb > 120 ? '>10 anos' : pb + ' meses') : '—');
+  setTxt_('res-pb-data', (margemMedia > 0 && pbAFrente !== null && pb <= 120)
+    ? (pbAFrente === 0 ? 'já recuperado' : 'capital de volta em ' + rotuloPlanoAno_(pbAFrente))
+    : '—');
   setTxt_('res-nota', n
     ? 'Média de ' + n.toFixed(1).replace('.', ',') + ' meses decorridos até hoje (o mês em curso conta pela fração de dias já vividos). Receita e despesa são as lançadas; não há estimativa de imposto por cima. O payback projeta ' + fmt(margemMedia) + '/mês.'
     : 'Sem lançamento até hoje — os números aparecem quando houver dado real.');
@@ -1492,6 +1520,11 @@ function calc() {
   setTxt_('tc-rec3', fmt(receitaMedia));
   setTxt_('liq2-txt', fmt(Math.max(0, margemMedia)));
   setTxt_('liq3-txt', fmt(Math.max(0, margemMedia)));
+
+  // A Cabana 1 já opera: a data é o primeiro mês com lançamento, não um chute.
+  setTxt_('inv-cabana1-opera', real.de === null || real.de === undefined
+    ? '✓ Operando'
+    : '✓ Operando · ' + rotuloMesAno_(new Date(2026, real.de, 1)));
 
   renderMargemRealMensal_();
   buildTimeline(margemMedia, real, receitaMedia, despesaMedia);
@@ -1512,7 +1545,11 @@ function buildTimeline(mensal, real, receitaMedia, despesaMedia) {
     var row  = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:10px';
     row.innerHTML =
-      '<div style="width:52px;font-size:10.5px;color:#9aa3af;text-align:right;flex-shrink:0">mês ' + m + '</div>' +
+      // A data é o que o leitor procura; o número do mês fica como apoio.
+      '<div style="width:62px;text-align:right;flex-shrink:0">' +
+        '<div style="font-size:11px;font-weight:600;color:#4b5563">' + rotuloPlano_(mesesProjecao) + '</div>' +
+        '<div style="font-size:8.5px;color:#b0b6bf;line-height:1.2">mês ' + m + '</div>' +
+      '</div>' +
       '<div style="flex:1;height:20px;background:#f0f1f3;border-radius:6px;overflow:hidden;position:relative">' +
         // Recuperado e em progresso precisam se distinguir de longe: laranja
         // cheio contra areia clara, com o texto escurecido na barra clara.
@@ -1576,7 +1613,7 @@ function buildCDI(margemPorCabana, retornoJaRealizado) {
   var margemNaObra2 = 0, margemNaObra3 = 0;
   var mesCruzamento = 0;
 
-  var labels = [], dsRetorno = [], dsInvestimento = [], dsAporte = [], dsCDI = [];
+  var labels = [], mesesPlano = [], dsRetorno = [], dsInvestimento = [], dsAporte = [], dsCDI = [];
 
   for (var m = 1; m <= TETO_CURVA; m++) {
     var margemMes = cabanasOperando_(m) * M;
@@ -1598,7 +1635,8 @@ function buildCDI(margemPorCabana, retornoJaRealizado) {
 
     acCDI += capCDI * CDI_M;
 
-    labels.push('M' + String(m).padStart(2, '0'));
+    labels.push(rotuloPlano_(m));
+    mesesPlano.push(m);
     dsRetorno.push(Math.round(retorno));
     dsInvestimento.push(Math.round(investimento));
     dsAporte.push(Math.round(aporteAcum));
@@ -1630,8 +1668,20 @@ function buildCDI(margemPorCabana, retornoJaRealizado) {
   setTxt_('inv-obra-margem-total', fmt(margemNaObra2 + margemNaObra3));
   setTxt_('inv-investimento-final', fmt(investimento));
   setTxt_('inv-cruzamento', mesCruzamento
-    ? 'mês ' + mesCruzamento + ' do plano (' + (mesCruzamento / 12).toFixed(1).replace('.', ',') + ' anos a partir de hoje)'
+    ? rotuloPlanoAno_(mesCruzamento) + ' (mês ' + mesCruzamento + ' do plano, ' + (mesCruzamento / 12).toFixed(1).replace('.', ',') + ' anos a partir de hoje)'
     : 'não acontece dentro de 20 anos com a margem atual');
+
+  // As datas do cronograma saem das mesmas constantes que desenham a curva.
+  setTxt_('cab2-obra-datas', 'Cabana 2 · obra ' + faixaPlano_(OBRA2_INICIO, OBRA2_FIM));
+  setTxt_('cab3-obra-datas', 'Cabana 3 · obra ' + faixaPlano_(OBRA3_INICIO, OBRA3_FIM));
+  setTxt_('cab2-opera', rotuloPlano_(CAB2_OPERA));
+  setTxt_('cab3-opera', rotuloPlano_(CAB3_OPERA));
+  setTxt_('tc-opera2', rotuloPlano_(CAB2_OPERA));
+  setTxt_('tc-opera3', rotuloPlano_(CAB3_OPERA));
+  setTxt_('mc-data2', rotuloPlano_(OBRA2_INICIO));
+  setTxt_('mc-data2e', rotuloPlano_(CAB2_OPERA));
+  setTxt_('mc-data3', rotuloPlano_(OBRA3_INICIO));
+  setTxt_('mc-data3e', rotuloPlano_(CAB3_OPERA));
 
   setTxt_('mc-liq1', fmt(M) + '/mês');
   setTxt_('mc-abate2', fmt(Math.min(M, custoMes)));
@@ -1665,13 +1715,17 @@ function buildCDI(margemPorCabana, retornoJaRealizado) {
           backgroundColor: '#0d1117', titleColor: '#fff', bodyColor: '#e5e7eb', borderWidth: 0,
           padding: 10, cornerRadius: 10, displayColors: true, boxPadding: 4,
           callbacks: {
-            title: function(t){ return 'Mês ' + String(t[0].label).replace(/^M0?/, '') + ' do plano'; },
+            title: function(t){ return t[0].label + ' · mês ' + mesesPlano[t[0].dataIndex] + ' do plano'; },
             label: function(c){ return c.dataset.label + ': R$ ' + c.raw.toLocaleString('pt-BR'); }
           }
         }
       },
       scales: {
-        x: { ticks: { color: '#9aa3af', font: { size: 9 }, maxRotation: 45 }, grid: { display: false }, border: { display: false } },
+        // Um rótulo por semestre: com ~55 pontos, escrever todo mês vira ruído.
+        x: { ticks: { color: '#9aa3af', font: { size: 9 }, maxRotation: 45, autoSkip: false,
+               callback: function(v, i){ var d = mesDoPlano_(mesesPlano[i]);
+                 return (d.getMonth() % 6 === 0) ? rotuloMes_(d) : ''; } },
+             grid: { display: false }, border: { display: false } },
         y: { ticks: { color: '#9aa3af', font: { size: 10 }, callback: function(v){ return 'R$' + (v/1000).toFixed(0) + 'k'; } }, grid: { color: '#f0f1f3' }, border: { display: false } }
       }
     }
